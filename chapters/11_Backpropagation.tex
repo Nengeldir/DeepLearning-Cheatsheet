@@ -31,7 +31,6 @@ Since NNs are based on the composition of functions we'll ineviteably need the \
 
 \Def[Jacobi Matrix of a Map] 
 The Jacobian \(\MJ_F\) of a map \(F\colon\R^n\to\R^m\) is defined as
-\begin{gather*}
 \begin{align*}
     \MJ_F
     :=
@@ -49,7 +48,6 @@ The Jacobian \(\MJ_F\) of a map \(F\colon\R^n\to\R^m\) is defined as
         \frac{\partial F_m}{\partial x_1} & \frac{\partial F_m}{\partial x_2} & \cdots & \frac{\partial F_m}{\partial x_n} \\
     \end{pmatrix} \in\R^{m\times n}
 \end{align*}
-\end{gather*}
 So each component function \(F_i\colon\R^n\to\R\) of \(F\), for \(i\in\set{1,\ldots,m}\) has a respective gradient. Putting these gradients together as rows of a matrix gives us the \emph{Jacobian} of \(F\).
 
 So we have that
@@ -125,17 +123,13 @@ Note that in the following we'll be taking gradients w.r.t. one datapoint (just 
     F_\theta=F^L_\theta\circ\cdots\circ F^1_\theta
 \end{align*}
 
-\begin{gather*}
 \begin{align*}
     &\cR\colon\underbrace{(\cX\stackrel{F_\theta}{\to}\cY)}_{ \substack{\text{we're interested in}\\\text{the predictions that}\\\text{result from choosing }\theta}}\times \underbrace{(\cX\times\cY)}_{ \substack{\text{evaluation set }\cS\\\text{(induces emp. dist.)}}}\times\underbrace{(\cY\times\cY\to\R_{\geq 0})}_{\text{loss }\ell}\to\R_{\geq 0}
 \end{align*}
-\end{gather*}
 
-\begin{gather*}
 \begin{align*}
     \vx=:\vx^0 \stackrel{F^1_\theta}{\mapsto} \vx^1 \stackrel{F^2_\theta}{\mapsto} \vx^2 \stackrel{F^3_\theta}{\mapsto} \cdots \stackrel{F^L_\theta}{\mapsto} \vx^L=:\vy \stackrel{\cR}{\mapsto} \cR(F_\theta;\set{\vx,\vy^*})\in\R_{\geq 0}
 \end{align*}
-\end{gather*}
 
 \( \vx^l = \sigma^l\left(\MW^l\vx^{l - 1} + \vb^l\right) \)
 

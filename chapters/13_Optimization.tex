@@ -294,7 +294,6 @@ Further, have a look at the following trace identities
 \sep
 
 Now let's see if we can rewrite the risk differently
-\begin{gather*}
 \begin{align*}
     \cR(\underbrace{\MA}_{=\theta}) &= \Exp{\norm{\vy-\MA\vx}_2^2} \\
     &= \Exp{\Tr{(\vy-\MA)(\vy-\MA)^\T}} \\
@@ -303,7 +302,6 @@ Now let's see if we can rewrite the risk differently
     &= \Tr{\Exp{\vy\vy^\T}} -2\sTr{\MA\underbrace{\Exp{\vx\vy^\T}}_{\mathclap{=:\MGamma^\T,\,\MGamma\in\R^{m\times n}}}} +\sTr{\MA\underbrace{\Exp{\vx\vx^\T}}_{\mathclap{=\MI\text{ (by ass.)}}}\MA^\T} \\
     &= \underbrace{\Tr{\Exp{\vy\vy^\T}}}_{\mathclap{\text{indep. of }\MA}} -2\Tr{\MA\MGamma^\T} +\Tr{\MA\MA^\T}
 \end{align*}
-\end{gather*}
 
 Now, let's see how we can minimize the risk
 
@@ -588,7 +586,6 @@ For later notation, let us collect all the weights in a set
 
 After the gradient step we'll have the following situation:
 
-\begin{gather*}
 \begin{align*}
     y^{\text{new}} &= \left( \prod_{l=1}^L \left( w_l-\eta\frac{\partial \cR}{\partial w_l}\right) \right)x \\
     \intertext{So what actually happens is that if we take the term for \(y^{new}\) and we expand it this leads to terms of up to order \(L\).} 
@@ -599,7 +596,6 @@ After the gradient step we'll have the following situation:
     &= y \underbrace{-\eta\frac{\partial \cR}{\partial w_1} \left(\prod_{l=2}^L w_l\right)x + \cdots + (-\eta)^L\left(\prod_{l=1}^L \frac{\partial \cR}{\partial w_l}\right)x}_{(*) \text{ significant?}} \\
     &= y+ \underbrace{\sum_{S\in\cP(W)} \left[ (-\eta)^{\card{W\setminus S}} \left(\prod_{w\in S}w\right) \left(\prod_{w\in W\setminus S} \frac{\partial \cR}{\partial w}\right)x \right]}_{(*)\text{ significant?}}
 \end{align*}
-\end{gather*}
 
 Hence, the higher order terms in terms of \(\eta\) \((*)\) may become significant, despite the damping.
 
@@ -659,195 +655,98 @@ However, no-one \emph{really} knows why BN works so well.
 
 \subsection{Norm-Based Regularization}
 
-\(
-\cR_{\Omega}(\theta;\cS)
-= 
-\cR(\theta;\cS)
-+ 
-\Omega(\theta),
-\)
+\(\cR_{\Omega}(\theta;\cS) = \cR(\theta;\cS) + \Omega(\theta),\)
 
-where \(\Omega\) is a functional (function from a vector-space to the field over
-which it's defined) that does not depend on the training data.
+where \(\Omega\) is a functional (function from a vector-space to the field over which it's defined) that does not depend on the training data.
 
 \sep
 
 \Def[\(L_2\) Frobenius-Norm Penalty (Weight Decay)]
 
-\(
-\Omega(\theta) = \frac{1}{2}\sum_{l = 1}^L \lambda^l\norm{\MW}_F^2,
-\quad
-\lambda^l\geq 0
-\)
+\(\Omega(\theta) = \frac{1}{2}\sum_{l = 1}^L \lambda^l\norm{\MW}_F^2,\quad\lambda^l\geq 0\)
 
 \Com It's common practice to only penalize the weights, and not the biases.
 
 \sep
 
-So, the assumption here is that the weights have to be small. So we'll only
-allow a big increase in the weights, if it comes at a much bigger increase in
-performance. Regularization based on the \(L_2\)-norm is also called \emph{weight-decay}, as
+So, the assumption here is that the weights have to be small. So we'll only allow a big increase in the weights, if it comes at a much bigger increase in performance. Regularization based on the \(L_2\)-norm is also called \emph{weight-decay}, as
 
-\(
-\frac{\partial \MOmega}{\partial w_{ij}^l}
-= 
-\lambda^lw_{ij}^l,
-\)
+\( \frac{\partial \MOmega}{\partial w_{ij}^l} = \lambda^lw_{ij}^l \)
 
-which means that the weights in the \(l\)-th layer get pulled towards zero with
-``gain'' \(\lambda^l\). What happens in the gradient-update step is
+which means that the weights in the \(l\)-th layer get pulled towards zero with ``gain'' \(\lambda^l\). What happens in the gradient-update step is
+
 \begin{align*}
-\theta(t+1)
-&=\theta(t)-\nabla_{\theta}\cR_{\Omega}(\theta;\cS)
-\\
-&=
-\underbrace{(1-\eta\lambda^l)\theta(t)}_{\text{weight decay}}
--\underbrace{\eta}_{\substack{\text{step}\\\text{size}}}
-\underbrace{\nabla_\theta\cR}_{\text{data dep.}}.
+    \theta(t+1) &= \theta(t)-\nabla_{\theta}\cR_{\Omega}(\theta;\cS) \\
+    &= \underbrace{(1-\eta\lambda^l)\theta(t)}_{\text{weight decay}} - \underbrace{\eta}_{\substack{\text{step}\\\text{size}}} \underbrace{\nabla_\theta\cR}_{\text{data dep.}}.
 \end{align*}
+
 and also note that we require \(\eta\lambda^l<1\).
 
 \sep
 
-Let's analyze the weight decay: The Quadratic (Taylor) approximation of \(\cR\)
-around the optimal \(\theta^*\) would be
+Let's analyze the weight decay: The Quadratic (Taylor) approximation of \(\cR\) around the optimal \(\theta^*\) would be
 
 \begin{align*}
-\cR(\theta)
-&\approx
-\cR(\theta^*)
-+
-\underbrace{\nabla_{\theta}\cR(\theta^*)^\T}_{=\vo}(\theta-\theta^*)
-+
-\frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*)
-\\
-&=\cR(\theta^*)
-+
-\frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*)
-\qquad\qquad(\star)
+    \cR(\theta) &\approx \cR(\theta^*) + \underbrace{\nabla_{\theta}\cR(\theta^*)^\T}_{=\vo}(\theta-\theta^*) + \frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*) \\
+    &=\cR(\theta^*) + \frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*) \qquad\qquad(\star)
 \end{align*}
+
 where \(\MH_{\cR}\) is the hessian of \(\cR\), so
-\[
-(\MH_{\cR})_{i,j}
-= 
-\frac{\partial^2 \cR}{\partial \theta_i \partial \theta_j}
-\]
+
+\[(\MH_{\cR})_{i,j} = \frac{\partial^2 \cR}{\partial \theta_i \partial \theta_j}\]
+
 and \(\MH\) is the evaluation of \(\MH_{\cR}\) at \(\theta^*\):
-\[
-\MH : = \MH_{\cR}(\theta^*).
-\]
-So now we have the upper quadratic approximation of the cost function
-\((\star)\) (so we're assuming it is a parabola and that we know \(\theta^*\)). Now,
-let's compute the gradient of that upper approximation of \(\cR\) (in \((\star)\)).
-\[
-\nabla_{\theta}\left[
-\cR(\theta^*)
-+ 
-\frac{1}{2}(\theta - \theta^*)^\T\MH(\theta - \theta^*)
-\right]
-= 
--\MH\theta^* +\MH\theta
-\tag{*}
-\]
+
+\[\MH : = \MH_{\cR}(\theta^*).\]
+
+So now we have the upper quadratic approximation of the cost function \((\star)\) (so we're assuming it is a parabola and that we know \(\theta^*\)). Now, let's compute the gradient of that upper approximation of \(\cR\) (in \((\star)\)).
+
+\[\nabla_{\theta}\left[\cR(\theta^*) + \frac{1}{2}(\theta - \theta^*)^\T\MH(\theta - \theta^*)\right] = -\MH\theta^* +\MH\theta\tag{*}\]
+
 Further, recall that
-\[
-\nabla_{\theta}\Omega
-= 
-\vlambda\odot\theta
-= 
-\diag(\vlambda)\theta
-\]
-So, now, let's set \(\nabla_{\theta}\cR_{\Omega}\) (with \(\nabla_{\theta}\cR\) 
-approximated as in \((*)\)) equal to zero.
+\[\nabla_{\theta}\Omega = \vlambda\odot\theta = \diag(\vlambda)\theta\]
+
+So, now, let's set \(\nabla_{\theta}\cR_{\Omega}\) (with \(\nabla_{\theta}\cR\) approximated as in \((*)\)) equal to zero.
+
 \begin{align*}
-&&
-\nabla_{\theta}\cR_{\Omega}
-&\stackrel{!}{\approx} 
-0
-\\
-&\Longleftrightarrow&
--\MH\theta^*+\MH\theta
-+\diag(\vlambda)\theta
-&\mbeq 0
-\\
-&\Longleftrightarrow&
-(\MH +\diag(\vlambda))\theta
-&=
-\MH\theta^*
-\\
-\shortintertext{Since both \(\MH\) and \(\diag(\vlambda)\) are s.p.s.d. we can
-invert their sum} 
-&\Longleftrightarrow&
-\theta
-&=
-(\MH +\diag(\vlambda))^{-1}
-\MH\theta^*
+    && \nabla_{\theta}\cR_{\Omega} &\stackrel{!}{\approx} 0 \\
+    &\Longleftrightarrow& -\MH\theta^*+\MH\theta +\diag(\vlambda)\theta &\mbeq 0 \\
+    &\Longleftrightarrow& (\MH +\diag(\vlambda))\theta &= \MH\theta^* \\
+    \shortintertext{Since both \(\MH\) and \(\diag(\vlambda)\) are s.p.s.d. we can invert their sum} 
+    &\Longleftrightarrow& \theta &= (\MH +\diag(\vlambda))^{-1}\MH\theta^*
 \end{align*}
-Now, what we can directly see here is that if we use no L2-regularization
-\(\theta = \theta^*\). Now, since \(\MH\) is s.p.s.d. we can diagonalize it to
-\(\MH = \MQ\MLambda\MQ^\T\) where \(\MLambda = \diag(\epsilon_1,\ldots,\epsilon_d)\) and
-plug this in which gives us
+
+Now, what we can directly see here is that if we use no L2-regularization \(\theta = \theta^*\). Now, since \(\MH\) is s.p.s.d. we can diagonalize it to \(\MH = \MQ\MLambda\MQ^\T\) where \(\MLambda = \diag(\epsilon_1,\ldots,\epsilon_d)\) and plug this in which gives us
+
 \begin{align*}
-\theta
-&=
-(\MQ\MLambda\MQ^T +\diag(\vlambda))^{-1}
-\MQ\MLambda\MQ^T\theta^*
-\\
-&=\text{\todo{do this steps and write down assumptions}}
-\\
-&=\MQ\underbrace{(\MLambda+\diag(\vlambda))^{-1}\MLambda}_{
-=\diag\left(
-\frac{\epsilon_1}{\epsilon_1+\lambda_1},
-\ldots, 
-\frac{\epsilon_d}{\epsilon_d+\lambda_d}\right)
-}\MQ^\T\theta^*.
+    \theta &= (\MQ\MLambda\MQ^T +\diag(\vlambda))^{-1}\MQ\MLambda\MQ^T\theta^* \\
+    &=\text{\todo{do this steps and write down assumptions}}\\
+    &=\MQ\underbrace{(\MLambda+\diag(\vlambda))^{-1}\MLambda}_{=\diag\left(\frac{\epsilon_1}{\epsilon_1+\lambda_1},\ldots, \frac{\epsilon_d}{\epsilon_d+\lambda_d}\right)}\MQ^\T\theta^*.
 \end{align*}
-So this gives us an idea what happens with \(\theta^*\) in the directions of the
-eigenvectors of the hessian \(\MH\) if we use L2-regularization:
+
+So this gives us an idea what happens with \(\theta^*\) in the directions of the eigenvectors of the hessian \(\MH\) if we use L2-regularization:
+
 \begin{itemize}
-  \item if \(\epsilon_i\gg\lambda_i\): \textbf{effect vanishes}: along directions
-  in parameter space with \emph{large} eigenvalues \(\epsilon_i\) the weights are
-  almost not reduced
-  \item if \(\epsilon_i\ll\lambda_i\): \textbf{shrinking effect}: along the
-  directions in parameter space with small eigenvalues \(\epsilon_i\) the weights
-  are shrunk to nearly zero magnitude.
+    \item if \(\epsilon_i\gg\lambda_i\): \textbf{effect vanishes}: along directions in parameter space with \emph{large} eigenvalues \(\epsilon_i\) the weights are almost not reduced
+    \item if \(\epsilon_i\ll\lambda_i\): \textbf{shrinking effect}: along the directions in parameter space with small eigenvalues \(\epsilon_i\) the weights are shrunk to nearly zero magnitude.
 \end{itemize}
-The following picture illustrates this better:
 
 \begin{center}
-  \includegraphics[width=0.5\linewidth]{%
-img/l2-regularization-effects-in-risk-space}
+    \includegraphics[width=0.5\linewidth]{img/l2-regularization-effects-in-risk-space}
 \end{center}
 
-The isometric balls illustrate the regularization loss (L2) for any choice of
-\(\theta\) (or \(w\)), and the ellipsoid curves illustrate the risk (for
-a parabolic risk). So \(\tilde{w}\) is the point with the least loss for its
-specific regularization loss. As we can see, at that point
+The isometric balls illustrate the regularization loss (L2) for any choice of \(\theta\) (or \(w\)), and the ellipsoid curves illustrate the risk (for a parabolic risk). So \(\tilde{w}\) is the point with the least loss for its specific regularization loss. As we can see, at that point
+
 \begin{itemize}
-  \item downwards the risk has a large eigenvalue, as the risk increases
-  rapidly. And as we've stated above, the value of \(w\) along that dimension is
-  not reduced that much.
-  \item from right to left (starting at \(w^*\)) the risk has a very low
-  eigenvalue, and hence \(\tilde{w}\) is reduced much more along that dimension.
+    \item downwards the risk has a large eigenvalue, as the risk increases rapidly. And as we've stated above, the value of \(w\) along that dimension is not reduced that much.
+    \item from right to left (starting at \(w^*\)) the risk has a very low eigenvalue, and hence \(\tilde{w}\) is reduced much more along that dimension.
 \end{itemize}
 
 \sep
 
 \Def[L1-Regularization (sparsity inducing)]
 
-\(
-\Omega(\theta)
-= 
-\sum_{l = 1}^L
-\lambda^l\norm{\MW^l}_1
-= 
-\sum_{l = 1}^L
-\lambda^l
-\sum_{i,j}
-\abs{w_{ij}},
-\qquad
-\lambda^l\geq 0
-\)
+\( \Omega(\theta) = \sum_{l = 1}^L \lambda^l\norm{\MW^l}_1 = \sum_{l = 1}^L \lambda^l \sum_{i,j} \abs{w_{ij}},\qquad \lambda^l\geq 0 \)
 
 \sep
 
@@ -859,251 +758,149 @@ here\ldots}
 \subsubsection{Regularization via Constrained Optimization}
 
 An alternative view on regularization is for a given \(r>0\), solve
-\[
-\min_{\theta, \norm{\theta}\leq r}
-\cR(\theta.)
-\]
-So we're also constraining the size of the coefficients indirecty, be
-constraining \(\theta\) to some ball.
+
+\[\min_{\theta, \norm{\theta}\leq r} \cR(\theta.) \]
+
+So we're also constraining the size of the coefficients indirectly, by constraining \(\theta\) to some ball.
 
 \ssep
 
 The simple optimization approach to this is: \emph{projected} gradient descent
-\[
-\theta(t + 1)
-= 
-\Pi_r(\theta(t) - \eta\nabla\cR),
-\qquad
-\Pi_r(\vv): =
-\min\set{1,\frac{r}{\norm{\vv}}}\vv
-\]
+
+\[\theta(t + 1) = \Pi_r(\theta(t) - \eta\nabla\cR),\]
+
+where
+
+\[\Pi_r(\vv): = \min\set{1,\frac{r}{\norm{\vv}}}\vv\]
+
 So we're essentially clipping the weights.
 
 \ssep
 
-Actually, for each \(\lambda\) in L2-Regularization there is a radius \(r\) that
-would make the two problems equivalent (if the loss is convex).
+Actually, for each \(\lambda\) in L2-Regularization there is a radius \(r\) that would make the two problems equivalent (if the loss is convex).
 
 \ssep
 
 Hinton made some research in 2013 and realized that
+
 \begin{itemize}
-  \item the constraints do not affect the initial learning (as the weights are
-  assumed to be small at the beginning), so we won't clip the weights. So the
-  constraints only become active, once the weights are large.
-  \item alternatively, we may just constrain the norm of the incoming weights
-  for each unit (so use row-norms for the weight matrices). This had some
-  practical success in stabilizing the optimization.
+  \item the constraints do not affect the initial learning (as the weights are assumed to be small at the beginning), so we won't clip the weights. So the constraints only become active, once the weights are large.
+  \item alternatively, we may just constrain the norm of the incoming weights for each unit (so use row-norms for the weight matrices). This had some practical success in stabilizing the optimization.
 \end{itemize}
 
 \subsubsection{Early Stopping}
 
-Gradient descent usually evolves solutions from: simple + robust \(\to\) complex +
-sensitive. Hence, it makes sense to stop training early (as soon as validation
-loss flattens/increases). Also: computationally attractive.
+Gradient descent usually evolves solutions from: simple + robust \(\to\) complex + sensitive. Hence, it makes sense to stop training early (as soon as validation loss flattens/increases). Also: computationally attractive.
 
-Since the weights are initialized to small values (and grow and grow to
-fit/overfit) we're kindof clipping/constraining the weight
-sizes by stopping the learning process earlier.
+Since the weights are initialized to small values (and grow and grow to fit/overfit) we're kindof clipping/constraining the weight sizes by stopping the learning process earlier.
 
-Let's analyze the situation closer: If we study the gradient descent
-trajectories through a quadratic approximation of the loss around the optimal
-set of parameters \(\theta^*\). We've derived previously already (and show it
-here again with slightly different notation) that:
-\[
-\evalat{\nabla_{\theta}\cR}{\theta_0}
-\approx
-\evalat{\nabla_{\theta}\cR}{\theta^*}
-+ 
-\evalat{\MJ_{\nabla\cR_{\theta}}}{\theta^*}
-(\theta_0 - \theta^*)
-= 
-\MH(\theta_0 - \theta^*).
-\]
-This is just because the Jacobian of the gradient map is the Hessian
-\(\MH_{\cR}\) from before.
+Let's analyze the situation closer: If we study the gradient descent trajectories through a quadratic approximation of the loss around the optimal set of parameters \(\theta^*\). We've derived previously already (and show it here again with slightly different notation) that:
+
+\[\evalat{\nabla_{\theta}\cR}{\theta_0} \approx \evalat{\nabla_{\theta}\cR}{\theta^*} + \evalat{\MJ_{\nabla\cR_{\theta}}}{\theta^*}(\theta_0 - \theta^*) = \MH(\theta_0 - \theta^*).\]
+
+This is just because the Jacobian of the gradient map is the Hessian \(\MH_{\cR}\) from before.
 
 So (as seen previously) we have that
-\[
-\theta(t + 1)
-= 
-\theta(t)
-- \evalat{\eta
-\nabla_{\theta}\cR}{\theta(t)}
-\approx
-\theta(t) - \eta\MH(\theta(t) - \theta^*).
-\]
+\[ \theta(t + 1) = \theta(t) - \evalat{\eta\nabla_{\theta}\cR}{\theta(t)} \approx \theta(t) - \eta\MH(\theta(t) - \theta^*).\]
+
 Now, subtracting \(\theta^*\) on both sides gives us
-\[
-\theta(t + 1) - \theta^*\approx
-(\MI - \eta\MH)(\theta(t) - \theta^*)
-\]
-Now we'll use the same trick as before that we can diagonalize the hessian \(\MH\)
-as it's s.p.s.d., so \(\MH = \MQ\MLambda\MQ^\T\). Inserting this gives us:
-\[
-\theta(t + 1) - \theta^*\approx
-(\MI - \eta\MQ\MLambda\MQ^\T)(\theta(t) - \theta^*)
-\]
-Now let's have a look at everything w.r.t the eigenbasis of \(\MH\), let's define
-\(\tilde{\theta} = \MQ^\T\theta\). Then
-\[
-\tilde{\theta}(t + 1) - \tilde{\theta}^*\approx
-(\MI - \eta\MLambda)(\tilde{\theta}(t) - \tilde{\theta}^*)
-\]
-Now, assuming \(\theta(0) = \vo\) (and inserting and using it) and a small \(\eta\)
-(\(\forall i\colon \abs{1 - \eta\lambda_i}<1\)) one gets explicitly
-\[
-\tilde{\theta}(t) = \tilde{\theta}^* -
-\underbrace{(\MI - \eta\MLambda)^t\tilde{\theta}^*}_{\mathclap{\to 0\text{ with
-upper ass. on eigenvalues}}}.
-\]
+
+\[\theta(t + 1) - \theta^*\approx (\MI - \eta\MH)(\theta(t) - \theta^*)\]
+
+Now we'll use the same trick as before that we can diagonalize the hessian \(\MH\) as it's p.s.d., so \(\MH = \MQ\MLambda\MQ^\T\). Inserting this gives us:
+
+\[\theta(t + 1) - \theta^*\approx (\MI - \eta\MQ\MLambda\MQ^\T)(\theta(t) - \theta^*)\]
+
+Now let's have a look at everything w.r.t the eigenbasis of \(\MH\), let's define \(\tilde{\theta} = \MQ^\T\theta\). Then
+
+\[\tilde{\theta}(t + 1) - \tilde{\theta}^*\approx (\MI - \eta\MLambda)(\tilde{\theta}(t) - \tilde{\theta}^*) \]
+
+Now, assuming \(\theta(0) = \vo\) (and inserting and using it) and a small \(\eta\) (\(\forall i\colon \abs{1 - \eta\lambda_i}<1\)) one gets explicitly
+
+\[\tilde{\theta}(t) = \tilde{\theta}^* - \underbrace{(\MI - \eta\MLambda)^t\tilde{\theta}^*}_{\mathclap{\to 0\text{ with upper ass. on eigenvalues}}}.\]
+
 Thus (comparing to the previous analysis) if we can choose \(t\), \(\eta\) s.t.
-\[
-(\MI - \eta\Lambda)^t\mbeq\lambda(\MLambda + \lambda\MI)^{-1}
-\]
-\todo{I don't get why we strive for this condition??? It is connected to
-something of before\ldots}
 
-\todo{Understand how we get to the next result by doing polynomial
-approximations of both sides (see ``Early Stopping: Analysis (Details 1,2 of
-2)'')}
+\[(\MI - \eta\Lambda)^t\mbeq\lambda(\MLambda + \lambda\MI)^{-1}\]
 
-which for \(\eta\epsilon_i\ll 1\), and \(\epsilon_i\ll\lambda\) can be achieved
-approximately via performing \(t = \frac{1}{\eta\lambda}\) steps.
+\todo{I don't get why we strive for this condition??? It is connected to something of before\ldots}
 
-So early stopping (up to the first order) can thus be seen as an approximate
-\(L_2\)-regularizer.
+\todo{Understand how we get to the next result by doing polynomial approximations of both sides (see ``Early Stopping: Analysis (Details 1,2 of 2)'')}
+
+which for \(\eta\epsilon_i\ll 1\), and \(\epsilon_i\ll\lambda\) can be achieved approximately via performing \(t = \frac{1}{\eta\lambda}\) steps.
+
+So early stopping (up to the first order) can thus be seen as an approximate \(L_2\)-regularizer.
 
 \subsection{Dataset Augmentation}
 
-Applying some transformations to the input data such that we know that the
-output is not affected. E.g., for images: mirroring, slight rotations, scaling,
-slight shearing, brightness changes. Blows up data, but: there are approaches to
-incorporating this into the gradient instead of the input data.
+Applying some transformations to the input data such that we know that the output is not affected. E.g., for images: mirroring, slight rotations, scaling, slight shearing, brightness changes. Blows up data, but: there are approaches to incorporating this into the gradient instead of the input data.
 
 \subsubsection{Invariant Architectures}
 
-Instead of augmenting the dataset one could build an architecture that is
-invariant to certain transformations of the data.
+Instead of augmenting the dataset one could build an architecture that is invariant to certain transformations of the data.
 
 \sep
 
-First, we distinguish the following terms: Let's say we have some \(\vx\) and
-apply the transformation \(\vx': =\tau(\vx)\). Then for our neural network \(F\)
+First, we distinguish the following terms: Let's say we have some \(\vx\) and apply the transformation \(\vx': =\tau(\vx)\). Then for our neural network \(F\)
 
 \begin{itemize}
   \item \Def[Invariance] means that \(F(\vx) = F(\tau(\vx))\).
   \item \Def[Equivariance] means that \(\tau(F(\vx)) = F(\tau(\vx))\).\\
-  So applying the transformation before or after applying \(F\) doesn't change a
-  thing (e.g., convolutions and translations are equivariant).
+  So applying the transformation before or after applying \(F\) doesn't change a thing (e.g., convolutions and translations are equivariant).
 \end{itemize}
 
 \ssep
 
-E.g. NNs where the first layer is a convolution are invariant to image
-translation. Hence, it would make no sense to augment the dataset of images with
-translations. It also saves computation and memory not to do this. So if we have
-an architecture that is invariant to certain dataset augmentations the
-augmentations become obsolete. So, if you can, choose an invariant architecture
-to make your life easier in the first place.
+E.g. NNs where the first layer is a convolution are invariant to image translation. Hence, it would make no sense to augment the dataset of images with translations. It also saves computation and memory not to do this. So if we have an architecture that is invariant to certain dataset augmentations the augmentations become obsolete. So, if you can, choose an invariant architecture to make your life easier in the first place.
 
 \subsubsection{Injection of Noise}
 
-At various places: inputs (noise robustness), weights (regularization), targets
-(network becomes more careful)
+At various places: inputs (noise robustness), weights (regularization), targets (network becomes more careful)
 
 \subsubsection{Semi-Supervised Training}
 
-If we have a lot of data, but only a few datapoints are labeled. Then
-semi-supervised training may become useful. You may build a generative model or
-an autoencoder to learn how to represent your data (learn features). Then, we
-train a supervised model on top of these representations.
+If we have a lot of data, but only a few datapoints are labeled. Then semi-supervised training may become useful. You may build a generative model or an autoencoder to learn how to represent your data (learn features). Then, we train a supervised model on top of these representations.
 
 \subsubsection{Multi-Task Learning}
 
-If we have different tasks that we may want to solve, we may share the
-intermediate representations across the tasks and then learn jointly (i.e.,
-minimize the combined objective). A typical architecture would be to share the
-low-level representations, lern the high-level representations per task.
+If we have different tasks that we may want to solve, we may share the intermediate representations across the tasks and then learn jointly (i.e., minimize the combined objective). A typical architecture would be to share the low-level representations, lern the high-level representations per task.
 
 \subsection{Dropout}
 
 \textbf{Dropout idea:} randomly ``drop'' subsets of the units in the network.
 
-So more preciely, we'll define a ``keep'' probability \(\pi_i^l\) for unit \(i\) in
-layer \(l\).
+So more preciely, we'll define a ``keep'' probability \(\pi_i^l\) for unit \(i\) in layer \(l\).
 \begin{itemize}
   \item typically: \(\pi_i^0 = 0.8\) (inputs), \(\pi^{l\geq 1} = 0.5\) (hidden units)
   \item realization: sampling bit mask and zeroing out activations
-  \item effectively defines an exponential ensemble of networks (each of which
-  is a sub-network of the original one), just that we sample these models at
-  training-time (instead of during prediction) and we \emph{share} the
-  parameters
+  \item effectively defines an exponential ensemble of networks (each of which is a sub-network of the original one), just that we sample these models at training-time (instead of during prediction) and we \emph{share} the parameters
   \item all modles share the same weights
   \item standard backpropagation applies.
-  \item This prevents complex co-adaptions in which a feature detector is only
-helpful in the context of several other specific feature detectors. Instead,
-each neuron learns to detect a feature that is generally helpful for producing
-the correct answer given the combinatorially large variety of internal contexts
-in which it must operate. (Hinton et al., 2012). This enforces the features to be redundant (not too specific about one thing in
-the image) and also to build on top of \emph{all} the features of the previous
-layer (since we never know if some are absent).
+  \item This prevents complex co-adaptions in which a feature detector is only helpful in the context of several other specific feature detectors. Instead, each neuron learns to detect a feature that is generally helpful for producing the correct answer given the combinatorially large variety of internal contexts in which it must operate. (Hinton et al., 2012). This enforces the features to be redundant (not too specific about one thing in the image) and also to build on top of \emph{all} the features of the previous layer (since we never know if some are absent).
 \end{itemize}
 
-\textbf{Benefits:} benefits of ensembles with the runtime complexity of the
-training of one network. The network gets trained to have many different paths through it to
-get the right result (as neurons are turned off).
+\textbf{Benefits:} benefits of ensembles with the runtime complexity of the training of one network. The network gets trained to have many different paths through it to get the right result (as neurons are turned off).
 
-Equivalent to: adding multiplicative noise to weights or training exponentially
-many sub-networks \(\sum_{i = 1}^{n}\binom{n}{i} = 2^n\) wher \(n\) is the number of
-compute units (so at each iteration we turn some nodes off according to some
-probability). So we're getting the benefits of ensembles with the runtime
-complexity of just training one network.
+Equivalent to: adding multiplicative noise to weights or training exponentially many sub-networks \(\sum_{i = 1}^{n}\binom{n}{i} = 2^n\) wher \(n\) is the number of compute units (so at each iteration we turn some nodes off according to some probability). So we're getting the benefits of ensembles with the runtime complexity of just training one network.
 
-Ensembling corresponds to taking geometric mean (instead of usual arithmetic)
-(must have to do with exponential growth of networks) of the ensembles:
+Ensembling corresponds to taking geometric mean (instead of usual arithmetic) (must have to do with exponential growth of networks) of the ensembles:
 
-\(
-\cProb[\text{ensemble}]{y}{\vx}
-= 
-\sqrt[d]{
-\prod_{\mu}
-\Prob{\vmu}
-\cProb{y}{\vx,\vmu}
-}
-\)
+\(\cProb[\text{ensemble}]{y}{\vx} = \sqrt[d]{\prod_{\mu}\Prob{\vmu}\cProb{y}{\vx,\vmu}}\)
 
 \sep
 
-Having to sample several sub-networks for a prediction is somewhat inconvenient,
-so the idea that Hinton et al. came up with is: scaling each weight \(w_{ij}^l\)
-by the probability of the unit \(j\) being active 
-\[
-\tilde{w}_{ij}^l
-\gets
-\pi_j^{l - 1}
-w_{ij}
-\]
-This makes sure that the net (total) input to unit \(x_i^{l}\) is calibrated,
-i.e.,
-\[
-\sum_{j}\tilde{w}_{ij}^lx_j^{l - 1}
-\mbeq
-\Exp[Z\sim\Prob{Z}]{
-\sum_{j}Z_{j}^{l - 1}w_{ij}x_j^{l - 1}
-}
-\sum_{j}\pi_{j}^{l - 1}w_{ij}x_j^{l - 1}
-\qquad\text{\ok}
-\]
-It can be shown that this approach leads to a (sometimes exact) approximation of
-a gemoetrically averaged ensemble (see DL-Book, 7.12).
+Having to sample several sub-networks for a prediction is somewhat inconvenient, so the idea that Hinton et al. came up with is: scaling each weight \(w_{ij}^l\) by the probability of the unit \(j\) being active:
+
+\[\tilde{w}_{ij}^l \gets \pi_j^{l - 1}w_{ij}\]
+
+This makes sure that the net (total) input to unit \(x_i^{l}\) is calibrated, i.e.,
+
+\[\sum_{j}\tilde{w}_{ij}^lx_j^{l - 1} = \Exp[Z\sim\Prob{Z}]{\sum_{j}Z_{j}^{l - 1}w_{ij}x_j^{l - 1}} = \sum_{j}\pi_{j}^{l - 1}w_{ij}x_j^{l - 1} \]
+
+It can be shown that this approach leads to a (sometimes exact) approximation of a gemoetrically averaged ensemble (see DL-Book, 7.12).
 
 \sep
 
-\Ex Let's say that at the end we selected each unit with a probability of 0.5.
-Then when typically when we're finished with training our neural network, we're
-going to multiply all the weights that we obtained with 0.5 to reduce the
-contribution of each of the features (since we'll have all of them). So with
-this trick for the prediction we can just do a single forward pass.
+\Ex Let's say that at the end we selected each unit with a probability of 0.5. Then when typically when we're finished with training our neural network, we're going to multiply all the weights that we obtained with 0.5 to reduce the contribution of each of the features (since we'll have all of them). So with this trick for the prediction we can just do a single forward pass.
 
 \sep

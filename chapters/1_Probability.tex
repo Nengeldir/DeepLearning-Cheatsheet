@@ -19,9 +19,6 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \(\Exp{\rX} = \int_{\cX} t \cdot f_X(t)\,dt = :\mu_X\)
 
-\( \textstyle{ \Var{X} = \Exp{\left(X - \Exp{X}\right)^2} = \int_{\cX} (t - \Exp{\rX})^2 f_X(t)\,dt = \Exp{X^2} - \Exp{X}^2 }
-\)
-
 \(\Cov{X,Y} = \Exp[x,y]{(X - \Exp[x]{X})(Y - \Exp[y]{Y})}\)
 
 \(\text{Cov}(X): =\Cov{X,X} = \Var{X}\)
@@ -30,16 +27,16 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \sep
 
-``\(\MX^2 = \MX\MX^T\)''\(\geq 0\) ((symmetric) positive semidefinite)
+\(\MX\MX^T\geq 0\) (symmetric positive semidefinite)
 
 \(\Var{X} = \Exp{X^2} - \Exp{X}^2\)
 
 \(\Var{\MA\MX} = \MA\Var{\MX}\MA^\T\) \quad \(\Var{aX + b} = a^2\Var{X}\)
 
-\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  2\sum_{\substack{i,j},i<j}a_ia_j\Cov{X_i,X_j}}
+\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  2\sum_{i<j}a_ia_j\Cov{X_i,X_j}}
 \)
 
-\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  \sum_{\substack{i,j},i\neq j}a_ia_j\Cov{X_i,X_j}}
+\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  \sum_{i\neq j}a_ia_j\Cov{X_i,X_j}}
 \)
 
 \sep
@@ -51,15 +48,7 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \sep
 
-Empirical CDF: \(\hat{F}_n(t) = \frac{1}{n}\sum_{i = 1}^n \ind{X_i\leq t}\)
-
-Empirical PDF: \(\hat{f}_n(t) = \frac{1}{n}\sum_{i = 1}^n\delta(t - X_i)\) (continuous)
-
-Empirical PDF: \(\hat{p}_n(t) = \frac{1}{n}\card{x = t}{x\in D}\) (discrete)
-
-\sep
-
-\Thm The MGF \(\psi_{X}(t) = \Exp{e^{tX}}\) characterizes the distr. of a rv
+\Thm The moment generating function (MGF) \(\psi_{X}(t) = \Exp{e^{tX}}\) characterizes the distr. of a rv
 
 \begin{tabular}{@{}l@{}l|l@{}l@{}}
     \(Be(p)\): & \(pe^t + (1 - p)\) & \(\cN(\mu,\sigma)\): & \(\exp\left(\mu t +  \frac{1}{2}\sigma^2 t^2\right)\)\\
@@ -69,23 +58,17 @@ Empirical PDF: \(\hat{p}_n(t) = \frac{1}{n}\card{x = t}{x\in D}\) (discrete)
 
 \sep
 
-\Thm If \(\rX_1,\ldots,\rX_n\) are ind. rvs with MGFs \(M_{\rX_i}(t) = \Exp{e^{t\rX_i}}\), then the MGF of \(\rY = \sum_{i = 1}^n a_i\rX_i\) is \(M_{\rY}(t) = \prod_{i = 1}^n M_{X_i}(a_it)\).
+\Thm If \(\rX_1,\ldots,\rX_n\) are indep. rvs with MGFs \(M_{\rX_i}(t) = \Exp{e^{t\rX_i}}\), then the MGF of \(\rY = \sum_{i = 1}^n a_i\rX_i\) is \(M_{\rY}(t) = \prod_{i = 1}^n M_{X_i}(a_it)\).
 
 \sep
 
-\Thm Let \(X\), \(Y\) be ind., then the p.d.f. of \(Z = X + Y\) is the conv. of the p.d.f. of \(X\) and \(Y\): \( f_Z(z) =  \int_{\R} f_X(t)f_Y(z - t) \,dt =  \int_{\R} f_X(z - t)f_Y(t) \,dt \)
+\Thm Let \(X\), \(Y\) be indep., then the p.d.f. of \(Z = X + Y\) is the conv. of the p.d.f. of \(X\) and \(Y\): \( f_Z(z) =  \int_{\R} f_X(t)f_Y(z - t) \,dt =  \int_{\R} f_X(z - t)f_Y(t) \,dt \)
 
 \sep
 
 \( \cN(\vx;\vmu,\MSigma) =  \frac{1}{\sqrt{(2\pi)^d\det(\MSigma)}} \exp\left(-\frac{1}{2}(\vx - \vmu)^\T\MSigma^{-1} (\vx - \vmu)\right) \)
 
-
-\( \cN(\vx;\vmu,\MSigma^{-1}) \propto \exp\left(\frac{1}{2}(\vx - \vmu)^\T\MSigma(\vx - \vmu)\right) \)
-
-
-\( \hat{\mu} = \frac{1}{n}\sum_{i = 1}^n \vx_i \)
-\quad
-\( \hat{\MSigma} = \frac{1}{n}\sum_{i = 1}^n (\vx - \hat{\vmu})(\vx - \hat{\vmu})^\T \)
+\( \hat{\mu} = \frac{1}{n}\sum_{i = 1}^n \vx_i \) \quad \( \hat{\MSigma} = \frac{1}{n}\sum_{i = 1}^n (\vx - \hat{\vmu})(\vx - \hat{\vmu})^\T \)
 
 \sep
 
@@ -133,3 +116,5 @@ Empirical PDF: \(\hat{p}_n(t) = \frac{1}{n}\card{x = t}{x\in D}\) (discrete)
 \sep
 
 \Thm[Chebyshev] Let \(X\) be a rv with \(\Exp{X} = \mu\) and variance \(\Var{X} = \sigma^2<\infty\). Then for any \(\epsilon > 0\), we have \( \Prob{\abs{X - \mu}\geq\epsilon} \leq\frac{\sigma^2}{\epsilon^2}. \)
+
+\todo{Luca: Add more probability distributions}

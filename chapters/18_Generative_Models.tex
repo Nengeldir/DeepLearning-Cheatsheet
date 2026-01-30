@@ -156,7 +156,6 @@ We can now just use standard maximum likelihood learning on the
 The distribution \(p_{\text{joint}}\) is essentially a logistic regression model
 applied to the difference in log probabilities of the model and the noise
 distribution:
-\begin{gather*}
 \begin{align*}
 p_{\text{joint}}(y=1|\vx)
 &=\frac{p_{\text{model}}(\vx)}{p_{\text{model}}(\vx)+p_{\text{noise}}(\vx)}
@@ -166,7 +165,6 @@ e^c\tilde{p}_{\text{model}}(\vx)+p_{\text{noise}}(\vx)}
 \\
 &=\sigma(\log(p_{\text{model}}(\vx))-\log(p_{\text{noise}}(\vx))).
 \end{align*}
-\end{gather*}
 
 Now, the estimate \(p_{\text{joint}}(\vx)\) is bayes optimal if
 \[
@@ -281,7 +279,6 @@ Now, equipped with our encoder and decoder networks, we can rewrite the data
 (log) likelihood as follows (note that we omit the product for all points -
 you'd just have to put a sum over all the instances in front of everything)
 
-\begin{gather*}
 \begin{align*}
 \log(p_\theta(\vx))
 &=\Exp[\vz\sim \cDist{q_\phi}{\vz}{\vx}]{\log(p_\theta(\vx))}
@@ -342,7 +339,6 @@ you'd just have to put a sum over all the instances in front of everything)
 \underbrace{KL(\cDist{q_\phi}{\vz}{\vx},\cDist{p_\theta}{\vz}{\vx})}_{(3)\geq 0}
 }
 \end{align*}
-\end{gather*}
 
 \begin{enumerate}[label=(\arabic*)]
   \item Decoder network gives us \(\cDist{p_\theta}{\vx}{\vz}\) and we can compute
@@ -456,7 +452,6 @@ the negative loss of \(D\)) see Minimax game VS Non-Saturating game.
 \textbf{Minimax Game:} Both \(D\) and \(G\) try to minimize and maximize the same
 value function:
 
-\begin{gather*}
 \begin{align*}
 V(G,D)
 &=\min_{G}\max_{D} \cR^{(D)}
@@ -466,7 +461,6 @@ V(G,D)
 +
 \Exp[\vz\sim p(\vz)]{\log(1-D_{\theta_d}(G_{\theta_g}(\vz)))}
 \end{align*}
-\end{gather*}
 
 \todo{Write it in terms of cross-entropy!!}
 

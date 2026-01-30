@@ -2,624 +2,317 @@
 
 Similarities between text and image processing: local information.
 
-Differences between text and image processing: texts have various lengths, texts
-may have long-term interactions, language is a man-made conceptions on how to
-communicate with each other / pictures capture the reality, pictures capture the
-reality / sentences may mean different things in different contexts
+Differences between text and image processing: texts have various lengths, texts may have long-term interactions, language is a man-made conceptions on how to communicate with each other / pictures capture the reality, pictures capture the reality / sentences may mean different things in different contexts
 
 \subsection{Word Embeddings}
 
-\textbf{Basic Idea:} Map symbols over a vocabulary \(\cV\) to a vector
-representation = \emph{embedding} into an (euclidean) vector space (see lookup
-table in architecture overview).
+\textbf{Basic Idea:} Map symbols over a vocabulary \(\cV\) to a vector representation = \emph{embedding} into an (euclidean) vector space (see lookup table in architecture overview).
 
 \begin{align*}
-\text{embedding map}\colon
-\text{(vocabulary) }\cV&\mapsto\R^d\text{ (embeddings)}\\
-\text{(symbolic) }w&\mapsto \vx_{w}\text{ (quantitative)}\\
+    \text{embedding map}\colon \text{(vocabulary) }\cV &\mapsto\R^d\text{ (embeddings)}\\
+    \text{(symbolic) }w &\mapsto \vx_{w}\text{ (quantitative)}\\
 \end{align*}
 
-\[
-\text{word }w\in\cV
-\to
-\text{one - hot }w\in\set{0,1}^{\card{V}}
-\to
-\text{embedding } \vx_{w}.
-\]
+\[\text{word }w\in\cV \to \text{one - hot }w\in\set{0,1}^{\card{V}} \to \text{embedding } \vx_{w}.\]
 
 \(m: =\card{\cV}\), usually \(\card{\cV} = 10^5\)
 
 \(d = \) dimensionality of embedding, \(d\ll m\) 
 
-So for each of the \(m\) words in \(\cV\) we have a corresponding embedding in
-\(\cR^d\), which can be stored in a shared lookup table:
+So for each of the \(m\) words in \(\cV\) we have a corresponding embedding in \(\cR^d\), which can be stored in a shared lookup table:
 
 \(\cR^{d\times m}\) shared lookup table
 
-Any sentence of \(k\) words can then be represented as a \(d\times k\) matrix (a
-sequence of \(k\) embedding vectors in \(\R^d\)).
+Any sentence of \(k\) words can then be represented as a \(d\times k\) matrix (a sequence of \(k\) embedding vectors in \(\R^d\)).
 
 \sep
 
-Now, how should an embedding be? Ideally, the embedding carries the
-information/structure that we need in order to go from the input text to the
-question that we want to solve. Typical questions are:
+Now, how should an embedding be? Ideally, the embedding carries the information/structure that we need in order to go from the input text to the question that we want to solve. Typical questions are:
+
 \begin{itemize}
-  \item Clustering based on context (co-occurrence)
-  \item Sentiment analysis (group words according to mood/feelings)
-  \item Translation (group by meaning)
-  \item Part-of-Speech tagging (understand the structure of text, e.g.,
-  location, time, actor, \ldots, or, noun, verb, adjective, \ldots) 
+    \item Clustering based on context (co-occurrence)
+    \item Sentiment analysis (group words according to mood/feelings)
+    \item Translation (group by meaning)
+    \item Part-of-Speech tagging (understand the structure of text, e.g., location, time, actor, \ldots, or, noun, verb, adjective, \ldots)
 \end{itemize}
 
 \subsubsection{Bi-Linear Models}
 
-The first thing that we could do is to use an information theoretic quantity:
-the so-called \emph{mutual information}. The mutual information is described in
-information theory as \emph{how much information one random variable has about
-another random variable}. If two variables are independent, then, the mutual
-information will be zero. 
+The first thing that we could do is to use an information theoretic quantity: the so-called \emph{mutual information}. The mutual information is described in information theory as \emph{how much information one random variable has about another random variable}. If two variables are independent, then, the mutual information will be zero. 
 
-So, if we put two words nearby, it's because they have to be related somehow in
-the \emph{meaning} of the sentence. Hence, we expect them to have a larger
-mutual information.
+So, if we put two words nearby, it's because they have to be related somehow in the \emph{meaning} of the sentence. Hence, we expect them to have a larger mutual information.
 
 \sep
 
 \Def[Pointwise Mutual Information]
-\begin{gather*}
 \begin{align*}
-\pmi(v,w)
-=
-\log\left(
-\frac{\Prob{v,w}}{\Prob{v}\Prob{w}}
-\right)
-=\log\left(
-\frac{\cProb{v}{w}}{\Prob{v}}
-\right)
-\approx
-\vx_v^\T\vx_w
-+\text{const}
+    \pmi(v,w) = \log\left(\frac{\Prob{v,w}}{\Prob{v}\Prob{w}}\right) = \log\left(\frac{\cProb{v}{w}}{\Prob{v}} \right) \approx \vx_v^\T\vx_w + \text{const}
 \end{align*}
-\end{gather*}
 
 \Com As you can see this metric is bi-linear.
 
 \sep
 
-So we interpret the vectors as \emph{latent variables} and link them to
-the observable probabilistic model. So the pointwise mutual information is
-related to the inner product between the latent vectors (the more related, the
-more co-linear the latent representations have to be).
+So we interpret the vectors as \emph{latent variables} and link them to the observable probabilistic model. So the pointwise mutual information is related to the inner product between the latent vectors (the more related, the more co-linear the latent representations have to be).
 
-Now, how do we compute the pointwise mutual information? One thing that we could
-do is to just look for words that are nearby and compute these probabilities
-empirically. This leads us to the idea of skip-grams.
+Now, how do we compute the pointwise mutual information? One thing that we could do is to just look for words that are nearby and compute these probabilities empirically. This leads us to the idea of skip-grams.
 
 \sep
 
-\Def[Skip Grams] The skip-gram approach is an approach to look at co-occurrences
-of words within a window size \(R\) (instead of looking at subsequences of some
-length \(n\) as with \(n\) grams). So we're only interested in the co-occurrence
-within some window size of words \(R\), rather than a precise sequence.
+\Def[Skip Grams] The skip-gram approach is an approach to look at co-occurrences of words within a window size \(R\) (instead of looking at subsequences of some length \(n\) as with \(n\) grams). So we're only interested in the co-occurrence within some window size of words \(R\), rather than a precise sequence.
 
 \sep
 
-\Def[Co-Occurrence Set] Here we look at the \emph{pairwise occurrences} of words
-in a \emph{context window} of size \(R\). So, if we have a long sequence of words
-\(\vw = (w_1,\ldots,w_T)\), then the co-occurrence index set is defined as
-\[
-\cC_R: =\dset{(i,j)}{1\leq\abs{i - j}\leq R}.
-\]
+\Def[Co-Occurrence Set] Here we look at the \emph{pairwise occurrences} of words in a \emph{context window} of size \(R\). So, if we have a long sequence of words \(\vw = (w_1,\ldots,w_T)\), then the co-occurrence index set is defined as 
+
+\[\cC_R: =\dset{(i,j)}{1\leq\abs{i - j}\leq R}.\]
 
 \sep
 
-\Def[Co-Ocurrence Matrix] Note that in order to get an (empirical) idea of the
-co-ocurrence frequencies one could compute the co-ocurrence matrix
-\[
-\MC\in\R^{\card{\cV}\times\card{\cV}},
-\quad\text{where }
-C_{ij} = \begin{matrix}
-\#\text{of co - occurrences of }w_i\text{ and }w_j \\
+\Def[Co-Ocurrence Matrix] Note that in order to get an (empirical) idea of the co-ocurrence frequencies one could compute the co-ocurrence matrix
+
+\[\MC\in\R^{\card{\cV}\times\card{\cV}},\quad\text{where } C_{ij} = 
+\begin{matrix} 
+    \#\text{of co - occurrences of }w_i\text{ and }w_j \\
 \text{within window size }R.
 \end{matrix}
 \]
+
 Properties: \(\MC = \MC^\T\) (symmetric), peaky, sparse.
 
 \sep
 
-One approach for embeddings: do PCA of \(\MC\) and use \(k\) eigenvectors
-corresponding to largest eigenvalues of \(\MC\). Note that we have
-\begin{gather*}
+One approach for embeddings: do PCA of \(\MC\) and use \(k\) eigenvectors corresponding to largest eigenvalues of \(\MC\). Note that we have
+
 \begin{align*}
-C_{ij}
-&=
-\underbrace{\text{one-hot}(w_i)}_{\vo_i}\MC
-\underbrace{\text{one-hot}(w_j)}_{\vo_j}
-=
-\vo_i\underbrace{\MV\MLambda\MV^\T}_{\text{SVD of }\MC}\vo_j
-\\
-&\approx
-\vo_i\underbrace{\MV_k\MLambda_k\MV_k^\T}_{k\text{ PCs}}\vo_j
-=
-\underbrace{\vo_i\MV_k\MLambda_k^{\frac{1}{2}}}_{\text{emb. }\vx_{w_i}}
-\underbrace{\MLambda_k^{\frac{1}{2}}\MV_k^\T\vo_j}_{\text{emb. }\vx_{w_j}}
+    C_{ij} &= \underbrace{\text{one-hot}(w_i)}_{\vo_i}\MC\underbrace{\text{one-hot}(w_j)}_{\vo_j} = \vo_i\underbrace{\MV\MLambda\MV^\T}_{\text{SVD of }\MC}\vo_j \\
+    &\approx \vo_i\underbrace{\MV_k\MLambda_k\MV_k^\T}_{k\text{ PCs}}\vo_j = \underbrace{\vo_i\MV_k\MLambda_k^{\frac{1}{2}}}_{\text{emb. }\vx_{w_i}}\underbrace{\MLambda_k^{\frac{1}{2}}\MV_k^\T\vo_j}_{\text{emb. }\vx_{w_j}}
 \end{align*}
-\end{gather*}
 
 de-embedding: \(\MV\MLambda_k^{-\frac{1}{2}}\) (then find nearest neighbour)
 
-Problem: \(\MC\) is huge (\(\card{\cV}^2\)), hence matrix-factorization becomes
-prohibitively expensive!
+Problem: \(\MC\) is huge (\(\card{\cV}^2\)), hence matrix-factorization becomes prohibitively expensive!
 
 Solution: Use skip-gram approach to avoid computing \(\MC\) at all!
 
 \ssep
 
-The solution to this is pretty simple: we train a model that tries to predict
-for one word \(w_t\) the preceding and following words:
-\[
-w_{t - c},w_{t - c + 1},\ldots,w_{t - 1},w_t,w_{t + 1},\ldots,w_{t + c - 1},w_{t + c}.
-\]
-Here's an illustration of the model for \(t = 3\):
+The solution to this is pretty simple: we train a model that tries to predict for one word \(w_t\) the preceding and following words:
 
-\(\text{input }w(t)\to\text{projection}\to w(t - 2), w(t - 1), w(t + 1), w(t + 2) \text{
-output}\)
+\[w_{t - c},w_{t - c + 1},\ldots,w_{t - 1},w_t,w_{t + 1},\ldots,w{t + c - 1},w_{t + c}.\]
 
-Note that the assumption (or simplification) of this model is that it assumes
-that the words \(W_i\), \(W_j\) within the window \(+c\), \(-c\) of \(W_t\) are
-conditionally independent of each other given \(W_t\).
-\[
-W_i\indep W_j\given W_t
-\qquad
-(i\neq j\land i\neq t\land j\neq t)
-\]
-That might be too much of an assumption but you can see that sometimes when
-we're talking about something we may change the order of the words and still
-mean the same thing (e.g., ``I was born in 1973.'', ``1973 is the year I was
-born.''). So in a way we're just trying to capture the meaning of \(W_t\) with
-this. So this gives us an idea of the context of \(W_t\) and might relieve the
-structure we're looking for. So, it's not as optimal as computing \(\MC\), but
+Here's an illustration of the model for \(t = 3\): \(\text{input }w(t)\to\text{projection}\to w(t - 2), w(t - 1), w(t + 1), w(t + 2) \text{ output}\)
+
+Note that the assumption (or simplification) of this model is that it assumes that the words \(W_i\), \(W_j\) within the window \(+c\), \(-c\) of \(W_t\) are conditionally independent of each other given \(W_t\).
+
+\[W_i\indep W_j\given W_t\qquad(i\neq j\land i\neq t\land j\neq t)\]
+
+That might be too much of an assumption but you can see that sometimes when we're talking about something we may change the order of the words and still mean the same thing (e.g., ``I was born in 1973.'', ``1973 is the year I was born.''). So in a way we're just trying to capture the meaning of \(W_t\) with this. So this gives us an idea of the context of \(W_t\) and might relieve the structure we're looking for. So, it's not as optimal as computing \(\MC\), but
 it's a way to start.
 
 \ssep
 
-So actually, what we want to do is we want to maximize the likelihood of the
-co-occurrences in our dataset:
-\[
-\theta^*
-=\argmax_{\theta}
-\prod_{(i,j)\in C_R}
-\cProb[\theta]{w_i}{w_j}
-\]
-Now our approach to approximate the probability \(\cProb[\theta]{w_i}{w_j}\) as
-follows: it should be something that is related to the dot product of the
-embeddings, so \(\vx_{w_i}^\T\vz_{w_j}\) (note how we use two different
-embeddings as the conditional probability is asymmetric), but in order to make
-the probability positive we'll take the exponential of it and normalize.
-Further, for SGD it's always better to optimize a sum: so we'll optimize the
-log-likelihood of co-occurrent words in our dataset \(\vw = (w_1,\ldots,w_T)\):
+So actually, what we want to do is we want to maximize the likelihood of the co-occurrences in our dataset:
+
+\[\theta^* = \argmax_{\theta} \prod_{(i,j)\in C_R} \cProb[\theta]{w_i}{w_j}\]
+
+Now our approach to approximate the probability \(\cProb[\theta]{w_i}{w_j}\) as follows: it should be something that is related to the dot product of the embeddings, so \(\vx_{w_i}^\T\vz_{w_j}\) (note how we use two different embeddings as the conditional probability is asymmetric), but in order to make the probability positive we'll take the exponential of it and normalize. Further, for SGD it's always better to optimize a sum: so we'll optimize the log-likelihood of co-occurrent words in our dataset \(\vw = (w_1,\ldots,w_T)\):
+
 \begin{align*}
-&=\argmax_{\theta}
-\sum_{(i,j)\in C_R}
-\log\left(
-\frac{
-\exp\left(\vx_{w_i}^\T\vz_{w_j}\right)
-}{
-\sum_{u\in\cV}
-\exp\left(\vx_{u}^\T\vz_{w_j}\right)
-}
-\right)
-\\
-&=\argmax_{\theta}
-\sum_{(i,j)\in C_R}
-\vx_{w_i}^\T\vz_{w_j}
--
-\log\left(\underbrace{\sum_{u\in\cV}\exp\left(\vx_u^\T\vz_w\right)}_{
-\text{partition function}
-}\right)
+    &=\argmax_{\theta}\sum_{(i,j)\in C_R}\log\left(\frac{\exp\left(\vx_{w_i}^\T\vz_{w_j}\right)}{\sum_{u\in\cV}\exp\left(\vx_{u}^\T\vz_{w_j}\right)}\right)\\
+    &=\argmax_{\theta}\sum_{(i,j)\in C_R}\vx_{w_i}^\T\vz_{w_j} - \log\left(\underbrace{\sum_{u\in\cV}\exp\left(\vx_u^\T\vz_w\right)}_{\text{partition function}}\right)
 \end{align*}
 
-So the idea is to use two different latent vectors \(\vx_w\) and \(\vz_w\) per word
-(to allow for the asymmetry for the conditional probability)
-\[
-\theta = (\vx_w,\vz_w)_{w\in\cV}
-\]
-where
+So the idea is to use two different latent vectors \(\vx_w\) and \(\vz_w\) per word (to allow for the asymmetry for the conditional probability)
+
+\[\theta = (\vx_w,\vz_w)_{w\in\cV}\]
+
 \begin{itemize}
   \item \(\vx_w\) is used to predict \(w\)'s conditional probability, and
   \item \(\vz_w\) is used to use \(w\) as an evidence in the cond. prob.
 \end{itemize}
 
-Note that \(\MC\) is actually symmetric (as it represents the joint probabilies),
-but the probabilities that we're computing are asymmetric (conditional
-probability).
+Note that \(\MC\) is actually symmetric (as it represents the joint probabilies), but the probabilities that we're computing are asymmetric (conditional probability).
 
-\textbf{Problem:} Note however that it's too expensive to compute the
-\emph{partition function} as we have to do a full sum over \(\cV\) (can be \(\sim\)
-\(10^5\) up to \(10^7\)). And we'd have to do this every time we pass a new
-batch-sample \((w_{t + \ell},w_t)\) through the network.
+\textbf{Problem:} Note however that it's too expensive to compute the \emph{partition function} as we have to do a full sum over \(\cV\) (can be \(\sim\) \(10^5\) up to \(10^7\)). And we'd have to do this every time we pass a new batch-sample \((w_{t + \ell},w_t)\) through the network.
 
-\textbf{Brillieant idea of skip-grams:} instead of computing the partition
-function, turn the problem of determining \(\cDist{P_\theta}{w_i}{w_j}\) into a
-classification problem (logistic regression). So, we create a classifier that
-determines the co-occurring likelihood of the words on a scale from 0 to 1.
+\textbf{Brillieant idea of skip-grams:} instead of computing the partition function, turn the problem of determining \(\cDist{P_\theta}{w_i}{w_j}\) into a classification problem (logistic regression). So, we create a classifier that determines the co-occurring likelihood of the words on a scale from 0 to 1.
 
 For this reason we'll introduce the following function
-\[
-D_{w_i,w_j}
-= 
+
+\[D_{w_i,w_j} = 
 \begin{cases}
-1,& \text{if }(i,j)\in C_R,\\
-0,& \text{if }(i,j)\nin C_R.
-\end{cases}
-\]
-and we'll squash the dot-product to something between 0 and 1 to make it serve
-as a probability
-\[
-\cProb[\theta]{w_i}{w_j}
-\cong\cProb[\theta]{D_{w_i,w_j} = 1}{\vx_{w_i},\vz_{w_j}}
-= \sigma(\vx_{w_i}^\T\vz_{w_j})
-\]
+    1,& \text{if }(i,j)\in C_R,\\
+    0,& \text{if }(i,j)\nin C_R.
+\end{cases}\]
+
+and we'll squash the dot-product to something between 0 and 1 to make it serve as a probability
+
+\[\cProb[\theta]{w_i}{w_j} \cong\cProb[\theta]{D_{w_i,w_j} = 1}{\vx_{w_i},\vz_{w_j}} = \sigma(\vx_{w_i}^\T\vz_{w_j}) \]
+
 and the opposite event is given by:
-\[
-\cProb[\theta]{D_{w_i,z_j} = 0}{\vx_{w_i},\vz_{w_j}}
-= 1 - \sigma(\vx_{w_i}^\T\vz_{w_j})
-= \sigma(-\vx_{w_i}^\T\vz_{w_j})
-\]
-Further, instead of just maximizing the likelihood over the dataset of
-co-occurrences \(D\), we'll also maximize the log likelihood over a dataset of
-non-co-occurrences \(\overline{D}\) (negative samples). So, we'll have the
-following maximization problem
-\begin{gather*}
+\[\cProb[\theta]{D_{w_i,z_j} = 0}{\vx_{w_i},\vz_{w_j}} = 1 - \sigma(\vx_{w_i}^\T\vz_{w_j}) = \sigma(-\vx_{w_i}^\T\vz_{w_j})\]
+
+Further, instead of just maximizing the likelihood over the dataset of co-occurrences \(D\), we'll also maximize the log likelihood over a dataset of non-co-occurrences \(\overline{D}\) (negative samples). So, we'll have the following maximization problem
+
 \begin{align*}
-\theta^*
-&=\argmax_{\theta}
-\sum_{(i,j)\in D}
-\log\left(\cProb[\theta]{D_{w_i,w_j}=1}{\vx_{w_i},\vz_{w_j}}\right)
-\\
-&\quad+
-\sum_{(i,j)\in \overline{D}}
-\log\left(1-\cProb[\theta]{D_{w_i,w_j}=0}{\vx_{w_i},\vz_{w_j}}\right)
-\\
-&=\argmax_{\theta}
-\sum_{(i,j)\in D}
-\log\left(\sigma(\vx_{w_i}^\T\vz_{w_j})\right)
-+
-\sum_{(i,j)\in \overline{D}}
-\log\left(\sigma(-\vx_{w_i}^\T\vz_{w_j})\right)
-\\
-&=\argmax_{\theta}
-\sum_{(i,j)\in C_R}
-\left[
-\underbrace{\log(\sigma(\vx_{w_i}^\T\vz_{w_j}))}_{\text{positive examples}}
-+
-\underbrace{k\cdot\Exp[v\sim p_n]{\log(\sigma(-\vx_{w_i}^\T\vz_{v}))}}_{\text{
-negative examples}}
-\right].
+    \theta^* &= \argmax_{\theta} \sum_{(i,j)\in D} \log\left(\cProb[\theta]{D_{w_i,w_j}=1}{\vx_{w_i},\vz_{w_j}}\right)\\
+    &\quad + \sum_{(i,j)\in \overline{D}} \log\left(1-\cProb[\theta]{D_{w_i,w_j}=0}{\vx_{w_i},\vz_{w_j}}\right)\\
+    &= \argmax_{\theta} \sum_{(i,j)\in D} \log\left(\sigma(\vx_{w_i}^\T\vz_{w_j})\right) + \sum_{(i,j)\in \overline{D}} \log\left(\sigma(-\vx_{w_i}^\T\vz_{w_j})\right)\\
+    &= \argmax_{\theta} \sum_{(i,j)\in C_R} \left[\underbrace{\log(\sigma(\vx_{w_i}^\T\vz_{w_j}))}_{\text{positive examples}} + \underbrace{k\cdot\Exp[v\sim p_n]{\log(\sigma(-\vx_{w_i}^\T\vz_{v}))}}_{\text{negative examples}}\right].
 \end{align*}
-\end{gather*}
 
-As we can see in the last step, instead of computing these sums separately,
-we'll do it as follows: we'll compute the log likelihood for one concrete
-positive example \((w_i,w_j)\) and produce some negative examples \((w_i,v)\), so
-we'll approximate the expectation below and weigh it a bit higher (oversampling
-facotr).
+As we can see in the last step, instead of computing these sums separately, we'll do it as follows: we'll compute the log likelihood for one concrete positive example \((w_i,w_j)\) and produce some negative examples \((w_i,v)\), so we'll approximate the expectation below and weigh it a bit higher (oversampling facotr).
 
-The negative examples are just sampled from the negative sampling
-distribution \(p_n(w)\): for that we determine relative frequencies of words
-\(p(w)\) and dampen them with a factor \(\alpha<1\) (usually: \(\alpha = \frac{3}{4}\)).
-Then \(p_n(w) = \alpha p(w)\) to increase the chance of true negatives. Even if by
-chance we might produce false negative examples this event is rather rare. The
-factor \(k\) is just tu weight the negative examples a bit more in the loss.
+The negative examples are just sampled from the negative sampling distribution \(p_n(w)\): for that we determine relative frequencies of words \(p(w)\) and dampen them with a factor \(\alpha<1\) (usually: \(\alpha = \frac{3}{4}\)). Then \(p_n(w) = \alpha p(w)\) to increase the chance of true negatives. Even if by chance we might produce false negative examples this event is rather rare. The factor \(k\) is just tu weight the negative examples a bit more in the loss.
 Usually \(k\approx 2\) to \(10\) (oversampling factor).
 
 \subsection{From Embedding Words to Embedding Sequences of Words}
 
-\textbf{Question:} Can we extend word embeddings to embeddings for
-\emph{sequences of words}? So what we're after is \emph{understanding the
-sentence}.
+\textbf{Question:} Can we extend word embeddings to embeddings for \emph{sequences of words}? So what we're after is \emph{understanding the sentence}.
 
 \ssep
 
-Why is this relevant? This is the fundamental question of \emph{statistical
-language modeling} (cf. Shannon). So we'd like to estimate the probability of a
-sequence of words in a certain order:
-\[
-\text{estimate }
-\Prob{w_1,\ldots,w_T}
-\stackrel{\text{prod. rule}}{=}
-\prod_{t = 1}^T
-\cProb{w_t}{w_{t - 1},\ldots,w_1}
-\]
-As we can see, thanks to the product rule this problem decomposes to predicting
-the next word of a sequence of words.
+Why is this relevant? This is the fundamental question of \emph{statistical language modeling} (cf. Shannon). So we'd like to estimate the probability of a sequence of words in a certain order:
+
+\[\text{estimate }\Prob{w_1,\ldots,w_T}\stackrel{\text{prod. rule}}{=}\prod_{t = 1}^T\cProb{w_t}{w_{t - 1},\ldots,w_1}\]
+
+As we can see, thanks to the product rule this problem decomposes to predicting the next word of a sequence of words.
 
 \sep
 
-This problem has been adressed in different ways. Here are the traditional
-approach, and the more modern approaches.
+This problem has been adressed in different ways. Here are the traditional approach, and the more modern approaches.
 
 \begin{enumerate}
-  \item \textbf{Traditional Approach:} \(k\)-th order Markov assumption
-\begin{gather*}
-\begin{align*}
-\cProb{w_t}{w_{t-1},\ldots,w_1}
-\stackrel{\text{Markov ass.}}{\approx}
-\cProb{w_t}{w_{t-1},\ldots,w_{t-k}}
-\stackrel{\text{emp. dist.}}{\approx}
-(k+1)-\text{gram counts}
-\end{align*}
-\end{gather*}
-In practice we often use 5-grams, i.e., \(k = 4\) (last 4 words).
-  \item \textbf{Modern Approach:} Create language models via embeddings
-\[
-\log\left(\cProb{w_t}{\vw: =w_{t - 1},\ldots,w_{1}}\right)
-= 
-\vx_{w_t}^\T\vz_{\vw}
-+ 
-\text{const}
-\]
-where
-\begin{itemize}
-  \item \(\vx_{w_t}\) is the word embedding
-  \item \(\vz_{\vw}\) is the sequence embedding (predicts the context)
-\end{itemize}
+    \item \textbf{Traditional Approach:} \(k\)-th order Markov assumption
+    \begin{align*}
+            \cProb{w_t}{w_{t-1},\ldots,w_1} \stackrel{\text{Markov ass.}}{\approx} \cProb{w_t}{w_{t-1},\ldots,w_{t-k}} \stackrel{\text{emp. dist.}}{\approx} (k+1) - \text{gram counts}
+        \end{align*}
+    In practice we often use 5-grams, i.e., \(k = 4\) (last 4 words).
+    \item \textbf{Modern Approach:} Create language models via embeddings
+    \[\log\left(\cProb{w_t}{\vw: =w_{t - 1},\ldots,w_{1}}\right) = \vx_{w_t}^\T\vz_{\vw} + \text{const}\]
+    where
+    \begin{itemize}
+        \item \(\vx_{w_t}\) is the word embedding
+        \item \(\vz_{\vw}\) is the sequence embedding (predicts the context)
+    \end{itemize}
 \end{enumerate}
 
 \ssep
 
 There are three main approaches to construct \emph{sequence embeddings}:
 \begin{enumerate}
-  \item CNNs
-  \begin{itemize}
-    \pro conceptually simple, fast to train
-    \con limited range of memory 
-  \end{itemize}
-  \item RNNs
-  \begin{itemize}
-    \pro active memory management via gated units
-    \con more difficult to optimize, larger datasets needed 
-  \end{itemize}
-  \item Recursive networks (in combination with parsers)
+    \item CNNs
+    \begin{itemize}
+        \pro conceptually simple, fast to train
+        \con limited range of memory 
+    \end{itemize}
+    \item RNNs
+    \begin{itemize}
+        \pro active memory management via gated units
+        \con more difficult to optimize, larger datasets needed 
+    \end{itemize}
+    \item Recursive networks (in combination with parsers)
 \end{enumerate}
 
 \subsubsection{ConvNets: Word Representations}
 
 \begin{center}
-  \includegraphics[width=1\linewidth]{%
-img/cnn-text-overview}
+  \includegraphics[width=1\linewidth]{img/cnn-text-overview}
 \end{center}
 
-The main stages in th \emph{``ConvNet''} architecture aka
-\emph{``time-delay NN with max-over-time pooling''} are:
+The main stages in th \emph{``ConvNet''} architecture aka \emph{``time-delay NN with max-over-time pooling''} are:
 
 \begin{enumerate}
-  \item \textbf{Embed Words:} Map word sequence (of \(n\) words) to a sequence of
-  embedded vectors in \(\R^d\). Store these into the \emph{sentence matrix} in
-  \(\R^{d\times n}\).
-  \item \textbf{Concatenation:} Then, we'll concatenate the columns of the
-  sentence matrix, which will give us a variable-length embedded \emph{sentence
-  vector} of length in \(\R^{n\cdot d}\):
-  \item \textbf{Convolution:} Then we'll do a convolution over the sentence
-  vector. Hereby, we'll convolve a number of embedded words (e.g., 3) at each
-  step. Of course the convolution parameters are shared.
-  \begin{itemize}
-    \item Filter size: \((d w)\times c\)
-    \\\(w = \) window size, e.g., 3-5 words, and\\ 
-    \(k = \) \#channels. (hyperparameter that we'll have to tune)
-    \item Stride: \(d\) (1 word)
-    \item Non-linearity: simple one like tanh or ReLU. 
-  \end{itemize}
-  So the convolution will transform the stacked vector of embeddings as follows:
-  \[
-  f\colon \R^{n\cdot d}\to\R^{(n - w + 1)\times k}
-  \]
-  \item \textbf{Max-Pooling over Time:} Now what is really different from text
-  to images is that texts are of different lengths (and if the images are not we
-  can easily convert them to the same size). So the pooling is done a bit
-  different here: what is done is that we have \(k\) channels and \(n - w + 1\)
-  convolution results for the sentences. So then, for each channel we do a
-  max-pooling in time over all the convolution results.
-  \[
-  \R^{(n - w + 1)\times k}\to\R^k
-  \]
-  So, suddenly, in this step we remove the temporal information. Further note,
-  how through this mapping every word sequence now maps to a fixed-length
-  representation.
-  \item \textbf{2-Layer Fully Coonnected + Softmax:} Once we have the output of
-  the max-pooling, we just put a two-layer fully-connected layer and a softmax
-  at the end. This will predict the following-word probabilities via soft-max as
-  follows:
-  \[
-  \cProb{w_{t + 1}}{\vw}
-  =  \frac{\exp\left(\vy_{w_t}^\T\vz_{\vw}\right)}{
-  \sum_{u\in\cV}\exp\left(\vy_{u}^\T\vz_{\vw}\right)
-  }.
-  \]
-  \todo{Understand what they mean by uses two word embeddings}
-  \todo{\(\vy_v\in\R^k\) and \(\vx_v\in\R^d,\vy_v\in\R^k\)}
-  \todo{what is \(\vz_{w}\)?? Is this the vector after pooling???}
-  \todo{Reconnect everything by saying how the output gives us our original
-  goal (the predicted \(w_t\))\ldots}
+    \item \textbf{Embed Words:} Map word sequence (of \(n\) words) to a sequence of embedded vectors in \(\R^d\). Store these into the \emph{sentence matrix} in \(\R^{d\times n}\).
+    \item \textbf{Concatenation:} Then, we'll concatenate the columns of the sentence matrix, which will give us a variable-length embedded \emph{sentence vector} of length in \(\R^{n\cdot d}\):
+    \item \textbf{Convolution:} Then we'll do a convolution over the sentence vector. Hereby, we'll convolve a number of embedded words (e.g., 3) at each step. Of course the convolution parameters are shared.
+    \begin{itemize}
+        \item Filter size: \((d w)\times c\) \\
+        \(w = \) window size, e.g., 3-5 words, and \\
+        \(k = \) \#channels. (hyperparameter that we'll have to tune)
+        \item Stride: \(d\) (1 word)
+        \item Non-linearity: simple one like tanh or ReLU. 
+    \end{itemize}
+    So the convolution will transform the stacked vector of embeddings as follows:
+    \[f\colon \R^{n\cdot d}\to\R^{(n - w + 1)\times k}\]
+    \item \textbf{Max-Pooling over Time:} Now what is really different from text to images is that texts are of different lengths (and if the images are not we can easily convert them to the same size). So the pooling is done a bit different here: what is done is that we have \(k\) channels and \(n - w + 1\) convolution results for the sentences. So then, for each channel we do a max-pooling in time over all the convolution results.
+    \[\R^{(n - w + 1)\times k}\to\R^k\]
+    So, suddenly, in this step we remove the temporal information. Further note, how through this mapping every word sequence now maps to a fixed-length representation.
+    \item \textbf{2-Layer Fully Coonnected + Softmax:} Once we have the output of the max-pooling, we just put a two-layer fully-connected layer and a softmax at the end. This will predict the following-word probabilities via soft-max as follows:
+    \[\cProb{w_{t + 1}}{\vw} =  \frac{\exp\left(\vy_{w_t}^\T\vz_{\vw}\right)}{\sum_{u\in\cV}\exp\left(\vy_{u}^\T\vz_{\vw}\right)}.\]
+    \todo{Understand what they mean by uses two word embeddings}
+    \todo{\(\vy_v\in\R^k\) and \(\vx_v\in\R^d,\vy_v\in\R^k\)}
+    \todo{what is \(\vz_{w}\)?? Is this the vector after pooling???}
+    \todo{Reconnect everything by saying how the output gives us our original goal (the predicted \(w_t\))\ldots}
 \end{enumerate}
 
-One thing to note about this architecture is that most of the parameters were
-in the embedding.
+One thing to note about this architecture is that most of the parameters were in the embedding.
 
 \subsubsection{Dynamic CNNs}
 
-Kalchbrenner et al suggested Dynamic CNNs in 2014 (as an alternative to
-ConvNet). They are exactly the same as ConvNets except for one thing: before
-doing the max-pooling over time (to get a fixed-size representation), they do a
-dynamic max-pooling (dynamic since it depends on the input size) over the
-sentence and another convolution.
+Kalchbrenner et al. suggested Dynamic CNNs in 2014 (as an alternative to ConvNet). They are exactly the same as ConvNets except for one thing: before doing the max-pooling over time (to get a fixed-size representation), they do a dynamic max-pooling (dynamic since it depends on the input size) over the sentence and another convolution.
 
 \subsection{Recurrent Networks (RRNs)}
 
-Disadvantage of CNNs: need to pick right convolution size, too small: no
-context, too large: a lot of data needed, anyways: loss of memory at some point.
+Disadvantage of CNNs: need to pick right convolution size, too small: no context, too large: a lot of data needed, anyways: loss of memory at some point.
 
-Advantage of RNNs: capture better the time component, lossy memorization of
-past in hidden state.
+Advantage of RNNs: capture better the time component, lossy memorization of past in hidden state.
 
 %\begin{center}
 %  \includegraphics[width=0.6\linewidth]{%
 %img/RNN-unfolding}
 %\end{center}
 
-Given an observation sequence \(\vx^1,\ldots,\vx^T\). We want to identify the
-hidden activites \(\vh^t\) with the state of a dynamical system. The discrete time
-evolution of the \emph{hidden state sequence} is expressed as a HMM with a non-linearity.
-\[
-\theta = (\MU,\MW,\vb,\MV,\vc)
-\]
-\[
-\vh^t = F(\vh^{t - 1},\vx^t;\theta),
-\qquad
-\vh^0 = \vo.
-\]
-\[
-F: =\sigma\circ\overline{F},
-\qquad
-\sigma\in\set{\text{logistic,tanh,ReLU,\ldots}}
-\]
-\[
-\overline{F}(\vh,\vx;\theta)
-: =
-\MW\vh + \MU\vx + \vb,
-\]
-\[
-\vy^t = H(\vh^t;\theta): =\sigma(\MV\vh^t + \vc),
-\]
+Given an observation sequence \(\vx^1,\ldots,\vx^T\). We want to identify the hidden activites \(\vh^t\) with the state of a dynamical system. The discrete time evolution of the \emph{hidden state sequence} is expressed as a HMM with a non-linearity.
+
+\[\theta = (\MU,\MW,\vb,\MV,\vc)\]
+
+\[\vh^t = F(\vh^{t - 1},\vx^t;\theta), \qquad \vh^0 = \vo.\]
+
+\[F: =\sigma\circ\overline{F}, \qquad \sigma\in\set{\text{logistic,tanh,ReLU,\ldots}}\]
+
+\[\overline{F}(\vh,\vx;\theta) := \MW\vh + \MU\vx + \vb,\]
+
+\[\vy^t = H(\vh^t;\theta): =\sigma(\MV\vh^t + \vc),\]
+
 There are two scenarios for producing outputs
 \begin{enumerate}
-  \item Only one output at the end:
-  \[
-  \vh^T\mapsto\MH(\vh^T;\theta) = \vy^T = \vy
-  \]
-  And then we just pass this \(\vy\) to the loss \(\cR\).
-  \item Output a prediction at every timestep: \(\vy^1,\ldots,\vy^T\). And then
-  use an additive loss function
-  \[
-  \cR(\vy^1,\ldots,\vy^T) = 
-  \sum_{i = 1}^T\cR(\vy^T) = 
-  \sum_{i = 1}^T\cR(H(\vh^T;\theta))
-  \]
+    \item Only one output at the end:
+    \[\vh^T\mapsto\MH(\vh^T;\theta) = \vy^T = \vy\]
+    And then we just pass this \(\vy\) to the loss \(\cR\).
+    \item Output a prediction at every timestep: \(\vy^1,\ldots,\vy^T\). And then use an additive loss function
+    \[\cR(\vy^1,\ldots,\vy^T) = \sum_{i = 1}^T\cR(\vy^T) = \sum_{i = 1}^T\cR(H(\vh^T;\theta))\]
 \end{enumerate}
+
 \begin{itemize}
-  \item \textbf{Markov Property:} hidden state at time \(t\) depends on input of
-  time \(t\) as well as the privous hidden state (but we don't need the oder
-  hidden states).
-  \item \textbf{Time-Invariance:} the state evolution function \(F\) is
-  independent of \(t\) (it's just parametrized by \(\theta\)).
+    \item \textbf{Markov Property:} hidden state at time \(t\) depends on input of time \(t\) as well as the privous hidden state (but we don't need the oder hidden states).
+    \item \textbf{Time-Invariance:} the state evolution function \(F\) is independent of \(t\) (it's just parametrized by \(\theta\)).
 \end{itemize}
 
-Feedforward VS Recurrent Networks: RNNs process inputs in sequence, parameters
-shared between layers (same \(H\) and \(F\) at every timestep).
+Feedforward VS Recurrent Networks: RNNs process inputs in sequence, parameters shared between layers (same \(H\) and \(F\) at every timestep).
 
 \intertitle{Backpropagation in Recurrent Networks}
 
-The backpropagation is straightforward: we propagate the derivatives
-\emph{backwards	through time}. So, the parameter sharing leads to a sum over
-\(t\) when dealing with the derivatives of the weights:
+The backpropagation is straightforward: we propagate the derivatives \emph{backwards	through time}. So, the parameter sharing leads to a sum over \(t\) when dealing with the derivatives of the weights:
 
 \begin{algorithm}[H]
 \caption{Backpropagation in RNNs}
 \DontPrintSemicolon
 \tcb{(Blue terms only need to be comp. for multiple-output RNNs)}\;
 // Compute derivative w.r.t. outputs\;
-Compute 
-\(
-\frac{\partial \cR}{\partial \vy^1},
-\mcb{\frac{\partial \cR}{\partial \vy^2},
-\ldots,
-\frac{\partial \cR}{\partial\vy^T}
-}\)
-\qquad
-\(\left(=\frac{\partial L}{\partial \vy^i}\right)\)\; 
-// Compute the gradient w.r.t. all hidden states\;
-\(
-\frac{\partial \cR}{\partial \vh^T}
-\gets
-\sum_{i}
-\frac{\partial \cR}{\partial \vy^T_i}
-\frac{\partial \vy^T_i}{\partial \vh^T}
-\)\;
-\For{\(t\gets (T - 1)\) down to \(1\)}{
-\(
-\frac{\partial \cR}{\partial \vh^t}
-\gets
-\sum_{i}
-\frac{\partial \cR}{\partial \vh^{t + 1}_i}
-\frac{\partial \vh^{t + 1}_i}{\partial \vh^t}
-\mcb{+
-\sum_{i}
-\frac{\partial \cR}{\partial \vy^{t}_i}
-\frac{\partial \vy^{t}_i}{\partial \vh^t}}
-\)\;
+Compute \(\frac{\partial \cR}{\partial \vy^1},\mcb{\frac{\partial \cR}{\partial \vy^2},\ldots,\frac{\partial \cR}{\partial\vy^T}}\)\qquad \(\left(=\frac{\partial L}{\partial \vy^i}\right)\)\; 
+// Compute the gradient w.r.t. all hidden states\; \(\frac{\partial \cR}{\partial \vh^T}\gets\sum_{i}\frac{\partial \cR}{\partial \vy^T_i}\frac{\partial \vy^T_i}{\partial \vh^T}\)\;
+\For{\(t\gets (T - 1)\) down to \(1\)}{\(\frac{\partial \cR}{\partial \vh^t}\gets\sum_{i}\frac{\partial \cR}{\partial \vh^{t + 1}_i}\frac{\partial \vh^{t + 1}_i}{\partial \vh^t}\mcb{+\sum_{i}\frac{\partial \cR}{\partial \vy^{t}_i}\frac{\partial \vy^{t}_i}{\partial \vh^t}}\)\;
 }
 // Do back-propagation over time for weights and biases\;
-\(
-\frac{\partial \cR}{\partial w_{ij}}
-\gets
-\sum_{i = 1}^T
-\frac{\partial \cR}{\partial h_j^{t - 1}}
-\frac{\partial h_j^{t - 1}}{\partial w_{ij}}
-= 
-\sum_{i = 1}^T
-\frac{\partial \cR}{\partial h_j^{t - 1}}
-\cdot \dot{\sigma}^t_i
-\cdot h_j^{t - 1},
-\)\;
-\(
-\frac{\partial \cR}{\partial u_{ij}}
-\gets
-\sum_{i = 1}^T
-\frac{\partial \cR}{\partial h_j^{t - 1}}
-\frac{\partial h_j^{t - 1}}{\partial u_{ij}}
-= 
-\sum_{i = 1}^T
-\frac{\partial \cR}{\partial h_j^{t - 1}}
-\cdot \dot{\sigma}^t_i
-\cdot x_j^{t},
-\)\;
-\(
-\frac{\partial \cR}{\partial b_{i}}
-\gets
-\sum_{t = 1}^T
-\frac{\partial \cR}{\partial \vh_i^t}
-\frac{\partial \vh_i^t}{\partial b_{i}}
-= 
-\sum_{t = 1}^T
-\frac{\partial \cR}{\partial \vh_i^t}
-\cdot \dot{\sigma}^t_i,
-\)\;
+\(\frac{\partial \cR}{\partial w_{ij}}\gets\sum_{i = 1}^T\frac{\partial \cR}{\partial h_j^{t - 1}}\frac{\partial h_j^{t - 1}}{\partial w_{ij}} = \sum_{i = 1}^T\frac{\partial \cR}{\partial h_j^{t - 1}}\cdot \dot{\sigma}^t_i\cdot h_j^{t - 1},\)\;
+\(\frac{\partial \cR}{\partial u_{ij}}\gets\sum_{i = 1}^T\frac{\partial \cR}{\partial h_j^{t - 1}}\frac{\partial h_j^{t - 1}}{\partial u_{ij}} = \sum_{i = 1}^T\frac{\partial \cR}{\partial h_j^{t - 1}}\cdot \dot{\sigma}^t_i\cdot x_j^{t},\)\;
+\(\frac{\partial \cR}{\partial b_{i}}\gets\sum_{t = 1}^T\frac{\partial \cR}{\partial \vh_i^t}\frac{\partial \vh_i^t}{\partial b_{i}} = \sum_{t = 1}^T \frac{\partial \cR}{\partial \vh_i^t}\cdot \dot{\sigma}^t_i,\)\;
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad
 where \(\dot{\sigma}_i^t: =\sigma'(\overline{F}_i(\vh^{t - 1},\vx^t)).\)\;
-\(
-\frac{\partial \cR}{\partial v_{ij}}
-\gets
-\mcb{\sum}_{\mcb{i = 1}}^T
-\frac{\partial \cR}{\partial y_j^{t - 1}}
-\frac{\partial y_j^{t - 1}}{\partial v_{ij}}
-= 
-\mcb{\sum}_{\mcb{i = 1}}^T
-\frac{\partial \cR}{\partial y_j^{t - 1}}
-\cdot \dot{\sigma}^t_i
-\cdot y_j^{t},
-\)\;
-\(
-\frac{\partial \cR}{\partial c_{ij}}
-\gets
-\mcb{\sum}_{\mcb{i = 1}}^T
-\frac{\partial \cR}{\partial y_j^{t - 1}}
-\frac{\partial y_j^{t - 1}}{\partial v_{ij}}
-= 
-\mcb{\sum}_{\mcb{i = 1}}^T
-\frac{\partial \cR}{\partial y_j^{t - 1}}
-\cdot \dot{\sigma}^t_i,
-\)\;
+\(\frac{\partial \cR}{\partial v_{ij}} \gets\mcb{\sum}_{\mcb{i = 1}}^T\frac{\partial \cR}{\partial y_j^{t - 1}}\frac{\partial y_j^{t - 1}}{\partial v_{ij}} = \mcb{\sum}_{\mcb{i = 1}}^T\frac{\partial \cR}{\partial y_j^{t - 1}} \cdot \dot{\sigma}^t_i \cdot y_j^{t},\)\;
+\(\frac{\partial \cR}{\partial c_{ij}} \gets\mcb{\sum}_{\mcb{i = 1}}^T\frac{\partial \cR}{\partial y_j^{t - 1}}\frac{\partial y_j^{t - 1}}{\partial v_{ij}} = \mcb{\sum}_{\mcb{i = 1}}^T \frac{\partial \cR}{\partial y_j^{t - 1}}\cdot \dot{\sigma}^t_i,\)\;
 \qquad\qquad\qquad\qquad\qquad\qquad\qquad
 where \(\dot{\sigma}_i^t: =\sigma'(\overline{H}_i(\vh^{t - 1},\vx^t)).\)\;
 \end{algorithm}
@@ -627,42 +320,22 @@ where \(\dot{\sigma}_i^t: =\sigma'(\overline{H}_i(\vh^{t - 1},\vx^t)).\)\;
 \todo{Think about how to write these in matrx form}
 
 Note that
-\(
-\frac{\partial \cR}{\partial w_{ij}}
-\gets
-\sum_{i = 1}^T\sum_{k}
-\frac{\partial \cR}{\partial h_k^{t - 1}}
-\frac{\partial h_k^{t - 1}}{\partial ww_{ij}}
-= 
-\sum_{i = 1}^T
-\frac{\partial \cR}{\partial h_j^{t - 1}}
-\frac{\partial h_j^{t - 1}}{\partial w_{ij}}
-\).
+\(\frac{\partial \cR}{\partial w_{ij}} \gets \sum_{i = 1}^T\sum_{k} \frac{\partial \cR}{\partial h_k^{t - 1}} \frac{\partial h_k^{t - 1}}{\partial ww_{ij}} = \sum_{i = 1}^T\frac{\partial \cR}{\partial h_j^{t - 1}}\frac{\partial h_j^{t - 1}}{\partial w_{ij}}\).
 Since for \(k\neq j\) the summand is zero (similarly for \(u_{ij}\) and \(v_{ij}\)).
 
 \intertitle{Exploding and/or Vanishing Gradients}
 
-One of the typical problems that RNNs have is that the gradients may explode or
-vanish. Remember that the gradients that we with MLPs were:
-\[
-\nabla_{\vx}\cR = \MJ_{F^1}\cdot\cdots\cdot\MJ_{F^L}\nabla_{\vy}\cR.
-\]
-Since we're sharing the parameters we have \(\forall t\colon F^t = F\), yet
-evaluated at different points. Now, if the sequence is very long (large \(T\))
-then we're multiplying a lot of times the same jacobian (yet evaluated at
-different points) by itself.
+One of the typical problems that RNNs have is that the gradients may explode or vanish. Remember that the gradients that we with MLPs were:
+
+\[\nabla_{\vx}\cR = \MJ_{F^1}\cdot\cdots\cdot\MJ_{F^L}\nabla_{\vy}\cR.\]
+
+Since we're sharing the parameters we have \(\forall t\colon F^t = F\), yet evaluated at different points. Now, if the sequence is very long (large \(T\)) then we're multiplying a lot of times the same jacobian (yet evaluated at different points) by itself.
 
 \sep
 
 \Def[Spectral Matrix Norm (Largest Singular Value)]
-\[
-\norm{\MA}_2
-: =
-\max_{\vx,\norm{\vx}_2 = 1}
-\norm{\MA\vx}_2
-= :
-\sigma_{\max}(\MA).
-\]
+
+\[\norm{\MA}_2 := \max_{\vx,\norm{\vx}_2 = 1} \norm{\MA\vx}_2 =: \sigma_{\max}(\MA).\]
 
 \sep
 
@@ -670,75 +343,26 @@ different points) by itself.
 
 \sep
 
-Now, let's have a look at the product of Jacobians for RNNs (single-output
-case, otherwise it would just be a sum of longer and longer products of
-Jacobians). Let's have a look at the gradient of \(\cR\) w.r.t. some input
-\(\vx^t\) at iteration \(t\):
-\tcr{This is a good formula for backpropagation through time!! If we did this
-w.r.t. the parameters we'd have to sum it up over \(t = 1\) to \(T\).}
-\begin{gather*}
+Now, let's have a look at the product of Jacobians for RNNs (single-output case, otherwise it would just be a sum of longer and longer products of Jacobians). Let's have a look at the gradient of \(\cR\) w.r.t. some input \(\vx^t\) at iteration \(t\): \tcr{This is a good formula for backpropagation through time!! If we did this w.r.t. the parameters we'd have to sum it up over \(t = 1\) to \(T\).}
+
 \begin{align*}
-\nabla_{\vx^t}\cR
-&=
-\frac{\partial \vh^t}{\partial \vx^t}
-\frac{\partial \vh^{t+1}}{\partial \vh^t}
-\frac{\partial \vh^{t+2}}{\partial \vh^{t+1}}
-\cdots
-\frac{\partial \vh^{T-1}}{\partial \vh^{T-2}}
-\frac{\partial \vh^T}{\partial \vh^{T-1}}
-\frac{\partial \vy^T}{\partial \vh^T}
-\frac{\partial \cR}{\partial \vy^T}
-\\
-&=
-\evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t-1}}
-\evalat{\MJ_{F}^\vh}{\vx^{t+1},\vh^t}
-\cdot\cdots\cdot
-\evalat{\MJ_{F}^\vh}{\vx^T,\vh^{T-1}}
-\evalat{\MJ_{H}}{\vh^{T}}
-\nabla_{\vy^T}\cR.
-\\
-&=
-\evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t-1}}
-\left(
-\prod_{s=t}^{T-1}
-\evalat{\MJ_{F}^\vh}{\vx^{s+1},\vh^{s}}
-\right)
-\evalat{\MJ_{H}}{\vh^{T}}
-\nabla_{\vy^T}\cR
-\\
-&=
-\evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t}}
-\left(
-\prod_{s=t}^{T-1}
-\underbrace{\diag(\sigma'(\MW\vh^{s}+\MU\vx^{s+1}+\vb))}_{
-\MS_{\vx^{s+1},\vh^{s}}
-}
-\MW
-\right)
-\evalat{\MJ_{H}}{\vh^{T}}
-\nabla_{\vy^T}\cR
+    \nabla_{\vx^t}\cR &= \frac{\partial \vh^t}{\partial \vx^t} \frac{\partial \vh^{t+1}}{\partial \vh^t} \frac{\partial \vh^{t+2}}{\partial \vh^{t+1}} \cdots \frac{\partial \vh^{T-1}}{\partial \vh^{T-2}} \frac{\partial \vh^T}{\partial \vh^{T-1}} \frac{\partial \vy^T}{\partial \vh^T} \frac{\partial \cR}{\partial \vy^T} \\
+    &= \evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t-1}} \evalat{\MJ_{F}^\vh}{\vx^{t+1},\vh^t} \cdot\cdots\cdot \evalat{\MJ_{F}^\vh}{\vx^T,\vh^{T-1}} \evalat{\MJ_{H}}{\vh^{T}} \nabla_{\vy^T}\cR. \\
+    &= \evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t-1}} \left(\prod_{s=t}^{T-1}\evalat{\MJ_{F}^\vh}{\vx^{s+1},\vh^{s}}\right) \evalat{\MJ_{H}}{\vh^{T}} \nabla_{\vy^T}\cR \\
+    &= \evalat{\MJ_{F}^\vx}{\vx^t,\vh^{t}} \left( \prod_{s=t}^{T-1}\underbrace{\diag(\sigma'(\MW\vh^{s}+\MU\vx^{s+1}+\vb))}_{=\MS_{\vx^{s+1},\vh^{s}}} \MW \right) \evalat{\MJ_{H}}{\vh^{T}} \nabla_{\vy^T}\cR
 \end{align*}
-\end{gather*}
-Note that when talking about \(\MJ_F^\vh\) we mean the Jacobian w.r.t. \(\vh\) (and
-analogously \(\vx\)). We need to make this explicit, since \(F\) acutally has
-two arguments. Now, the Jacobians were just computed as follows
-\[
-\evalat{(\MJ_F)_{ij}^{\vh}}{\vx^t,\vh^{t - 1}}
-= 
-\frac{\partial F_i}{\partial h_j^{t - 1}}
-= 
-\frac{\partial h^t_i}{\partial h_j^{t - 1}}
-= 
-\sigma'(\MW\vh^{t - 1} + \MU\vx^t + \vb)_i\cdot w_{ij}
-\]
+
+Note that when talking about \(\MJ_F^\vh\) we mean the Jacobian w.r.t. \(\vh\) (and analogously \(\vx\)). We need to make this explicit, since \(F\) acutally has two arguments. Now, the Jacobians were just computed as follows
+
+\[\evalat{(\MJ_F)_{ij}^{\vh}}{\vx^t,\vh^{t - 1}} = \frac{\partial F_i}{\partial h_j^{t - 1}} = \frac{\partial h^t_i}{\partial h_j^{t - 1}} = \sigma'(\MW\vh^{t - 1} + \MU\vx^t + \vb)_i\cdot w_{ij} \]
 
 \[ \evalat{\MJ_F^\vh}{\vx^t,\vh^{t - 1}} =  \underbrace{\diag(\sigma'(\MW\vh^{t - 1} + \MU\vx^t + \vb))}_{=\MS_{\vx^t,\vh^{t - 1}} } \cdot \MW \]
 
-Now, for the eigenvalues of these Jacobians, we have that
+Now, for the eigenvalues of these Jacobians, we have that 
+
 \[ \MS_{\vx^t,\vh^{t - 1}}\leq\MI \tag{$\circ$} \]
-if \(\sigma\in\set{\text{logistic,tanh,ReLU}}\). Hence \(\MS_{\vx^t,\vh^{t - 1}}\)
-will make the gradients vanish over time (when the products gets large, so \(t\)
-is small) if \(\MW\) doesn't have big enough eigenvalues.
+
+if \(\sigma\in\set{\text{logistic,tanh,ReLU}}\). Hence \(\MS_{\vx^t,\vh^{t - 1}}\) will make the gradients vanish over time (when the products gets large, so \(t\) is small) if \(\MW\) doesn't have big enough eigenvalues.
 
 \sep
 
@@ -746,41 +370,36 @@ is small) if \(\MW\) doesn't have big enough eigenvalues.
 
 \sep
 
-So, let's have a look at what happens to the spectral norm of this product of
-Jacobians:
-\begin{gather*}
-    \begin{align*}
-        \norm{
-            \prod_{s=t}^{T-1} \MS_{\vx^{s+1},\vh^{s}} \MW}_2
-        \stackrel{(\circ)}{\leq} \norm{\prod_{s=t}^{T-1}\MW}_2 =
-        \norm{\MW^{T-t-1}}_2 \leq
-        \norm{\MW}_2^{T-t-1} =
-        \sigma_{\max}(\MW)^{T-t-1}
-    \end{align*}
-\end{gather*}
+So, let's have a look at what happens to the spectral norm of this product of Jacobians:
+
+\begin{align*}
+    \norm{\prod_{s=t}^{T-1} \MS_{\vx^{s+1},\vh^{s}} \MW}_2 \stackrel{(\circ)}{\leq} \norm{\prod_{s=t}^{T-1}\MW}_2 = \norm{\MW^{T-t-1}}_2 \leq \norm{\MW}_2^{T-t-1} = \sigma_{\max}(\MW)^{T-t-1}
+\end{align*}   
+
 Now, this means that
+
 \begin{itemize}
-  \item If \(\sigma_{\max}(\MW)<1\), then the gradients will vanish
-  \[ \norm{\nabla_{\vx^t}\cR}_2 \leq C\cdot\sigma_{\max}(\MW)^{T - t - 1}\stackrel{(T - t - 1)\to\infty}{\to} 0, \]
-  where \(C\) is just some constant that depends on the other matrix and vector norms, but not on \(T - t\).
-  \item Conversely, if \(\sigma_{\max}(\MW)>1\) the gradient may, or may not explode - we can't really say something.
+    \item If \(\sigma_{\max}(\MW)<1\), then the gradients will vanish
+    \[ \norm{\nabla_{\vx^t}\cR}_2 \leq C\cdot\sigma_{\max}(\MW)^{T - t - 1}\stackrel{(T - t - 1)\to\infty}{\to} 0, \]
+    where \(C\) is just some constant that depends on the other matrix and vector norms, but not on \(T - t\).
+    \item Conversely, if \(\sigma_{\max}(\MW)>1\) the gradient may, or may not explode - we can't really say something.
 \end{itemize}
 This was observed and published in a paper by Pascanu, Mikolov, Bengion in 2013.
 
 \intertitle{Fixing Exploding/Vanishing Gradients}
 
 \begin{itemize}
-  \item When the gradients are exploding a common heuristic is to clip the gradients (shring the gradient norm once it gets too big), so-called gradient clipping.
-  \[ \nabla_\vx \cR \gets \nabla_\vx \cR \cdot \frac{\gamma_{\max}}{\max\left(\norm{\nabla_{\vx}}\cR, \gamma_{\max}\right)} \]
-  This ensures that the gradient norm is never greater than \(\gamma_{\max}\).
-  \item However, when have vanishing gradients over time, then this means that the RNN is forgetting the past after a few timesteps, and usually then the RNN is not performing very well. This is harder to fix, and we'll see later how this is solved with LSTMS.
+    \item When the gradients are exploding a common heuristic is to clip the gradients (shring the gradient norm once it gets too big), so-called gradient clipping.
+    \[ \nabla_\vx \cR \gets \nabla_\vx \cR \cdot \frac{\gamma_{\max}}{\max\left(\norm{\nabla_{\vx}}\cR, \gamma_{\max}\right)} \]
+    This ensures that the gradient norm is never greater than \(\gamma_{\max}\).
+    \item However, when have vanishing gradients over time, then this means that the RNN is forgetting the past after a few timesteps, and usually then the RNN is not performing very well. This is harder to fix, and we'll see later how this is solved with LSTMS.
 \end{itemize}
 
 \subsubsection{Backprop Over Time}
 
 For multi-output loss
 
-\(\frac{L}{\theta} = \sum_{t = 1}^T\frac{\partial L_t}{\partial y_t}\frac{\partial y_t}{\partial h_t}\sum_{\ell = 1}^T\left[\prod_{k = \ell + 1}^T\frac{\partial h_k}{\partial h_{k - 1}}\right]\frac{\partial h_t}{\partial \theta}\)
+\[\frac{L}{\theta} = \sum_{t = 1}^T\frac{\partial L_t}{\partial y_t}\frac{\partial y_t}{\partial h_t}\sum_{\ell = 1}^T\left[\prod_{k = \ell + 1}^T\frac{\partial h_k}{\partial h_{k - 1}}\right]\frac{\partial h_t}{\partial \theta}\]
 
 
 \subsubsection{Bi-Directional RNNs}
@@ -790,9 +409,13 @@ For multi-output loss
 \end{center}
 
 So, additionally, we're define a \emph{reverse order sequence}
+
 \[\vg^t: =G(\vx^t,\vg^{t + 1};\theta) = \sigma(\MP\vx^t + \MQ\vg^{t + 1} + \vd),\quad\text{with }\vg^T = \vo \]
+
 the function \(F\) to compute the normal order sequence stays the same, and the output transform \(H\) becomes now a function of both hidden states:
+
 \[\vy^t = H(\vh^t,\vg^t;\theta).\]
+
 The nice thing is that we can compute both sequences (the forward and backward sequence) in parallel (or independently) - just verify this in the graph. The back-propagation through time is done in reverse order for the reverse order sequence.
 
 \subsubsection{Deep Recurrent Networks}
@@ -811,9 +434,6 @@ Deep recurrent networks (DRNNs) just use a deeper network for the evolution func
 img/DRNN}
 \end{center}
 \end{multicols}
-
-
-
 
 
 \subsubsection{Probability Distributions over Sequences}

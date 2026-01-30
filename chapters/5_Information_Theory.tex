@@ -2,16 +2,13 @@
 
 \Def[Entropy] Let \(\rvX\) be a random variable distributed according to \(p(\rvX)\). Then the entropy of \(\rvX\)
 
-\( H(\rvX) =  -\sum_{\vx\in\cX} p(\vx)\log\left(p(\vx)\right) =  \Exp{I(X)} =  \Exp{-\log(\Prob{X})} \geq 0. \)
+\( H(\rvX) = \Exp{-\log(\Prob{X})} = -\sum_{\vx\in\cX} p(\vx)\log\left(p(\vx)\right) \geq 0. \)
 
-describes the expected information content \(I(\rvX)\) of \(\rvX\). 
+It describes the expected information content \(I(\rvX)\) of \(\rvX\). 
 
 \sep
 
-\Def[Cross-Entropy] for the distributions \(p\) and \(q\) over a given set is
-
-
-\( H(p,q) =  -\sum_{\vx\in\cX}p(\vx)\log(q(\vx)) =  \Exp[\vx\sim p]{-\log(q(\vx))} \geq 0. \)
+\Def[Cross-Entropy] For distributions \(p\) and \(q\) over a given set is \( H(p,q) =  -\sum_{\vx\in\cX}p(\vx)\log(q(\vx)) =  \Exp[\vx\sim p]{-\log(q(\vx))} \geq 0. \)
 
 \( H(X;p,q) =  H(X) +  KL(p,q) \geq 0, \quad\text{where }H\text{ uses }p. \)
 
@@ -23,28 +20,6 @@ describes the expected information content \(I(\rvX)\) of \(\rvX\).
 \Com The second formulation clearly shows why \(q: =p\) is the minimizer of the cross-entropy (or hence: the maximizer of the likelihood).
 
 \Com Usually, \(q\) is the approximation of the unknown \(p\).
-
-\ssep
-
-\textbf{Relation to Log-Likelihood}
-
-In classification problems we want to estimate the probability of different outcomes. If we have the following quantities:
-\begin{itemize}
-  \item estimated probability of outcome \(i\) is \(q_i\). Now we want to tune \(q\) in a way that the data gets the most likely. First, let's just see how good \(q\) is doing.
-  \item the frequency (empirical probability) of outcome \(i\) in the data is \(p_i\)
-  \item \(n\) data points
-\end{itemize}
-Then the likelihood of the data under \(p_i\) is
-
-\( \prod_{i = 1}^n q_{i}^{n\cdot p_i} \)
-
-since the model estimates event \(i\) with probability \(q_i\) exactly \(n\cot p_i\) times. Now the log-likelihood, divided by \(n\) is
-
-\( \frac{1}{n}\sum_{i = 1}^n n p_i \log\left(q_i\right) =  \sum_{i = 1}^n p_i \log\left(q_i\right) = -H(p,q) \)
-
-Hence, maximizing the log-likelihood corresponds to minimizing the cross-entropy (which is why it's used so often as a loss).
-
-\sep
 
 \Def[Kullback-Leibler Divergence]
 
