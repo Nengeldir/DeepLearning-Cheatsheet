@@ -1,0 +1,233 @@
+\section{Backpropagation}
+
+\emph{Learning} in neural networks is about \emph{gradient-based optimization} (with very few exceptions). So what we'll do is compute the gradient of the objective (empirical risk) with regards to the parameters \(\theta\): 
+
+\(\nabla_\theta\cR = 
+\begin{pmatrix} 
+    \frac{\partial\cR}{\partial\theta_1} & \cdots & \frac{\partial\cR}{\partial\theta_d}
+\end{pmatrix}^\T\).
+
+\subsection{Comp. of Gradient via Backpropagation}
+
+A good way to compute \(\nabla_\theta\cR\) is by exploiting the computational structure of the network through the so-called \emph{backpropagation}.
+
+The basic steps of \emph{backpropagation} are as follows:
+\begin{enumerate}
+  \item Forward-Pass: Perform a forward pass (for a given training input \(\vx\)), compute all the activations for all units
+  \item Compute the gradient of \(\cR\) w.r.t. the ouput layer activations (for a given target \(\vy\)) (even though we're not interested directly in these gradients, they'll simplify the computations of the gradients in step 4.)
+  \item Iteratively propagate the activation gradient information from the outputs of the previous layer to the inputs of the current layer.
+  \item Compute the local gradients of the activations w.r.t. the weights and biases
+\end{enumerate}
+
+Since NNs are based on the composition of functions we'll ineviteably need the \emph{chain rule}.
+
+\sep
+
+\Thm[1-D Chain Rule] \(y = f(\underbrace{g(x)}_{z})\)
+
+\((f\circ g)' = (f'\circ g)\cdot g' \qquad \left.\frac{d(f\circ g)}{dx}\right|_{x = x_0} = \left.\frac{df}{dz}\right|_{z = g(x_0)}\cdot\left.\frac{dg}{dx}\right|_{x = x_0}\)
+
+\sep
+
+\Def[Jacobi Matrix of a Map] 
+The Jacobian \(\MJ_F\) of a map \(F\colon\R^n\to\R^m\) is defined as
+\begin{gather*}
+\begin{align*}
+    \MJ_F
+    :=
+    \begin{pmatrix}
+        \horzbar(\nabla F_1)^\T\horzbar \\
+        \horzbar(\nabla F_2)^\T\horzbar \\
+        \vdots \\
+        \horzbar(\nabla F_m)^\T\horzbar \\
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+        \frac{\partial F_1}{\partial x_1} & \frac{\partial F_1}{\partial x_2} & \cdots & \frac{\partial F_1}{\partial x_n} \\
+        \frac{\partial F_2}{\partial x_1} & \frac{\partial F_2}{\partial x_2} & \cdots & \frac{\partial F_2}{\partial x_n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        \frac{\partial F_m}{\partial x_1} & \frac{\partial F_m}{\partial x_2} & \cdots & \frac{\partial F_m}{\partial x_n} \\
+    \end{pmatrix} \in\R^{m\times n}
+\end{align*}
+\end{gather*}
+So each component function \(F_i\colon\R^n\to\R\) of \(F\), for \(i\in\set{1,\ldots,m}\) has a respective gradient. Putting these gradients together as rows of a matrix gives us the \emph{Jacobian} of \(F\).
+
+So we have that
+\[ \left(\MJ_F\right)_{ij} = \frac{\partial F_i}{\partial x_j}.\]
+
+\sep
+
+\Thm[Jacobi Matrix Chain Rule]
+
+\(G\colon\R^n\to\R^q\quad H\colon\R^q\to\R^m\)
+
+\(F: = H\circ G\)
+
+\begin{align*}
+    F\colon\R^n & \stackrel{G}{\to}\R^q\stackrel{H}{\to}\R^m \\
+    \vx & \stackrel{G}{\mapsto} \vz:=G(\vx) \stackrel{H}{\mapsto} \vy:=H(\vz)=H(G(\vx))
+\end{align*}
+
+Chain-rule for a single component-function \(F_i\colon\R^n\to\R\) of \(F\):
+
+\[\left.\frac{\partial F_i}{\partial x_j}\right|_{\vx = \vx_0} =  \left.\frac{\partial (H\circ G)_i}{\partial x_j}\right|_{\vx = \vx_0} = \sum_{k = 1}^q \left.\frac{\partial H_i}{\partial z_k}\right|_{\vz = G(\vx_0)} \cdot \left.\frac{\partial G_k}{\partial x_j}\right|_{\vx = \vx_0}\]
+
+This gives us the following lemma for Jacobi matrices of compositions of functions
+
+\sep
+
+\Lem[Jacobi Matrix Chain Rule]
+\[\evalat{\MJ_{F}}{\vx = \vx_0} = \evalat{\MJ_{H\circ G}}{\vx = \vx_0} = \evalat{\MJ_H}{\vz = G(\vx_0)}\cdot\evalat{\MJ_{G}}{\vx = \vx_0}\]
+
+\ssep
+
+\Proof This just follows from the upper relationship
+\begin{align*}
+    \evalat{(\MJ_{H\circ G})_{ij}}{\vx=\vx_0} &= \evalat{\frac{\partial (H\circ G)_i}{\partial x_j}}{\vx=\vx_0} \\
+    &= \sum_{k=1}^q \left.\frac{\partial H_i}{\partial z_k}\right|_{\vz=G(\vx_0)}\cdot\left.\frac{\partial G_k}{\partial x_j}\right|_{\vx=\vx_0} \\
+    &= \evalat{(\MJ_H)_{i,:}}{\vz=G(\vx_0)}\evalat{(\MJ_{G})_{:,j}}{\vx=\vx_0} \\
+    &= \evalat{(\nabla_{\vz} H_i)^\T}{\vz=G(\vx_0)} \evalat{(\MJ_{G})_{:,j}}{\vx=\vx_0}
+\end{align*}
+
+\intertitle{Special Case: Function Composition}
+
+Let's have a look at the special case where we compose a map with a function
+
+\[ G\colon\R^n\to\R^m, \quad h\colon\R^m\to\R, \quad h\circ G\colon\R^n\to\R \]
+
+And let's use the more intuitive variable notation
+
+\[ \vx\stackrel{G}{\mapsto}\vy\stackrel{h}{\mapsto}z \]
+
+Then we have that
+
+\[\nabla_{\vx}z =  \sum_{k = 1}^m\frac{\partial z}{\partial y_k}\cdot\veclines{\frac{\partial y_k}{\partial\vx}} = (\MJ_G)^\T\nabla_{\vy}z\]
+
+\intertitle{Important Notation}
+
+Note that we have a lot of indicies. Always use the following convention:
+\begin{itemize}
+  \item index of a layer: put as a \emph{superscript}
+  \item index of a dimension of a vector: put as a \emph{subscript}
+  \item futher we use the following shorthand for layer activations
+  \[ \vx^l: =(F^l\circ\cdots\circ F^1)(\vx)\in\R^{m_l}\]
+  \[ x_i^l\in\R\colon\text{activation of }i\text{-th unit in layer }l \]
+  \item the index of a data point (i.e., the index of one of the \(N\) samples), is omitted where possible, but if we really need to we'll use rectangular brackets (to not confuse it with the vector indices). So,
+  \[ (\vx[i],\vy[i]) \text{ is the }i\text{-th sample point.}\]
+\end{itemize}
+
+Note that in the following we'll be taking gradients w.r.t. one datapoint (just in order to not get another index in this mess). So, one data sample \((\vx,\vy)\). If we wanted to take the gradient w.r.t. some larger batch, then the resulting gradient would just be the average of the gradients for each sample datapoint in the batch. 
+
+\intertitle{Deep Function Compositions}
+
+\begin{align*}
+    F_\theta\colon\cX=\R^n\to\R^m=\cY\\
+    F_\theta=F^L_\theta\circ\cdots\circ F^1_\theta
+\end{align*}
+
+\begin{gather*}
+\begin{align*}
+    &\cR\colon\underbrace{(\cX\stackrel{F_\theta}{\to}\cY)}_{ \substack{\text{we're interested in}\\\text{the predictions that}\\\text{result from choosing }\theta}}\times \underbrace{(\cX\times\cY)}_{ \substack{\text{evaluation set }\cS\\\text{(induces emp. dist.)}}}\times\underbrace{(\cY\times\cY\to\R_{\geq 0})}_{\text{loss }\ell}\to\R_{\geq 0}
+\end{align*}
+\end{gather*}
+
+\begin{gather*}
+\begin{align*}
+    \vx=:\vx^0 \stackrel{F^1_\theta}{\mapsto} \vx^1 \stackrel{F^2_\theta}{\mapsto} \vx^2 \stackrel{F^3_\theta}{\mapsto} \cdots \stackrel{F^L_\theta}{\mapsto} \vx^L=:\vy \stackrel{\cR}{\mapsto} \cR(F_\theta;\set{\vx,\vy^*})\in\R_{\geq 0}
+\end{align*}
+\end{gather*}
+
+\( \vx^l = \sigma^l\left(\MW^l\vx^{l - 1} + \vb^l\right) \)
+
+\( \ve^l = \nabla_{\vx^l}\cR \)
+
+
+\( \ve^l = \nabla_{\vx^l}\cR = \frac{\partial \cR}{\partial\vx^l} = \sum_{k = 1}^{m_{l + 1}} \underbrace{\frac{\partial \cR}{\partial x^{l + 1}_k}}_{e^{l + 1}_k} \cdot \underbrace{\veclines{\frac{\partial x^{l + 1}_k}{\partial\vx^l}}}_{(\MJ_{F^{l + 1}}^\T)_{:,k}} = \MJ_{F^{l + 1}}^\T\ve_k^{l + 1} \)
+
+\( \ve^0 =  \MJ^T_{F^{1}} \cdot \MJ^T_{F^{2}} \cdots \MJ^T_{F^{L - 1}} \cdots \MJ^T_{F^{L}} \ve^L \)
+
+Backpropagation just gives us another network in the reversed direction.
+\(\ve^L\stackrel{\MJ_{F^{L}}^\T}{\mapsto}\ve^{L - 1}\stackrel{\MJ_{F^{L - 1}}^\T}{\mapsto}\cdots\ve^{l + 1}\stackrel{\MJ_{F^{l + 1}}^\T}{\mapsto}\ve^l\mapsto\cdots\stackrel{\MJ_{F^{1}}^\T}{\mapsto}\ve^0.\)
+
+\begin{algorithm}[H]
+\caption{Activity Backpropagation}
+\DontPrintSemicolon
+\( \ve^L \gets \evalat{\nabla_\vy\cR}{\vy} = \frac{1}{N}\sum_{(\vx,\vy^*)\in\cS_N}\evalat{\nabla_\vy\ell(\vy = F_\theta(\vx),\vy^*)}{\vy}\)\;
+\For{\(l\gets (L - 1)\) (down) \KwTo \(0\)}{
+\( \ve^l \gets \MJ_{F^{l + 1}}^\T\ve_k^{l + 1}\)
+}
+\end{algorithm}
+
+\todo{Say something about what these gradients mean (w.r.t. the input \(\vx\)), why we need them, and that actually we're more interested in the gradients w.r.t. \(\theta\)!!!}
+
+\sep
+
+\textbf{Jacobians of Ridge Functions}
+
+\( \vx^l = F^l(\vx^{l - 1}) = \sigma^l\left(\MW^l\vx^{l - 1} + \vb^l\right) = \sigma^l(\vz^l).\)
+
+\( \vz^l =  \MW^l\vx^{l - 1} + \vb^l \)
+
+\( \frac{\partial x_i^l}{\partial x_j^{l - 1}} = \sigma'(z_i^l) \cdot \frac{\partial z_i^l}{\partial x_j^{l - 1}} = \sigma'(z_i^l) \cdot 
+w_{ij}^l \)
+
+\(\MJ_{F^l} = 
+\begin{pmatrix}
+    \vertbar & \vertbar & & \vertbar\\
+    \sigma'(\vz^l) & \sigma'(\vz^l) & \cdots & \sigma'(\vz^l)\\
+    \vertbar & \vertbar & & \vertbar\\
+\end{pmatrix} \odot \MW^l = \diag(\sigma'(\vz^t))\MW^t\)
+
+\todo{is this product expressible in another way??}
+
+Sidenote: if \(\sigma = \) ReLU, then \(\sigma'(z)\in\set{0,1}\) which makes \(\MJ_{F^l}\) a sparsified version of \(\MW^l\) (0-rows, or just the rows of \(\MW^l\)).
+
+\todo{Further analyze what this means for the error vectors, and how this affects other gradients.}
+
+\sep
+
+\todo{Have a look at the gradients of the loss functions}
+
+\todo{Study what they mean}
+
+\todo{What has surprised me is that the gradient of the suqared loss actually depends on whether we subtract the target from the prediction or vice-versa!!!}
+
+\sep
+
+Now we'll se how we can get from the gradients w.r.t. the activations to the gradients w.r.t. the weights. Actually, that is very easy - we just need to apply the chain rule one more time locally:
+
+Just draw a picture of the network graph if you need to understand it better.
+
+%\begin{center}
+%  \includegraphics[width=1\linewidth]{%
+%img/backprop-from-error-activations-to-parameter-gradients}
+%\end{center}
+
+\( \frac{\partial \cR}{\partial w_{ij}^l} = \underbrace{\frac{\partial \cR}{\partial x_i^l}}_{=e^l_i}\frac{\partial x_i^l}{\partial w_{ij}^l} = e^l_i \underbrace{\frac{\partial x_i^l}{\partial z_i^l}}_{=\sigma'(z_i^l)} \underbrace{\frac{\partial z_i^l}{\partial w_{ij}^l}}_{=x_j^{l - 1}} = e^l_i\sigma'(z_i^l)x_j^{l - 1} \)
+
+\( \frac{\partial \cR}{\partial b_i^l} = \underbrace{\frac{\partial \cR}{\partial x_i^l}}_{=e^l_i}\frac{\partial x_i^l}{\partial b_i^l} = e^l_i \underbrace{\frac{\partial x_i^l}{\partial z_i^l}}_{=\sigma'(z_i^l)} \underbrace{\frac{\partial z_i^l}{\partial b_i^l}}_{=1} = e^l_i\sigma'(z_i^l). \)
+
+
+%\frac{\partial }{\partial }
+
+
+%\todo{Convert this to nice \LaTeX}
+
+Note that in a way, the size of the gradient depends on the error that we have times the strength of the network's output at some node.
+
+%\sep
+
+%\todo{Write the whole backpropagation algorithm. Or also the general backpropagation algorithm from the DL book.}
+
+
+\subsection{Backpropagation Graphs}
+
+The approach a backpropagation graph for a loss \(L\) from a FF network graph is as follows:
+\begin{enumerate}
+  \item (RED) Starting at the loss \(L\) backward: for each node \(n\) and for each of its outputs \(o\) which has a path to the loss, add the node \(\frac{\partial o}{\partial n}\) (at the height of node \(n\)). Connect the output \(o\) and that node \(n\) to that newly created node.
+  \item (BROWN) Starting at the loss backward: for each node \(n\) create a node \(\frac{\partial L}{\partial n}\) (if it doesn't exist already) and connect each previously created partial node (\(\frac{\partial o}{\partial n}\)) to it, and the previously crated (in this step) \(\frac{\partial L}{\partial o}\)'s too.
+\end{enumerate}
+
+\begin{center}
+  \includegraphics[width=0.7\linewidth]{img/backprop-graphs}
+\end{center}

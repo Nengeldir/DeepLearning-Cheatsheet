@@ -1,0 +1,1109 @@
+\section{Optimization}
+
+\subsection{Learning as Optimization}
+
+Machine learning uses optimization, but it's \emph{not equal} to optimization for two reasons:
+\begin{itemize}
+  \item The empirical risk is only a \emph{proxy} for the expected risk
+  \item The loss function may only be a \emph{surrogate}
+\end{itemize}
+
+\subsection{Objectives as Expectations}
+
+\[\nabla_{\theta}\cR(D) = \Exp[\cS_N\sim p_D]{\nabla_{\theta}\cR(\cS_N)} = \Exp{\frac{1}{N}\sum_{i = 1}^N\nabla_{\theta}\cR(\theta;\set{\vx[i],\vy[i]})}\]
+
+The typical structure of a learning objective in a NN is a \emph{large finite sum} (over all training instances). Accuracy-complexity trade-off: in practice we subsample terms in the sum, by using \emph{mini-batches} of the training data (so we'll get something close to the true gradient - but not exactly). The idea behind it, is that everything will work out in expectation. Further, we favour cheap and imprecise computations over many datapoints rather than precise and expensive computations over a few datapoints.
+
+\subsection{Gradient Descent}
+
+\(\theta(t + 1) = \theta(t) - \eta_t\nabla_\theta\cR\)
+
+\(\dot{\theta} = -\eta_t\nabla_\theta\cR(\theta)\)
+
+\todo{Mention how line search works: Euler Method. Search for the optimal \(\eta\) in the direction of the gradient such that we get to a minimum, so \(\argmin_\eta\)}
+
+\subsection{Gradient Descent: Classic Analysis}
+
+In classical machine learning we have a \tcg{\emph{convex}} objective \(\cR\). And we denote
+
+\begin{itemize}
+  \item \(\cR^*\) as the minimum of \(\cR\)
+  \item \(\theta^*\) as the optimal set of parameters (the minimizer of \(\cR\))
+\end{itemize}
+
+So we have \(\forall\theta\neq\theta^*\colon\cR^*: =\cR(\theta^*)\leq\cR(\theta)\).
+
+\sep
+
+\Def[Strictly Convex Objective] \(\to\) objective has only one (a unique) minimum.
+
+\[\forall\theta\neq\theta^*\colon\cR^*: =\cR(\theta^*)\mcg{<}\cR(\theta)\]
+
+\sep
+
+\Def[\(L\)-Lipschitz Continous Function] Given two \emph{metric spaces} \((X, d_X)\) and \((Y, d_Y)\), where \(d_X\) denotes the \emph{metric} on the set \(X\), and \(d_Y\) denotes the metric on set \(Y\), a function \(f\colon X\to Y\) is called \emph{Lipschitz continuous}, if there exists a real constant \(L\in\R^+_0\), such that
+
+\[\forall x_1,x_2\in X\colon\quad d_Y(f(x_1),f(x_2))\leq L\cdot d_X(x_1,x_2).\]
+
+Hereby, \(L\) is referred to as a \emph{Lipschitz constant} for \(f\).
+
+\begin{itemize}
+  \item If \(L = 1\) the function is called a \emph{short map}
+  \item If \(0\leq L < 1	\) and \(f\) maps a metric space to itself, so \(f\colon X\to X\), then the function \(f\) is called a \emph{contraction}.
+\end{itemize}
+
+In particular, a map \(f\colon\R^n\to\R^m\) is called Lipschitz continous if there exists a \(L\in\R^+_0\) such that
+
+\[ \forall\vx_1,\vx_2\in\R^n\colon\quad\underbrace{\norm{f(\vx_1) -  f(\vx_2)}}_{=d_{\R^m}(f(\vx_1),f(\vx_2))}\leq L\cdot\underbrace{\norm{\vx_1 - \vx_2}}_{d_{\R^n}(\vx_1,\vx_2)}. \]
+
+\ssep
+
+\Ex So for our risk function \(\cR\), we say that the gradient of it
+
+\[\nabla_\theta\cR\colon\Omega\to\Omega\quad\text{where }\Omega = \R^n\]
+
+is \(L\)-Lipschitz continous, if it holds that
+
+\[\forall\theta_1,\theta_2\in\Theta\colon\quad\norm{\nabla_\theta\cR(\theta_1) - \nabla_\theta\cR(\theta_2)}\leq L\norm{\theta_1 - \theta_2}\]
+
+\Com So, the \(L\) tells us how big the gradient could be.
+
+\sep
+
+\Thm We have the following chain of inclusions for functions over a \emph{closed} and \emph{bounded} (i.e., compact) subset of the real line.
+
+Continously differentiable \(\subseteq\) Lipschitz continuous \(\subseteq\) (Uniformly) continous
+
+\Com It's important that the space is bounded. Because for example only on a compact subset \([a,b]\subset\R\) the function \(e^x\) is Lipschitz continous. On \(\R\) the function \(e^x\) is not Lipschitz continuous, as it gets arbitrarily steep.
+
+\todo{Does this also hold for compact vector-spaces?}
+
+\todo{Add Properties listed on Wikipedia! Very useful for understanding!
+
+\url{https://en.wikipedia.org/wiki/Lipschitz_continuity#Properties}
+}
+
+\sep
+
+\Thm An everywhere differentiable function \(f\colon\R\to\R\) is Lipschitz continuous (with \(L = \sup\abs{f'(x)}\)) iff it has \emph{bounded first derivatives}.
+
+\ssep
+
+\Thm In particular any continously differentiable function is \emph{locally} Lipschitz continuous. As continuous functions are bounded on an interval, so its gradient is locally bounded as well.
+
+\sep
+
+\Thm If \(\cR\) is convex with \(L\)-Lipschitz-continuous gradients then we have that 
+\[  \cR(\theta(t)) - \cR^* \leq\frac{2L}{t + 1}\norm{\theta(0) - \theta^*}^2 \in\BigO(t^{-1}) \]
+
+\Com So we have a polynomial (linear) convergence rate of \(\theta\) towards the optimal parameter \(\theta^*\) (note: just in the convex setting!). As we can see, the convergence time is bounded by a time that depends on our initial guess, and the Lipschitz constant \(L\).
+
+\Com Usually one value for \(\eta\) that people use in this setting is \(\eta: =\frac{1}{L}\) or \(\eta: =\frac{2}{L}\).
+
+\sep
+
+\Def[Convex Set] A set \(S\subseteq\R^d\) is called \emph{convex} if
+
+\( \forall\vx,\vx'\in\S, \,\,\forall\lambda\in[0,1]\colon \quad \lambda\vx + (1 - \lambda)\vx'\in S. \)
+
+\Com Any point on the line between two points is within the set.
+
+\sep
+
+\Def[Convex Function] A function \(f\colon S\to\R\) defined on a \emph{convex set} \(S\subseteq\R^d\) is called \emph{convex} if
+
+\[ \forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)  \]
+
+\Com convex combination of two points \(<\) evaluation of convex combination of two points.
+
+\Com Another way to formulate that \(f\) is convex function is to say that the \emph{epigraph} of \(f\) is a convex set.
+
+\sep
+
+\Thm Every local optimum of a convex function is a global optimum.
+
+\sep
+
+\Thm[Operations that Preserve Convexity]
+\begin{itemize}
+  \item \(-f\) is concave if and only if \(f\) is convex
+  \item nonnegative weighted sums
+  \item point/element-wise maximum \(\max(f_1(\vx),\ldots,f_n(\vx))\)
+  \item composition with non-decreasing function, e.g. \(e^{f(\vx)}\)
+  \item composition with affine mapping: \(f(\MA\vx + \vb)\)
+  \item restriction to a line (of convex set domain)
+\end{itemize}
+
+\sep
+
+\Def[Strictly Convex Function] \(f\) is called \emph{strictly convex} if
+
+\[ \forall\vx,\vx'\in S,\vx\neq\vx' \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')<\lambda f(\vx) +  (1 - \lambda)f(\vx)  \]
+
+\sep
+
+\Def[Strongly Convex Function] A differentiable function \(f\) is called \emph{\(\mu\)-strongly convex} if the following inequality holds for all points \(\vx,\vy\) in its domain:
+
+\[ \forall\vx\vy\colon\quad \scprod{\nabla f(\vy) - \nabla f(\vx),\vy - \vx}\geq\mu\norm{\vy - \vx}_2^2 \]
+
+where \(\norm{\argdot}\) is any norm. An equivalent condition is the following:
+
+\[ \forall\vx,\vy\colon\quad f(\vy)\geq f(\vx) + \nabla f(\vx)^\T(\vy - \vx) +  \frac{\mu}{2}\norm{\vy - \vx}_2^2.\]
+
+\ssep
+
+\Com 
+The concept of strong convexity extends and parametrizes the notion of strict convexity. A strongly convex function is also strictly convex, but not vice versa. Notice how the definition of strong convexity approaches the definition for strict convexity as \(\mu\to 0\), and is identical to the definition of a convex function when \(\mu = 0\). Despite this, functions exist that are strictly convex, but are not strongly convex for any \(\mu>0\).
+
+\todo{Add an illustration how \(\mu\)-strong convexity allows not to only place a
+tangent below the graph at any point on the graph, but actually a parabola, so
+the function is acutally even more curved (controlled by \(\mu\)).}
+
+%\todo{Visit other useful hints about strong convexity!}
+
+%\href{%
+%https://en.wikipedia.org/wiki/Convex_function#Strongly_convex_functions
+%}{<<Strong Convexity Link>>}
+
+\sep
+
+\Thm Now, when \(\cR\) is \(\mu\)-strongly convex in \(\theta\) and its gradient is \(L\)-Lipschitz continuous \(\Longrightarrow\)
+
+\[ \cR(\theta(t)) - \cR^* \leq \left(1 - \frac{\mu}{L}\right)^t (\cR(\theta(0)) - \cR^*) \in \BigO\left(\left(1 - \frac{\mu}{L}\right)^t\right) \]
+
+So we have
+\begin{itemize}
+  \item an exponential convergence (``linear rate'')
+  \item and the rate depends adversely on the condition number \(\frac{L}{\mu}\).
+  So we want the maximum gradient to be small, and we want the curvature to be large (which are somewhat contrary desires, but ideally the condition number is very close to \(1\)).
+\end{itemize}
+
+\sep
+
+\Thm If we use Nesterov acceleration (in the general case), then we get a polynomial convergence rate of \(\BigO(t^{-2})\).
+
+\Com The trick used in the Nesterov approach is \emph{momentum}.
+
+\todo{What is meant by \emph{general case}?}
+
+\subsection{Optimization Challenges in NNs: Curvatures}
+
+When it comes to NNs the objective is usually non-convex. So this is for example an objective that we may get that is non-convex. Still, we can apply gradient descent in this setting. And if we respect the rule of choosing the learning rate as \(\eta = \frac{1}{L}\) where \(L\) is the Lipschitz-constant of the function, then usually, we're fine.
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/challenge-curvature}
+\end{center}
+
+So the problem is if we have sharp non-linearities, then there are two approaches to solve this
+\begin{itemize}
+  \item one is to be very conservative and only do small update steps by choosing a very small learning rate.
+  \item or we are courageous and due huge jumps as depicted in the image.
+\end{itemize}
+
+So this is kindof the typical problem that, at least some people think, happens with NNs.
+
+Typical approaches are to clip the gradient when it gets too large, or use a decreasing learning rate (in terms of time).
+
+Now, the problem is not that the cliff is very steep. The problem is the curvature. Because when we take the gradient, the gradient is actually constant on the wall of the cliff. Let's have a look at this through some equations.
+
+Now, let's evaluate what the risk is at some point, plus some gradient step. If we do the 2nd-order Taylor expansion of that, then we get
+
+\[\cR(\theta - \eta\nabla_{\theta}\cR(\theta)) \stackrel{\text{Taylor}}{\approx} \cR(\theta) - \eta\norm{\nabla_\theta\cR(\theta)}_2^2 + \frac{\eta^2}{2}\underbrace{\nabla_{\theta}\cR(\theta)^\T\MH\nabla_{\theta}\cR(\theta)}_{\norm{\nabla_\theta\cR(\theta)}_{\MH}^2}\]
+
+where
+\[\MH: =\nabla^2\cR(\theta) \qquad \text{(Hessian matrix)}\]
+
+\todo{Shouldn't \(\MH\) be denoted as an inverse somewhere?} 
+
+Now, what we want is that the rest of the sum \todo{which?} is negative. If that is the case, because then we're improving our cost function. If not, then we're basically diverging. \todo{understand argument}
+
+So,
+\begin{itemize}
+  \item the first term \(-\eta\norm{\nabla_\theta\cR(\theta)}_2^2\) will obviously be negative, as it's a negative factor of a norm
+  \item the second term will always be positive, as the hessian matrix is positive semi-definite. Fortunately, we're squaring \(\eta\), which may be already small, so the term is small. However, if the Hessian is ill-conditioned (as in the cliff-situation (curvature)). Then we can have a very large positive value in the second term. So what then can happen is that
+  \[\frac{\eta}{2}\norm{\nabla_\theta\cR(\theta)}_{\MH}^2 \gtrsim \norm{\nabla_\theta\cR(\theta)}^2\]
+  So, the hessian term becomes much larger than the gradient. So we're not improving our cost function.
+  \todo{Shouldn't there be a square on \(\eta\)? What does this symbol mean?}
+  \item and the remaining terms, will be negative (as defined by the Taylor sum)
+\end{itemize}
+
+So a typical remedy for first-order methods is to take very small step sizes
+\(\eta\).
+
+\sep
+
+However, things bececome even stranger because of the curvature. As we can see, the gradient norm gets larger and larger the more we train (can be checked empirically). And the gradient norm also tends to have larger fluctuations. And as we can see, starting at some point, the error just fluctuates around at a certain level. Actually, one might assume that as we're getting closer to the minimum, the gradient should get smaller and smaller, as the objective gets flatter and flatter at the optimal point - but that's actually not the case!
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/challenges-curvature-and-gradients}
+\end{center}
+
+This is probably so, because we're dealing with large curvatures when reaching (or getting close to) the optimal parameters. So with gradient descent we may not arrive at a critical point of any kind, and this also motivates to use more and more decreasing learning rates, the closer we get to the optimal parameters. Note that this graph was built using the MNIST dataset and some CNN.
+
+Note that there exist many architectures where the final gradient was very large, and still they are used in practice, and people are quite happy with them.
+
+\subsection{Optimization Challenges in NNs: Local Minima}
+
+At the beginning people were happy when they were doing convex optimization because there was a single optimum and it was reachable. And then when people started using non-convex optimization they were afraid of getting into non-optimal local minima and getting stuck there.
+
+\ssep
+
+Neural network cost functions can have many local minima and/or saddle points - and this is typical. Gradient descent can get stuck.
+
+Questions that have been looked at are
+\begin{itemize}
+  \item Ar local minima a practical issue? Somtimes not: Gori \& Tesi, 1992
+  \item Do local minima even exist? Sometimes not (auto encoder): Baldi \& Hornik, 1989
+  \item Are local minima typically worse? often not (large networks): e.g., Choromanska et al., 2015
+  \item Can we understand the learning dynamics? Deep linear case has similarities with non-linear case, e.g., Saxe et al., 2013
+\end{itemize}
+
+So it turns out that the non-convexity is actually not so much of an issue. It turns out that when we go to very high dimensions, the number of local minima VS the number of saddle points (gradient is zero, but non-optimal) is very small - so we're much more likely to end up in a saddle point. However, in practice, if we do SGD there is some stochasticity that will make our gradient move. Then, after waiting for a while we'll exit the saddle point.
+
+Now, next we'll look at the insights that were gained by the paper of Saxe.
+
+\subsection{Least Squares: Single Layer Lin. Netw.}
+
+Let's assume that we have some inputs \(\vx\in\R^n = \cX\) and some outputs \(\vy\in\R^m = \cY\), and we have a very simple architecture, that will take our input \(\vx\) and transform it to some output in \(\cY\) the output space 
+
+\[F(\vx) = \MA\vx, \qquad \MA\in\R^{m\times n}\]
+
+So then, we can define our risk as
+
+\[\cR(\MA) = \Exp{\norm{\vy - \MA\vx}_2^2}.\]
+so we're taking the expectation with regard to the empirical distribution (averaging over all \((\vx,\vy)\)-training pairs).
+
+\ssep
+
+Now, to make things simpler, we assume that the inputs are whitened, that means that
+
+\[\Exp{\vx\vx^\T} = \MI\]
+
+So if the mean \(\mu = \vo\), then our input is uncorrelated, and every feature is of variance 1. \todo{I don't get this??}
+
+\sep
+
+Further, have a look at the following trace identities
+
+\[\vv^\T\vw = \sum_{i}v_iw_i = \Tr{\vv\vw^\T} = \Tr{\vw\vv^\T}\]
+
+\[\Tr{\MA + \MB} = \Tr{\MA} +  \Tr{\MB}\]
+
+\[\Exp{\Tr{\rvX}} = \Tr{\Exp{\rvX}} \qquad\text{(linearity of trace and exp.)}\]
+
+\sep
+
+Now let's see if we can rewrite the risk differently
+\begin{gather*}
+\begin{align*}
+    \cR(\underbrace{\MA}_{=\theta}) &= \Exp{\norm{\vy-\MA\vx}_2^2} \\
+    &= \Exp{\Tr{(\vy-\MA)(\vy-\MA)^\T}} \\
+    \shortintertext{Using the linearity of the expectation and the trace, and some
+    trace identities leads us to}
+    &= \Tr{\Exp{\vy\vy^\T}} -2\sTr{\MA\underbrace{\Exp{\vx\vy^\T}}_{\mathclap{=:\MGamma^\T,\,\MGamma\in\R^{m\times n}}}} +\sTr{\MA\underbrace{\Exp{\vx\vx^\T}}_{\mathclap{=\MI\text{ (by ass.)}}}\MA^\T} \\
+    &= \underbrace{\Tr{\Exp{\vy\vy^\T}}}_{\mathclap{\text{indep. of }\MA}} -2\Tr{\MA\MGamma^\T} +\Tr{\MA\MA^\T}
+\end{align*}
+\end{gather*}
+
+Now, let's see how we can minimize the risk
+
+\begin{align*}
+    \MA^* &= \argmin_{\MA}\cR(\MA) \\
+    &= \argmin_{\MA} -2\Tr{\MA\MGamma^\T} +\Tr{\MA\MA^\T}
+\end{align*}
+
+Now it's hard to continue from here, so we'll just do it via computing the gradient (generalized) and setting it equal to zero:
+
+\begin{align*}
+    \cR(\MA) &= \Tr{\Exp{\vy\vy^\T}} -2\Tr{\MA\MGamma^\T} +\Tr{\MA\MA^\T} \\
+    \nabla_{\MA}\cR(\MA) &= -2\MGamma + 2\MA = 2(\MA-\MGamma)
+\end{align*}
+
+So, obviously, the derivative is zero for 
+
+\[\MA^* =\MGamma = \Exp{\vx\vy^\T}^\T = \Exp{\vy\vx^\T} \stackrel{\text{emp. dist}}{=} \frac{1}{N}\sum_{i = 1}^N\vy[i]\vx[i]^\T.\]
+
+\ssep
+
+Note that when computing the derivative we've used the following trace differentiation rules (cf. wikipedia, The Matrix Cookbook)
+\[\nabla_{\MA}\Tr{\MA\MA^\T} = 2\MA \qquad \nabla_{\MA}\Tr{\MA\MB} = \MB^\T\]
+
+\sep
+
+\todo{Verify if this approach is correct!!}
+
+Note that one could have solved the solution also through the following way, by recognizing that \(\MA(t)\) follows the following differential equation
+
+\[\dot{\MA}(t) = -\eta\nabla_{\MA}\cR(\MA(t)) = 2\eta(\MGamma - \MA(t)) = 2\eta\MGamma -  2\eta\MA(t).\]
+
+So rearranging the equation for \(\MA(t)\) we get 
+
+\[\MA(t) = -\frac{1}{2}\eta\dot{\MA}(t) + \MGamma\]
+
+And now, since we're using gradient descent, we'll converge, and the gradients will go to zero, hence
+
+\[\lim_{t\to\infty}\MA(t) = -\frac{1}{2}\eta\underbrace{\left(\lim_{t\to\infty}\dot{\MA}(t)\right)}_{\to 0} + \MGamma = \MGamma.\]
+
+So \(\MA(t)\) will converge to \(\MGamma\).
+
+\subsection{Least Squares: Two-Layer Lin. Netw.}
+
+Now, the question is what happens, when we build a two-layer linear network (again with the squared error), with no nonlinearity. So we'll have a linear mapping (that is composed of two linear mappings)
+
+\[F(\vx) = \MA\vx = \MQ\MW\vx\]
+
+Now, from what we've seen before, we can express the risk as (due to trace identities, trace linearity, etc.) just by replacing \(\MA = \MQ\MW\), so
+
+\[\cR(\MQ,\MW) =  \text{const.} + \Tr{(\MQ\MW)(\MQ\MW)^\T} - 2\Tr{\MQ\MW\MGamma^\T}\]
+
+Now, taking the derivatives w.r.t. the parameters, we get (using the chain rule)
+
+\begin{align*}
+    \nabla_{\MQ}\cR(\MQ,\MW) = \frac{\partial \cR(\MA)}{\partial \MA}\frac{\partial \MA}{\partial\MQ} \\
+    \nabla_{\MW}\cR(\MQ,\MW) = \frac{\partial \cR(\MA)}{\partial \MA}\frac{\partial \MA}{\partial\MW}
+\end{align*}
+
+\todo{This is wrong, because \(\MQ^\T\) is on the left!! How is the chain rule done here?}
+
+Which in the end gives us
+
+\begin{align*}
+    \nabla_{\MQ}\cR(\MQ,\MW) &= 2\underbrace{\MQ\MW}_{=\MA}\MW^\T-2\MGamma\MW^\T =2(\MA-\MGamma)\MW^\T \\
+    \nabla_{\MW}\cR(\MQ,\MW) &= 2\MQ^\T\underbrace{\MQ\MW}_{=\MA}-2\MQ^\T\MGamma = 2\MQ^\T(\MA-\MGamma)
+\end{align*}
+
+Now, what we'll do is we'll perform the SVD of \(\MGamma\) (we can do this since \(\MGamma\) only depends on the data, it was the correlation matrix between the inputs and the outputs). So,
+
+\[\MGamma = \MU\MSigma\MV^\T.\]
+
+Now, we'll linearly transform the variables:
+
+\begin{align*}
+    \widetilde{\MQ}&=\MU^\T\MQ \quad \Longleftrightarrow\quad \MQ=\MU\widetilde{\MQ} \\
+    \widetilde{\MW}&=\MW\MV \quad \Longleftrightarrow\quad \MW=\widetilde{\MW}\MV^\T
+\end{align*}
+\todo{Are we assuming something on the rank of \(\MGamma\)? Or should we express it via transposes?}
+
+Then, we have that the common term in the gradients \(\MA - \MGamma\) can be written as follows
+
+\begin{align*}
+    \MA-\MGamma &= \MQ\MW-\MU\MSigma\MV^\T \\
+    &= \MU\underbrace{\MU^\T\MQ}_{=\widetilde{\MQ}}\underbrace{\MW\MV}_{=\widetilde{\MW}}\MV^\T-\MU\MSigma\MV^\T \\
+    &= \MU(\widetilde{\MQ}\widetilde{\MW}-\MSigma)\MV^\T
+\end{align*}
+
+And we can re-express the risk in terms of \(\widetilde{\MQ},\widetilde{\MW}\) as follows:
+
+\begin{align*}
+    \cR(\widetilde{\MQ},\widetilde{\MW}) &= \text{const.} + \Tr{(\MU^\T\widetilde{\MQ}\widetilde{\MW}\MV^\T)(\MU^\T\widetilde{\MQ}\widetilde{\MW}\MV^\T)^\T} \\
+    &\qquad-2\Tr{(\MU^\T\widetilde{\MQ}\widetilde{\MW}\MV^\T)\MGamma^\T}
+\end{align*}
+And we can compute the corresponding projected gradients in terms of \(\widetilde{\MQ},\widetilde{\MW}\) as follows.
+
+\todo{write the gradients here}
+\begin{align*}
+    \nabla_{\widetilde{\MQ}}\cR(\widetilde{\MQ},\widetilde{\MW}) &= \MU^\T\nabla_{\MQ}\cR(\MQ,\MW)=\cdots \\
+    \cdots &= \cdots
+\end{align*}
+
+So, as we can easily see, the gradients can be computed through the rules of linearity.
+
+\todo{Do the rest of this\ldots}
+
+\subsection{Stochastic Gradient Descent}
+
+So, how do we modify the gradient descent approach to work with batches?
+
+The idea in \emph{stochastic} gradient descent is to choose the update direction \(\rvV\) \emph{at random}, such that
+
+\[\Exp{\rvV} = -\nabla_\theta\cR.\]
+
+So, the randomization scheme is unbiased.
+
+So SGD works via subsampling. So we pick a random subset
+
+\[\cS_K\subseteq\cS_N,\qquad K\leq N. \quad (\text{usually }K\ll N)\]
+
+And since we're picking \(\cS_K\) at random, note how
+
+\[\Exp{\cR(\cS_K)} = \cR(\cS_N)\]
+
+And thus it also holds for the gradient that
+
+\[\nabla_{\theta}\Exp{\cR(\cS_K)}\stackrel{\text{lin.}}{=}\Exp{\nabla_{\theta}\cR(\cS_K)}= \nabla_{\theta}\cR(\cS_N).\]
+
+So, with SGD, we just do gradient descent, where at each \(t\) we'll do a randomization of \(\cS_K\), so
+
+\[\theta(t + 1) = \theta(t) - \eta\nabla_\theta\cR(\theta(t);\cS_{K}(t))\]
+
+\sep
+
+In practice, what is done is we \emph{permute} the instances, and break them up into mini-batches. So we're actually not doing random sampling at every timestep. We're rather doing a random partitioning of the training instances into batches. This gives rise to the following definitions:
+
+\ssep
+
+\Def[Epoch = one sweep through the whole data]
+\begin{itemize}
+  \item take the data batch by batch
+  \item compute one gradient by batch
+  \item harder to analyze theoretically
+  \item typically works better in practice
+  \item no permutation \(\to\) danger of ``unlearning''. Let's suppose we're training for MNIST, and we're first doing the gradient steps for the 1s, then for the 2s, etc. This will completely bias the gradient and lead us into the wrong direction at every gradient step. In the end we'll never converge to a good solution.
+\end{itemize}
+
+\Com It happens that this way SGD is a bit harder to analyze theoretically, but for NNs it works quite well in practice.
+
+\ssep
+
+\Def[Minibatch Size]
+\begin{itemize}
+  \item ``Standard SGD'': \(k = 1\), this is for classical SGD. However, if we only take one instance, the error on the gradient direction will be too large.
+  \item but: larger \(k\) is better for utilizing concurrency in GPUs or multicore CPUs. And we'll also get more accuracy. Of course, this requires more computation per gradient step, so we'll have to compute more to do one step, but it pays of in terms of accuracy of the gradient (and it can be parallelized anyways).
+\end{itemize}
+
+\Com In practice we just need to ensure that the batch is sufficiently big to have a representative subsample to compute a reliable estimate of the gradient (in order to converge). Further, we usually use batch-sizes of \(2^k\) for some \(k\in\N\).
+
+\subsubsection{Convergence Rates}
+
+Under certain conditions SGD converges to the optimum:
+
+\begin{itemize}
+  \item If we have a convex, or strongly convex objective,
+  \item and if we have Lipschitz continous gradients,
+  \item and a deaying learning rate, s.t.
+  \[\underbrace{\sum_{t = 1}^\infty\eta_t = \infty}_{\mathclap{\text{we get far enough}}}, \qquad \underbrace{\sum_{t = 1}^\infty\eta_t^2<\infty}_{\text{our steps get always smaller}}\]
+  typically \(\eta_t = Ct^{-\alpha}\), \(\frac{1}{2}<\alpha<1\) (c.f. harmonic series.)
+  \item or we use iterate (Polyak) averaging (once we start jumping around, we average the solutions over time).
+\end{itemize}
+
+Then, we can get the following convergence rates:
+
+\begin{itemize}
+  \item strongly-convex case: can achieve a \(\BigO(1/t)\) suboptimality rate (only polynomial convergence)
+  \item non-strongly convex case: \(\BigO(1/\sqrt{t})\) suboptimality rate (even worse than polynomial convergence)
+\end{itemize}
+
+So, even if the convergence rates are not super nice, thanks to the cheap gradient computation (only one example at the time), we may even converge faster than computing the gradient on the full dataset everytime.
+
+\subsubsection{Practicalities}
+
+Now, let's have a look at some of the practicalities:
+
+\begin{itemize}
+  \item Almost none of the analysis applies to the non-convex case
+  \item Choosing a learning rate schedule can be a nuisance
+  \item Fast decay schedules may lead to super-slow convergence
+  \item In practice, we tend to use larger step sizes and level out at a minimal step size. The justification behind this that the SGD with a fixed step size is known to converge to a ball around the optimum (strongly convex case). So we may use
+  \[\eta_t = \max(0.001,\frac{1}{t}).\]
+  \item Further, there's the common belief that the stochasticity of the SGD is a ``feature'', since it may help to escape from reagions with small gradients via perturbations.
+\end{itemize}
+
+\subsubsection{Momentum}
+
+Accumulate the gradient over several updates (as a geometrically weighted average). The momentum (averaging) keeps the gradient moving better towards the optimum (instead of zig-zagging).
+
+Initialization: \(\alpha = 0.95\) (typically), \(\vm(0) = \vo\).
+
+Then at every timestep \(t = 1,2,\ldots\) \(\vm(t) = \alpha \vm(t - 1) - (1 - \alpha)\nabla_\theta\cR(\vtheta(t - 1)),\) \(\vhm(t) = \frac{\vm(t)}{(1 - \alpha)^t}\) \quad(bias correction, otw. gradient is too small at beginning) \(\vtheta(t) = \vtheta(t - 1) - \eta\vhm(t)\) \quad (update parameters)
+
+Usually it's good to choose a small alpha (0.5) at the beginning, and only towards the end, we'll increase alpha to 0.99 to accumulate and average the speed.
+
+\subsubsection{Nesterov Momentum}
+
+First jump, and then compute the momentum based on the gradient at the place that we'll land (seems to work better in practice).
+
+\( \vtheta(t + 1) = \vtheta(t) + \eta\alpha\vhm(t)\) (jump first)
+
+\( \vv(t + 1) = \alpha \vv(t) + \epsilon\nabla_\theta\cR(\vtheta(t) + \alpha\vhm(t)).\) (and then correct the jump with the gradient at the place that we jumped to)
+
+\todo{Write this down correctly!}
+
+\subsubsection{AdaGrad}
+
+With AdaGrad we consider the entire history of gradients and put all the gradients ito a \emph{gradient matrix}, so
+
+\[\theta\in\R^d, \quad \MG\in\R^{d\times t_{\max}}, \quad g_{it}= \evalat{\frac{\partial \cR(t)}{\partial \theta_i}}{\theta = \theta(t)}\]
+
+Then we compute the (partial) row sums of squares of \(\MG\) (note: not the gradient norms! \(\to\) rows!) 
+
+\[\gamma_i^2(t): =\sum_{s = 1}^tg_{is}^2.\]
+
+And then we adapt the gradient stepsize for each dimension as follows:
+
+\[\theta_i(t + 1) = \theta_i(t) - \frac{\eta}{\delta + \gamma_i(t)}\nabla_\theta\cR(t), \qquad \delta>0\text{ (small)} \]
+
+This will transform the gradient such as if the loss landscape would be in a more isometric shape. It will scale the gradient appropriately into each dimension. So instead of having a valley, we'll have a nice round hole again. This avoids this typical situation where the gradient descent boundes left and right in the valley, instead of walking down the valley.
+
+\sep
+
+\todo{maybe take notes from Data Mining}
+
+\sep
+
+In practice a variant of AdaGrad (RMSprop) is used. Intuitively: the learning rate decays faster for weights that have seen significant updates.
+
+Theoretical justification: regret bounds for convex objectives (Duchi, Hazan, Singer, 2011) (out of scope for this lecture).
+
+So, Tieleman \& Hinton came up with a ``non-convex variant of AdaGrad'' in 2012:
+
+\[\gamma_i^2(t): =\sum_{s = 1}^t\rho^{t - s}g_{is}^2, \qquad \rho<1.\]
+
+This is just a moving average, which is exponentially weighted. The weight decays exponentially over time, and thus \todo{give explanation}. It turns out that this optimizer works very nice some times.
+
+\subsubsection{ADAM}
+
+Adam is probably the most popular optimizer today. It takes the best of both worlds: AdaGrad (adapting the gradient) + Momentum. However, more parameters to tune \((\beta_1,\beta_2)\).
+
+Initialization: \(\vm(0) = \vo\), \(\vv(0) = \vo\)
+
+Typical values: \(\beta_1 = 0.9\), \(\beta_2 = 0.999\), \(\epsilon = 10^{-8}\)
+
+Then at every timestep \(t = 1,2,\ldots\)
+
+\(\vg(t) = \nabla_{\theta}\cR(\vtheta(t - 1))\) (get the gradient)
+
+\(\vm(t) = \beta_1 \vm(t - 1) + (1 - \beta_1)\vg(t)\) (update the biased first moment estimate)
+
+\(\vv(t) = \beta_2 \vv(t - 1) + (1 - \beta_2)\vg(t)^2\) (update the b. second raw moment estimate)
+
+\(\hat{\vm}(t) = \vm(t)(1 - \beta_1^t)\) (bias correction first moment estimate)
+
+\(\hat{\vv}(t) = \vv(t)(1 - \beta_2^t)\) (bias correction second raw moment estimate)
+
+\(\vtheta(t) = \vtheta(t - 1) + \eta\hat{\vm}(t)/(\sqrt{\hat{\vv}(t)} + \epsilon)\) (update params)
+
+\subsubsection{Batch Normalization}
+
+Batch normalization (Ioffe \& Szegedy, 2015) is one of the most controversial but most useful tricks in DL. 
+
+One of the big problems that we have when we optimize NNs, is that usually there exist strong dependencies between the weights in various layers (recall: we also saw that the gradients interact with each other through complex dynamics). So it's hard to find a suitable learning rate for all the situations of the weights. The dynamics were fine in this case, but if we have a large network it might not work out, and we may have to wait a long time until the dynamics diminish and lead to the solution. What batch normalization tries to achieve is to remove the dependencies between the layers. So the learning algorithm can optimize the weights of each layer independently. Of course, that's not really what happens, but anyways that's the idea behind it.
+
+Let's have a look at a toy example to illustrate this is: a deep linear network with one unit per layer:
+
+\[ y = w_1w_2\cdot\cdots\cdot w_L x = \left(\prod_{l = 1}^L w_l\right)x \]
+
+For later notation, let us collect all the weights in a set
+
+\[W: =\set{w_1,\ldots,w_L}\]
+
+After the gradient step we'll have the following situation:
+
+\begin{gather*}
+\begin{align*}
+    y^{\text{new}} &= \left( \prod_{l=1}^L \left( w_l-\eta\frac{\partial \cR}{\partial w_l}\right) \right)x \\
+    \intertext{So what actually happens is that if we take the term for \(y^{new}\) and we expand it this leads to terms of up to order \(L\).} 
+    &= \left(w_1-\eta\frac{\partial \cR}{\partial w_1}\right)
+    \left(w_2-\eta\frac{\partial \cR}{\partial w_2}\right) \cdots \left(w_L-\eta\frac{\partial \cR}{\partial w_L}\right)x \\
+    &= \left(\left(\prod_{l=1}^L w_l\right) - \eta\frac{\partial \cR}{\partial w_1}\left(\prod_{l=2}^L w_l\right) +\cdots+ (-\eta)^L\left(\prod_{l=1}^L \frac{\partial \cR}{\partial w_l}\right)\right)x \\
+    &= \underbrace{\left(\prod_{l=1}^L w_l\right)x}_{=y} - \eta\frac{\partial \cR}{\partial w_1}\left(\prod_{l=2}^L w_l\right)x + \cdots + (-\eta)^L\left(\prod_{l=1}^L \frac{\partial \cR}{\partial w_l}\right)x \\
+    &= y \underbrace{-\eta\frac{\partial \cR}{\partial w_1} \left(\prod_{l=2}^L w_l\right)x + \cdots + (-\eta)^L\left(\prod_{l=1}^L \frac{\partial \cR}{\partial w_l}\right)x}_{(*) \text{ significant?}} \\
+    &= y+ \underbrace{\sum_{S\in\cP(W)} \left[ (-\eta)^{\card{W\setminus S}} \left(\prod_{w\in S}w\right) \left(\prod_{w\in W\setminus S} \frac{\partial \cR}{\partial w}\right)x \right]}_{(*)\text{ significant?}}
+\end{align*}
+\end{gather*}
+
+Hence, the higher order terms in terms of \(\eta\) \((*)\) may become significant, despite the damping.
+
+\ssep
+
+\todo{Talk more exactly about the significance (which terms are good and which are bad).}
+
+\ssep
+
+The key idea of batch-normalization is to normalize the layer activations (\(\to\) batch normalization) and then to backpropagate through the normalization. So it ``keeps the same distribution'' at each layer. And if we optimize the weights of a layer, it should not affect the distribution at the end of the layer.
+
+So what we do is
+
+\begin{itemize}
+  \item we fix a layer \(l\),
+  \item and we fix a set of examples \(I\subset[1:N]\)
+  \item and compute the mean activities and a vector of the standard deviations
+
+  \begin{align*}
+    \vmu^{l} &:= \frac{1}{\card{I}}\sum_{i\in I}(F^l\circ\cdots\circ F^1)(\vx[i])\in\R^{m_l}\\ 
+    \vsigma^l&\in\R^{m_l}\\
+    \sigma_j^l&:=\sqrt{\delta + \frac{1}{\card{I}}\sum_{i\in I} ((F^l_j\circ\cdots\circ F^1)(\vx[i]) -\mu_j^l )^2}, \quad \delta > 0,
+  \end{align*}
+  \item then we remove the mean and divide by the standard deviation to normalize the activities.
+  \[\tilde{x}_j^l :=\frac{x_j^l - \mu_j^l}{\sigma_j^l} \]
+  However, when we do this, what happens is that we can represent less than before. We may only have distributions with mean zero, and variance one (because we enforce this through the normalization). So we need to do something to regain the representational power. What we do is we multiply by some coefficients \(\alpha_j\) and \(\beta_j\)
+  \[\tilde{\tilde{x}}_j^l = \alpha_j^l\tilde{x}_j^l + \beta_j^l \]
+\end{itemize}
+
+So since \(\vmu\) and \(\vsigma\) are functions of the weights and they can be differentiated. 
+
+\todo{Write down gradients of batch-norm layer}
+
+A further note about batch-normalization is that it doesn't change the information in the data, because since we have \(\vmu\) and \(\vsigma\) we could theoretically recuperate the original activations.
+
+Now, some implementation details:
+
+\begin{itemize}
+  \item The bias term before the batch normalization should be removed (since we're removing the mean it makes no sense).
+  \item At training time, the statistics are computed per batch, hence they're very noisy. So what people do in practice (e.g., when they're predicting just one sample) is that they keep a running average over the batch batch-norm statistics. So, at test time, \(\vmu\) and \(\vsigma\) are replaced by the running averages that were collected during training time. An alternative, is to pass through the whole dataset at the end of the training and re-compute the statistics - that may work even better (but it takes a lot of time).
+\end{itemize}
+
+What is not very clear is why batch-normalization works. The original paper about batch-normalization (BN) said that BN reduces the internal covariance shift of the data. What they meant by this is that: let's say that we have a very simple classifier, that will basically classify everything that is negative to one class, and everything that is positive to another class. Then, when we just shift the data by a constant vector, then, without batch-normalization we'd shift all the datapoints into one class. However, with BN since the mean is removed we'll remove that constant shift the BN layer and it will work out. So BN reduces the covariance shift. That was the effect that the inventors of BN described.
+
+However, it turns out that some other people came later on and said the following: They didn't negate the effect of the covariance-shift reduction, but the reason they said that BN works is that it makes the landscape of the loss more smooth. Hence, the optimization works better and gives better results.
+
+However, no-one \emph{really} knows why BN works so well.
+
+\subsubsection{Other Heuristics}
+
+\begin{itemize}
+  \item \textbf{Curriculum learning and non-uniform sampling} of data points \(\to\) focus on the most relevant examples (Bengio, Louradour, Collobert, Weston, 2009) (DL-Book: 8.7.6) Or increase hardness of tasks (corner-cases9 as NN improves\\
+  \item \textbf{Continuation methods}: define a family of (simpler) objective functions and track solutions, gradually change hardness of loss (DL-Book: 8.7.6)
+  \item \textbf{Heuristics for initialization} (DL-Book: 8.4) scale the weights of each layer in a way that at at the end of the layer, the data has more or less the same energy (and gradient norms are more or less the same at each layer).
+  \item \textbf{pre-training} (DL-Book: 8.7.4). for better initialization, to avoid local minima (less relevant today).
+\end{itemize}
+
+\subsection{Norm-Based Regularization}
+
+\(
+\cR_{\Omega}(\theta;\cS)
+= 
+\cR(\theta;\cS)
++ 
+\Omega(\theta),
+\)
+
+where \(\Omega\) is a functional (function from a vector-space to the field over
+which it's defined) that does not depend on the training data.
+
+\sep
+
+\Def[\(L_2\) Frobenius-Norm Penalty (Weight Decay)]
+
+\(
+\Omega(\theta) = \frac{1}{2}\sum_{l = 1}^L \lambda^l\norm{\MW}_F^2,
+\quad
+\lambda^l\geq 0
+\)
+
+\Com It's common practice to only penalize the weights, and not the biases.
+
+\sep
+
+So, the assumption here is that the weights have to be small. So we'll only
+allow a big increase in the weights, if it comes at a much bigger increase in
+performance. Regularization based on the \(L_2\)-norm is also called \emph{weight-decay}, as
+
+\(
+\frac{\partial \MOmega}{\partial w_{ij}^l}
+= 
+\lambda^lw_{ij}^l,
+\)
+
+which means that the weights in the \(l\)-th layer get pulled towards zero with
+``gain'' \(\lambda^l\). What happens in the gradient-update step is
+\begin{align*}
+\theta(t+1)
+&=\theta(t)-\nabla_{\theta}\cR_{\Omega}(\theta;\cS)
+\\
+&=
+\underbrace{(1-\eta\lambda^l)\theta(t)}_{\text{weight decay}}
+-\underbrace{\eta}_{\substack{\text{step}\\\text{size}}}
+\underbrace{\nabla_\theta\cR}_{\text{data dep.}}.
+\end{align*}
+and also note that we require \(\eta\lambda^l<1\).
+
+\sep
+
+Let's analyze the weight decay: The Quadratic (Taylor) approximation of \(\cR\)
+around the optimal \(\theta^*\) would be
+
+\begin{align*}
+\cR(\theta)
+&\approx
+\cR(\theta^*)
++
+\underbrace{\nabla_{\theta}\cR(\theta^*)^\T}_{=\vo}(\theta-\theta^*)
++
+\frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*)
+\\
+&=\cR(\theta^*)
++
+\frac{1}{2}(\theta-\theta^*)^\T\MH(\theta-\theta^*)
+\qquad\qquad(\star)
+\end{align*}
+where \(\MH_{\cR}\) is the hessian of \(\cR\), so
+\[
+(\MH_{\cR})_{i,j}
+= 
+\frac{\partial^2 \cR}{\partial \theta_i \partial \theta_j}
+\]
+and \(\MH\) is the evaluation of \(\MH_{\cR}\) at \(\theta^*\):
+\[
+\MH : = \MH_{\cR}(\theta^*).
+\]
+So now we have the upper quadratic approximation of the cost function
+\((\star)\) (so we're assuming it is a parabola and that we know \(\theta^*\)). Now,
+let's compute the gradient of that upper approximation of \(\cR\) (in \((\star)\)).
+\[
+\nabla_{\theta}\left[
+\cR(\theta^*)
++ 
+\frac{1}{2}(\theta - \theta^*)^\T\MH(\theta - \theta^*)
+\right]
+= 
+-\MH\theta^* +\MH\theta
+\tag{*}
+\]
+Further, recall that
+\[
+\nabla_{\theta}\Omega
+= 
+\vlambda\odot\theta
+= 
+\diag(\vlambda)\theta
+\]
+So, now, let's set \(\nabla_{\theta}\cR_{\Omega}\) (with \(\nabla_{\theta}\cR\) 
+approximated as in \((*)\)) equal to zero.
+\begin{align*}
+&&
+\nabla_{\theta}\cR_{\Omega}
+&\stackrel{!}{\approx} 
+0
+\\
+&\Longleftrightarrow&
+-\MH\theta^*+\MH\theta
++\diag(\vlambda)\theta
+&\mbeq 0
+\\
+&\Longleftrightarrow&
+(\MH +\diag(\vlambda))\theta
+&=
+\MH\theta^*
+\\
+\shortintertext{Since both \(\MH\) and \(\diag(\vlambda)\) are s.p.s.d. we can
+invert their sum} 
+&\Longleftrightarrow&
+\theta
+&=
+(\MH +\diag(\vlambda))^{-1}
+\MH\theta^*
+\end{align*}
+Now, what we can directly see here is that if we use no L2-regularization
+\(\theta = \theta^*\). Now, since \(\MH\) is s.p.s.d. we can diagonalize it to
+\(\MH = \MQ\MLambda\MQ^\T\) where \(\MLambda = \diag(\epsilon_1,\ldots,\epsilon_d)\) and
+plug this in which gives us
+\begin{align*}
+\theta
+&=
+(\MQ\MLambda\MQ^T +\diag(\vlambda))^{-1}
+\MQ\MLambda\MQ^T\theta^*
+\\
+&=\text{\todo{do this steps and write down assumptions}}
+\\
+&=\MQ\underbrace{(\MLambda+\diag(\vlambda))^{-1}\MLambda}_{
+=\diag\left(
+\frac{\epsilon_1}{\epsilon_1+\lambda_1},
+\ldots, 
+\frac{\epsilon_d}{\epsilon_d+\lambda_d}\right)
+}\MQ^\T\theta^*.
+\end{align*}
+So this gives us an idea what happens with \(\theta^*\) in the directions of the
+eigenvectors of the hessian \(\MH\) if we use L2-regularization:
+\begin{itemize}
+  \item if \(\epsilon_i\gg\lambda_i\): \textbf{effect vanishes}: along directions
+  in parameter space with \emph{large} eigenvalues \(\epsilon_i\) the weights are
+  almost not reduced
+  \item if \(\epsilon_i\ll\lambda_i\): \textbf{shrinking effect}: along the
+  directions in parameter space with small eigenvalues \(\epsilon_i\) the weights
+  are shrunk to nearly zero magnitude.
+\end{itemize}
+The following picture illustrates this better:
+
+\begin{center}
+  \includegraphics[width=0.5\linewidth]{%
+img/l2-regularization-effects-in-risk-space}
+\end{center}
+
+The isometric balls illustrate the regularization loss (L2) for any choice of
+\(\theta\) (or \(w\)), and the ellipsoid curves illustrate the risk (for
+a parabolic risk). So \(\tilde{w}\) is the point with the least loss for its
+specific regularization loss. As we can see, at that point
+\begin{itemize}
+  \item downwards the risk has a large eigenvalue, as the risk increases
+  rapidly. And as we've stated above, the value of \(w\) along that dimension is
+  not reduced that much.
+  \item from right to left (starting at \(w^*\)) the risk has a very low
+  eigenvalue, and hence \(\tilde{w}\) is reduced much more along that dimension.
+\end{itemize}
+
+\sep
+
+\Def[L1-Regularization (sparsity inducing)]
+
+\(
+\Omega(\theta)
+= 
+\sum_{l = 1}^L
+\lambda^l\norm{\MW^l}_1
+= 
+\sum_{l = 1}^L
+\lambda^l
+\sum_{i,j}
+\abs{w_{ij}},
+\qquad
+\lambda^l\geq 0
+\)
+
+\sep
+
+\todo{Understand what is mentioned about the one-dimensional problem.}
+
+\todo{Understand connection to batch-normalization with the powers of \(\eta\)
+here\ldots}
+
+\subsubsection{Regularization via Constrained Optimization}
+
+An alternative view on regularization is for a given \(r>0\), solve
+\[
+\min_{\theta, \norm{\theta}\leq r}
+\cR(\theta.)
+\]
+So we're also constraining the size of the coefficients indirecty, be
+constraining \(\theta\) to some ball.
+
+\ssep
+
+The simple optimization approach to this is: \emph{projected} gradient descent
+\[
+\theta(t + 1)
+= 
+\Pi_r(\theta(t) - \eta\nabla\cR),
+\qquad
+\Pi_r(\vv): =
+\min\set{1,\frac{r}{\norm{\vv}}}\vv
+\]
+So we're essentially clipping the weights.
+
+\ssep
+
+Actually, for each \(\lambda\) in L2-Regularization there is a radius \(r\) that
+would make the two problems equivalent (if the loss is convex).
+
+\ssep
+
+Hinton made some research in 2013 and realized that
+\begin{itemize}
+  \item the constraints do not affect the initial learning (as the weights are
+  assumed to be small at the beginning), so we won't clip the weights. So the
+  constraints only become active, once the weights are large.
+  \item alternatively, we may just constrain the norm of the incoming weights
+  for each unit (so use row-norms for the weight matrices). This had some
+  practical success in stabilizing the optimization.
+\end{itemize}
+
+\subsubsection{Early Stopping}
+
+Gradient descent usually evolves solutions from: simple + robust \(\to\) complex +
+sensitive. Hence, it makes sense to stop training early (as soon as validation
+loss flattens/increases). Also: computationally attractive.
+
+Since the weights are initialized to small values (and grow and grow to
+fit/overfit) we're kindof clipping/constraining the weight
+sizes by stopping the learning process earlier.
+
+Let's analyze the situation closer: If we study the gradient descent
+trajectories through a quadratic approximation of the loss around the optimal
+set of parameters \(\theta^*\). We've derived previously already (and show it
+here again with slightly different notation) that:
+\[
+\evalat{\nabla_{\theta}\cR}{\theta_0}
+\approx
+\evalat{\nabla_{\theta}\cR}{\theta^*}
++ 
+\evalat{\MJ_{\nabla\cR_{\theta}}}{\theta^*}
+(\theta_0 - \theta^*)
+= 
+\MH(\theta_0 - \theta^*).
+\]
+This is just because the Jacobian of the gradient map is the Hessian
+\(\MH_{\cR}\) from before.
+
+So (as seen previously) we have that
+\[
+\theta(t + 1)
+= 
+\theta(t)
+- \evalat{\eta
+\nabla_{\theta}\cR}{\theta(t)}
+\approx
+\theta(t) - \eta\MH(\theta(t) - \theta^*).
+\]
+Now, subtracting \(\theta^*\) on both sides gives us
+\[
+\theta(t + 1) - \theta^*\approx
+(\MI - \eta\MH)(\theta(t) - \theta^*)
+\]
+Now we'll use the same trick as before that we can diagonalize the hessian \(\MH\)
+as it's s.p.s.d., so \(\MH = \MQ\MLambda\MQ^\T\). Inserting this gives us:
+\[
+\theta(t + 1) - \theta^*\approx
+(\MI - \eta\MQ\MLambda\MQ^\T)(\theta(t) - \theta^*)
+\]
+Now let's have a look at everything w.r.t the eigenbasis of \(\MH\), let's define
+\(\tilde{\theta} = \MQ^\T\theta\). Then
+\[
+\tilde{\theta}(t + 1) - \tilde{\theta}^*\approx
+(\MI - \eta\MLambda)(\tilde{\theta}(t) - \tilde{\theta}^*)
+\]
+Now, assuming \(\theta(0) = \vo\) (and inserting and using it) and a small \(\eta\)
+(\(\forall i\colon \abs{1 - \eta\lambda_i}<1\)) one gets explicitly
+\[
+\tilde{\theta}(t) = \tilde{\theta}^* -
+\underbrace{(\MI - \eta\MLambda)^t\tilde{\theta}^*}_{\mathclap{\to 0\text{ with
+upper ass. on eigenvalues}}}.
+\]
+Thus (comparing to the previous analysis) if we can choose \(t\), \(\eta\) s.t.
+\[
+(\MI - \eta\Lambda)^t\mbeq\lambda(\MLambda + \lambda\MI)^{-1}
+\]
+\todo{I don't get why we strive for this condition??? It is connected to
+something of before\ldots}
+
+\todo{Understand how we get to the next result by doing polynomial
+approximations of both sides (see ``Early Stopping: Analysis (Details 1,2 of
+2)'')}
+
+which for \(\eta\epsilon_i\ll 1\), and \(\epsilon_i\ll\lambda\) can be achieved
+approximately via performing \(t = \frac{1}{\eta\lambda}\) steps.
+
+So early stopping (up to the first order) can thus be seen as an approximate
+\(L_2\)-regularizer.
+
+\subsection{Dataset Augmentation}
+
+Applying some transformations to the input data such that we know that the
+output is not affected. E.g., for images: mirroring, slight rotations, scaling,
+slight shearing, brightness changes. Blows up data, but: there are approaches to
+incorporating this into the gradient instead of the input data.
+
+\subsubsection{Invariant Architectures}
+
+Instead of augmenting the dataset one could build an architecture that is
+invariant to certain transformations of the data.
+
+\sep
+
+First, we distinguish the following terms: Let's say we have some \(\vx\) and
+apply the transformation \(\vx': =\tau(\vx)\). Then for our neural network \(F\)
+
+\begin{itemize}
+  \item \Def[Invariance] means that \(F(\vx) = F(\tau(\vx))\).
+  \item \Def[Equivariance] means that \(\tau(F(\vx)) = F(\tau(\vx))\).\\
+  So applying the transformation before or after applying \(F\) doesn't change a
+  thing (e.g., convolutions and translations are equivariant).
+\end{itemize}
+
+\ssep
+
+E.g. NNs where the first layer is a convolution are invariant to image
+translation. Hence, it would make no sense to augment the dataset of images with
+translations. It also saves computation and memory not to do this. So if we have
+an architecture that is invariant to certain dataset augmentations the
+augmentations become obsolete. So, if you can, choose an invariant architecture
+to make your life easier in the first place.
+
+\subsubsection{Injection of Noise}
+
+At various places: inputs (noise robustness), weights (regularization), targets
+(network becomes more careful)
+
+\subsubsection{Semi-Supervised Training}
+
+If we have a lot of data, but only a few datapoints are labeled. Then
+semi-supervised training may become useful. You may build a generative model or
+an autoencoder to learn how to represent your data (learn features). Then, we
+train a supervised model on top of these representations.
+
+\subsubsection{Multi-Task Learning}
+
+If we have different tasks that we may want to solve, we may share the
+intermediate representations across the tasks and then learn jointly (i.e.,
+minimize the combined objective). A typical architecture would be to share the
+low-level representations, lern the high-level representations per task.
+
+\subsection{Dropout}
+
+\textbf{Dropout idea:} randomly ``drop'' subsets of the units in the network.
+
+So more preciely, we'll define a ``keep'' probability \(\pi_i^l\) for unit \(i\) in
+layer \(l\).
+\begin{itemize}
+  \item typically: \(\pi_i^0 = 0.8\) (inputs), \(\pi^{l\geq 1} = 0.5\) (hidden units)
+  \item realization: sampling bit mask and zeroing out activations
+  \item effectively defines an exponential ensemble of networks (each of which
+  is a sub-network of the original one), just that we sample these models at
+  training-time (instead of during prediction) and we \emph{share} the
+  parameters
+  \item all modles share the same weights
+  \item standard backpropagation applies.
+  \item This prevents complex co-adaptions in which a feature detector is only
+helpful in the context of several other specific feature detectors. Instead,
+each neuron learns to detect a feature that is generally helpful for producing
+the correct answer given the combinatorially large variety of internal contexts
+in which it must operate. (Hinton et al., 2012). This enforces the features to be redundant (not too specific about one thing in
+the image) and also to build on top of \emph{all} the features of the previous
+layer (since we never know if some are absent).
+\end{itemize}
+
+\textbf{Benefits:} benefits of ensembles with the runtime complexity of the
+training of one network. The network gets trained to have many different paths through it to
+get the right result (as neurons are turned off).
+
+Equivalent to: adding multiplicative noise to weights or training exponentially
+many sub-networks \(\sum_{i = 1}^{n}\binom{n}{i} = 2^n\) wher \(n\) is the number of
+compute units (so at each iteration we turn some nodes off according to some
+probability). So we're getting the benefits of ensembles with the runtime
+complexity of just training one network.
+
+Ensembling corresponds to taking geometric mean (instead of usual arithmetic)
+(must have to do with exponential growth of networks) of the ensembles:
+
+\(
+\cProb[\text{ensemble}]{y}{\vx}
+= 
+\sqrt[d]{
+\prod_{\mu}
+\Prob{\vmu}
+\cProb{y}{\vx,\vmu}
+}
+\)
+
+\sep
+
+Having to sample several sub-networks for a prediction is somewhat inconvenient,
+so the idea that Hinton et al. came up with is: scaling each weight \(w_{ij}^l\)
+by the probability of the unit \(j\) being active 
+\[
+\tilde{w}_{ij}^l
+\gets
+\pi_j^{l - 1}
+w_{ij}
+\]
+This makes sure that the net (total) input to unit \(x_i^{l}\) is calibrated,
+i.e.,
+\[
+\sum_{j}\tilde{w}_{ij}^lx_j^{l - 1}
+\mbeq
+\Exp[Z\sim\Prob{Z}]{
+\sum_{j}Z_{j}^{l - 1}w_{ij}x_j^{l - 1}
+}
+\sum_{j}\pi_{j}^{l - 1}w_{ij}x_j^{l - 1}
+\qquad\text{\ok}
+\]
+It can be shown that this approach leads to a (sometimes exact) approximation of
+a gemoetrically averaged ensemble (see DL-Book, 7.12).
+
+\sep
+
+\Ex Let's say that at the end we selected each unit with a probability of 0.5.
+Then when typically when we're finished with training our neural network, we're
+going to multiply all the weights that we obtained with 0.5 to reduce the
+contribution of each of the features (since we'll have all of them). So with
+this trick for the prediction we can just do a single forward pass.
+
+\sep

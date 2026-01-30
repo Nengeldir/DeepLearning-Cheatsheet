@@ -1,0 +1,983 @@
+\section{Unsupervised Learning}
+
+Here we'll look at what we can say about a distribution of \(\rvX\), when we have
+some samples \(\vx_1,\ldots,\vx_N\). Unsupervised learning is the most dangerous
+thing that we can do (dangerous if we don't know what we're doing). Unsupervised
+learning usually is hard, because we don't have a goal. The final goal of
+unsupervised learning is \emph{density estimation} - so, understand the
+distribution that the data is coming from. Other things we might strive for is
+interpretability of the results we've learned about \(p(x)\). Another key aspect
+of unsupervised learning is: ``I don't know what I'm looking for until I find
+it.''
+
+\sep
+
+\todo{Have a look at the example algorithm: ``Latent Dirichlet Allocation'' A
+clustering algorithm for documents. This is a very useful algorithm if we're
+trying to summarize documents and trying to understand what there is in these
+documents. We'll come to LDA back later.}
+
+\subsection{Density Estimation}
+
+\Def[Density Estimation] is a standard problem in statistics and unsupervised
+learning. It's used to learn the distribution of the data. Classically, we use a
+\emph{parametric family of densities}
+\[
+\dset{p_{\theta}}{\theta\in\Theta}
+\]
+to describe the set of densities that we may model. Usually, the parameters are
+stimated with MLE (expectation w.r.t. the empirical distribution)
+\[
+\theta^*
+=\argmax_{\theta}
+\Exp[\vx\sim p_{\text{emp.}}]{\log(p_{\theta}(\vx))}.
+\]
+
+\sep
+
+However, real data is rarely gaussian, laplacian, \ldots e.g., images. So the
+fact that in general we cannot solve for \(p_\theta\) for a parametric function
+makes this task quite complicated.
+
+\ssep
+
+So when using a \emph{prescribed model} \(p_\theta\) we have to
+\begin{itemize}
+  \item ensure that \(p_\theta\) defines a proper density:
+  \[
+  \int p_\theta(\vx)\,d\vx =  1.
+  \]
+  \item and to be able to evaluate the density \(p_\theta\) at various sample
+  points \(\vx\)
+  \begin{itemize}
+  \item this may be trivial for models such as exponential families (simple
+  formulas)
+  \item but impractical for complex models (Markov networks, DNNs)
+\end{itemize}
+\end{itemize}
+Now, the question is what strategies can we use for more complex models.
+
+\ssep
+
+A typical example for an non-parametric and unnormalized model \todo{but it
+looks normalized?} is kernel-density estimation.
+
+\ssep
+
+\Def[Kernel Density Estimator] Let \(\vx_1,\ldots,\vx_n\) be a sample, and \(k\) a
+kernel with bandwidth \(h>0\) then the estimator is defined as:
+\[
+\overline{p}_\theta(\vx)
+= 
+\frac{1}{n}
+\sum_{i = 1}^n
+k_h(\vx - \vx_i)
+= 
+\frac{1}{nh}
+\sum_{i = 1}^n
+k\left(\frac{\vx - \vx_i}{h}\right).
+\]
+
+\ssep
+
+The problem with this is that the rate of convergence is \(\log(\log(n))\) - this
+is extremely painfully slow. This is just a guarantee in general when we know
+nothing about our density.
+
+\sep
+
+An alternative is to use \emph{unnormalized models} (non-parametric: the number
+of parameters depends on dataset size). These then represent improper density
+functions:
+\[
+\underbrace{\overline{p}_\theta(\vx)}_{\text{represented}}
+= 
+\underbrace{c_\theta}_{\text{unknown}}
+\cdot
+\underbrace{p_\theta(\vx)}_{\text{normalized}}.
+\]
+Finding the normalization constant \(c_\theta\) might be really complicated, so we
+can only evaluate relative probabilities. Further, here we cannot use the
+log-likelihood, because scaling up \(\overline{p}_\theta\) leads to an unbounded
+likelihood.
+
+\ssep
+
+So the question still is: is there an alternative \emph{estimation method} for
+unnormalized models?
+
+What we do in practice is we do not look for the exact \(p_\theta\), but we
+look for properties of \(p_\theta\). In many cases these properties depend on our
+prior knowledge of \(p_\theta\). We need to understand what the problem is in
+order to put the prior knowledge into the model that we want to do. This was
+already important in supervised learning (e.g., CNNs with several layers for
+images), and is even more important in unsupervised learning. We have to do the
+same thing there without knowing what our final goal is.
+
+\sep
+
+Finally, Hyvarinen came up with the following idea in 2005. He asked himself whether there's an \emph{operator} that we can apply to \(\overline{p}_\theta\) that does not depend on normalization. - The answer was yes! Instead of estimating \(p_\theta\), we estimate \(\log p_\theta\). 
+
+\ssep
+
+\Def[Score Matching (Hyvarinen 2005)]
+\[
+\psi_\theta: =
+\nabla_{\vx}\log\overline{p}_\theta,
+\quad
+\psi =  \nabla_{\vx}\log p
+\]
+Minimize the criterion
+\[
+J(\theta)
+= 
+\Exp{\norm{\psi_\theta -  \psi}}^2
+\]
+or equivalently (by eliminating \(\psi\) by integration by parts)
+\[
+J(\theta)
+= 
+\Exp{\sum_{i}\partial_i\psi_{\theta,\i} - \frac{1}{2}\psi^2_{\theta,i}}.
+\]
+This expectation can be approximated by sampling.
+
+\ssep
+
+\todo{This was not explained in detail!!}
+
+The main problem with this is that it assumes that the two normalization
+constants are the same! \todo{for which two distr?}
+
+\todo{This idea wasn't really explained.}
+
+\subsection{Autoencoders}
+
+\textbf{Given:} data points \(\set{\vx_1,\ldots,\vx_n}\subset\R^d\)
+
+\textbf{Goal:} \emph{Compress} the data into \(m\)-dim. \((m\leq d)\)
+representation.
+
+\sep
+
+\Def[Autoencoder] any NN that aims to learn the \emph{identity map}.
+\[
+\cR(\theta) = \frac{1}{2n}\sum_{i = 1}^n\norm{\vx - F_\theta(\vx)}_2^2
+= \Exp[\vx\sim p_{\text{emp}}]{\ell(\vx,(H\circ G)(\vx))}
+\]
+\[
+\ell(\vx,\hat{\vx}) = \frac{1}{2}\norm{\vx - \hat{\vx}}^2_2
+\]
+Typically, the network can be broken into two parts \(G\) and \(H\) such that
+\begin{itemize}
+  \item \(F = H\circ G\approx \vx\mapsto\vx\)
+  \item \emph{Encoder}: \(G = F_l\circ\cdots\circ F_1\colon\R^n\to\R^m\),
+  \(\vx\mapsto\vz = \vx^l\)
+  \item \emph{Decoder}: \(H = F_L\circ\cdots\circ F_{l + 1}\colon\R^m\to\R^n\),
+  \(\vz\mapsto\vy = \hat{\vx}\).
+  \item layer \(l\) is usually a ``bottleneck'' layer.
+\end{itemize}
+
+\Com Just a special case of a feedforward NN, that can be trained through
+backpropagation.
+
+\sep
+
+Autoencoders provide a canonical way of \emph{representation learning} (since
+NNs naturally do this). Note, how the data compression (learning compressed
+representation) is just a ``proxy'' and not the real learning objective of the
+network (identity function).
+
+\subsubsection{Linear Autoencoding}
+
+\Def[Linear Autoencoder]
+
+A linear autoencoder just consists of two linear maps: an encoder
+\(\MC\in\R^{m\times d}\) and a decoder \(\MD^{d\times m}\). The objective it
+minimizes is then:
+\[
+\cR(\theta)
+= 
+\frac{1}{2n}
+\sum_{i = 1}^n
+\norm{\vx_i - \MD\MC\vx_i}_2^2.
+\]
+
+So it's a NN with one hidden layer (no biases and linear activation
+functions) which will contain the compressed representation
+\(\vz = \MC\vx\in\R^{m}\).
+
+\sep
+
+\Def[Linear Autoencoder with Coupled Weights] 
+
+Then, we define \(\MD: =\MC^\T\).
+
+\sep
+
+\Def[Singular Value Decomposition]
+
+\todo{Define this cleanly!!!!}
+
+\todo{Define this cleanly!!!!}
+
+\todo{Define this cleanly!!!!}
+
+Recall that the SVD of a data matrix
+\[
+\MX = 
+\begin{bmatrix}
+\vertbar & \vertbar & & \vertbar\\
+\vx_1 & \vx_2 & \cdots & \vx_k\\
+\vertbar & \vertbar & & \vertbar\\
+\end{bmatrix}
+\]
+is of the following form:
+\[
+\MX
+= 
+\underset{n\times n}{\MU}
+\underbrace{
+\diag^\dagger(\sigma_1,\ldots,\sigma_{\min(n,k)})
+}_{=:\MSigma\in\R^{n\times k}}
+\underset{k\times k}{\MV^\T}.
+\]
+And the matrices \(\MU\) and \(\MV\) are orthogonal - so we have an orthogonal
+basis. Further recall that via the SVD we can get the best rank \(k\)
+approximation of a linear mapping. It also is a decomposition that preserves as
+much of the variance (or energy) of the data for a predefined number of desired
+basis vectors to represent it.
+
+\intertitle{Optimal Linear Compression}
+
+\Thm[Eckhart-Young] For \(m\leq\min(n,k)\) and the objective
+\[
+\argmin_{\hat{\MX}\colon\rank(\hat{\MX}) = m}
+\norm{\MX - \hat{\MX}}_F^2
+= \MU_m
+\diag(\sigma_1,\ldots,\sigma_m)
+\MV_m^\T
+\]
+where the subscript \(m\) refers to the matrices of the SVD pruned to \(m\) columns.
+
+\ssep
+
+\Cor This means that a linear auto-encoder with \(m\) hidden units cannot improve
+the SVD since \(\rank(\MC\MD)\leq m\). However, the auto-encoder can achieve the result of
+the SVD.
+
+\ssep
+
+\Thm Given the SVD of the data \(\MX = \MU\diag(\sigma_1,\ldots,\sigma_n)\MV^\T\).
+The choice \(\MC = \MU^\T_m\) and \(\MD = \MU_m\) minimizes the squared reconstruction
+error of a two-layer linear auto-encoder with \(m\) hidden units.
+
+\Proof
+\begin{align*}
+\MD\MC\MX
+=
+\MU_m\MU_m^\T\MU\MSigma\MV^T
+=
+\MU_m\begin{bmatrix}\MI_m & \MO\end{bmatrix}\MSigma\MV^T
+=
+\MU_m\begin{bmatrix}\MSigma_m & \MO\end{bmatrix}\MV^T
+=
+\MU_m\MSigma_m\MV_m^T.
+\end{align*}
+And as we know from the Eckhart-Young theorem \(\hat{\MX} = \MU_m\MSigma_m\MV_m^T\)
+is the best \(m\)-dimensional approximation of the original data \(\MX\). 
+
+Now, since \(\MC = \MU_m^\T\) and \(\MD = \MU_m\) that means that we can do weight
+sharing between the decoder and encoder network, since \(\MC = \MD^\T\).
+
+Another thing to note is that the solution is \emph{not unique!} For any
+invertible matrix \(\MA\in GL(m)\) we have
+\[
+\underbrace{(\MU_m\MA^{-1})}_{\tilde{\MD}}
+\underbrace{(\MA\MU_m^\T)}_{\tilde{\MC}} = \MU_m\MU_m^\T
+\]
+Now, restricting through weight sharing that \(\MD = \MC^\T\) will enforce that
+\[
+\MA^{-1} = \MA^\T
+\]
+hencem \(\MA\in O(m)\) (orthogonal group, rotation matrices). Then the mapping
+\(\vx\to\vz\) is determined (up some rotation that we do in-between, rotation and
+its inverse).
+
+\intertitle{Principal Component Analysis}
+
+\todo{Define this cleanly!!!!}
+
+\todo{Define this cleanly!!!!}
+
+\todo{Define this cleanly!!!!}
+
+A way to solve \todo{thsi problem, which?? the rotation??} this problem is
+through PCA. First, we center the data (pre-processing) as follows:
+\[
+\vx_i
+\mapsto
+\vx_i
+\sum_{i = 1}^k
+\vx_i
+\]
+Then we define
+\[
+\MS: =\MX\MX^\T
+\]
+which is the sample covariance matrix. And then, in order to get \(\MU\) we just
+do the singular value decomposition of \(\MS\). If we relate it to the SVD of
+\(\MX\) we can see that
+\[
+\MS = \MU\MSigma\MV^\T\MV\MSigma\MU^\T = \MU\MSigma^2\MU^\T.
+\]
+So, the column vectors of \(\MU\) are the eigenvectors of the covariance matrix.
+And \(\MU_m\MU_m^\T\) is the orthogonal projection onto \(m\) principal components
+of \(\MS\).
+
+\todo{Might there also be efficiency reasons for doing the PCA instead of the
+SVD of \(\MX\)???}
+
+Note that if we wanted to get \(\MV\) the we'd just do the PCA with
+\(\MS = \MX^\T\MX\).
+
+\subsubsection{Non-Linear Autoencoders}
+
+Non-linear autoencoders allow us to learn powerful non-linear generalizations of
+the PCA.
+
+\sep
+
+\Def[Non-Linear Autoencoder] contains many hidden layers with 
+nonlinear-activation functios as we want (as long as there's a bottleneck layer)
+and train the parameters via MLE.
+
+\subsubsection{Regularized Autoencoders}
+
+One may also regularize the code \(\vz\) via a regularizers \(\Omega(\vz)\). This
+will give us a regularized autoencoder.
+
+There are various flavours of regularization:
+\begin{itemize}
+  \item standard \(L_2\) penalty: ability to learn ``overcomplete'' codes
+  \item \Def[Code Sparseness] e.g., via \(\Omega(\vz) = \lambda\norm{\vz}_1\)
+  \item \Def[Contractive Autoencoders]
+  \(\Omega(\vz) = \lambda\norm{\frac{\partial\vz}{\partial\vx}}_F^2\). This
+  penalizes the Jacobian and generalizes weight decay (cf. Rifai et al, 2011)
+\end{itemize}
+
+\subsubsection{Denoising Autoencoders}
+
+Autoencoders allso allow us to separate the signal from noise: De-noising
+autoencoders aim to learn features of the original data representation that are
+robust under noise.
+
+\sep
+
+\Def[Denoising Autoencoder] we perturb the inputs
+\[
+\vx\mapsto\vx_{\veta},
+\]
+where \(\eta\) \emph{is a random noise vector}, e.g., additive (white) noise
+\[
+\vx_\eta = \vx + \veta,
+\qquad
+\veta\sim\cN(\vo,\sigma^2\MI)
+\]
+and instead of the original objective, we minimize the following
+\[
+\Exp[\vx]{
+\Exp[\veta]{
+\ell(\vx,(H\circ G)(\vx_{\veta}))
+}
+}
+\]
+The hope is that we'll achieve \emph{de-noising}, which happens if
+\[
+\norm{\vx - H(G(\vx_{\veta}))}^2.
+<
+\norm{\vx - \vx_{\veta}}^2
+\]
+So this would mean that the reconstruction error of the noisy data is less than
+the error we created by the noise we've added (then the de-noising works).
+
+\subsection{Factor Analysis}
+
+\subsubsection{Latent Variable Analysis}
+
+Latent Variable Analysis provides a generic way of defining probabilistic, i.e.,
+\emph{generative models} - the so-called \emph{latent variable models}. They
+usually work as follows
+\begin{enumerate}
+  \item Define a \emph{\tcb{latent variable}} \(\vz\), with a distribution
+  \(p(\vz)\)
+  \item Define \emph{\tcb{conditional models}} for the observables \(\vx\)
+  conditoned on the latent variable: \(\cDist{p}{\vx}{\vz}\)
+  \item Construct the \emph{\tcb{observed data model}} by integrating/summing
+  out the latent variables
+  \begin{gather*}
+  \begin{align*}
+  p(\vx)
+  =
+  \int
+  p(\vz)
+  \cDist{p}{\vx}{\vz}
+  \,
+  \mu(d\vz)
+  =\begin{cases}
+  \int p(\vz)\cDist{p}{\vx}{\vz}\, d\vz, & \mu=\text{Lebesgue}\\
+  \sum_{\vz} p(\vz)\cDist{p}{\vx}{\vz}, & \mu=\text{counting}\\
+  \end{cases}  
+  \end{align*}
+  \end{gather*}
+\end{enumerate}
+
+\sep
+
+\Ex[Gaussian Mixture Models GMMs]
+
+\(\vz\in\set{1,\ldots,K}\), \(p(\vz) = \)mixing proportions
+
+\(\cDist{p}{\vx}{\vz}:\) conditional densities (Gaussians for GMMs)
+
+\sep
+
+The idea of latent variable models is very similar to the one of autoencoders.
+The idea is to have some
+\begin{itemize}
+  \item \(\vx\in\R^d\)
+  \item and we want to embed it into \(\R^k\) (\(k\ll d\))
+  \item so we'll use \(\vz\in\R^k\) (latent-space)
+  \item and look at the conditional probabilities \(\cDist{p}{\vx}{\vz}\) for some
+  \(\vx\)
+\end{itemize}
+Depending on whether \(\vz\) is continuous (e.g., as with PCA) or discrete random
+variable (e.g., GMMs) we'll be using the Lebesgue integral or counting to
+integrate/sum it out.
+
+\sep
+
+A typical approach to for latent variable models is \emph{linear factor
+analysis}.
+
+\intertitle{Linear Factor Analysis}
+
+The idea of linear factor analysis is to explain the data through some
+low-dimensional isotropic gaussian. And the data is mapped/reconstructed through
+some linear map to/from the lower-dimensional space. The reconstruction is done
+via a linear map \(\MW\) and then different gaussian noises are added to the
+reconstructed vector (via \(\veta\)).
+
+So the \emph{latent variable prior} is \(\vz\in\R^m\) where
+\[
+\vz\sim\cN(\vo,\MI)
+\]
+and we have a linear \emph{observation model} for \(\vx\in\R^n\)
+\[
+\vx = \vmu + \underset{n\times m}{\MW}\vz + \veta,
+\quad
+\veta\sim\cN(\vo,\MSigma),
+\,
+\MSigma: =\diag(\sigma_1^2,\ldots,\sigma_n^2)
+\]
+Further note that
+\begin{itemize}
+  \item \(\vmu\) and \(\vz\) are \emph{independent}
+  \item typically \(m\ll n\) (fewer factors than features)
+  \item so few factors account for the depencencies between many observables
+  \item The vector \(\vmu\) is computed through MLE on the training set
+  \[
+  \hat{\vmu} = \frac{1}{k}\sum_{i = 1}^k\vx_i
+  \]
+  Usually we assume centered data, so \(\vmu = \vo\). Since \(\vmu\) only complicates
+  the notation and is actually easy to determine.
+\end{itemize}
+
+Recall, that in the previous part when we were doing autoencoders, the
+deviations that we were having for each of the components was the same one
+\todo{why??}. So we wanted the error to be the same for each of the
+components. Now, with this model, with \(\veta\) we're allowing for additional
+flexibility for the error. There will be some components that we'll be able to
+explain with less error, and some with more.
+
+So, \(\vz\) shoud capture everything that is important to explain the data, and
+\(\veta\) can be viewn as noise.
+
+Altough we're assuming that here everything is gaussian, in general we may view
+\(\vz\) as a clustering mechanism, where \(\vz\) determines some cluster components
+that are selected.
+
+\ssep
+
+\Thm The distribution of the \emph{observation model} is
+\[
+\vx\sim\cN(\vmu,\MW\MW^\T + \MSigma).
+\]
+
+\Proof This can be proven in three steps
+
+\begin{enumerate}
+  \item We use the insights on MGFs of and their properties.
+  \item We use the insights on MGFs of multivariate normal distributions
+  \item Then the proof is straightforward.
+\end{enumerate}
+
+If you need some refresher of some core definitions just have a look at them
+(after the proof).
+
+Let \(\vtx: =\MW\vz\) s.t. \(\vx = \vmu + \vtx + \veta\). Now let's determine the MGF of
+\(\vtx\):
+\[
+M_{\vtx}(\vt)
+= 
+\Exp[\vtx]{e^{\vt^\T\vtx}}
+= 
+\Exp[\vz]{e^{\vt^\T\MW\vz}}
+= 
+\Exp[\vz]{e^{\left(\MW^\T\vt\right)^\T\vz}}
+= 
+M_{\vz}(\MW^\T\vt).
+\]
+Now, since \(\vz\sim\cN(\vo,\MI)\) and we know the form of a MGF of a normal
+distribution, we can just plug in:
+\[
+M_{\vz}(\MW^\T\vt)
+= 
+\exp\left(\frac{1}{2}(\MW^\T\vt)^\T\MI(\MW^\T\vt)\right)
+= 
+\exp\left(\frac{1}{2}\vt^\T(\MW\MW^\T)\vt\right).
+\]
+So this gives us
+\[
+M_{\vtx}(\vt)
+= 
+\exp\left(\frac{1}{2}\vt^\T(\MW\MW^\T)\vt\right).
+\]
+which btw shows us that \(\vtx = \MW\vz\sim\cN(\vo,\MW\MW^\T)\).
+
+Now, we defined that \(\vx = \vtx + \veta + \vmu\). Now, in order to determine the
+distribution \(\Prob{\vx}\), we can just use the fact that the MGF of the addition
+of two or more random variables is just the multiplication of their MGFs. So,
+\begin{align*}
+M_{\vx}
+&=
+M_{\vtx+\veta+\vmu}
+\\
+&=
+M_{\vtx}
+\cdot
+M_{\veta}
+\cdot
+M_{\vmu}
+\\
+&=
+\exp\left(\frac{1}{2}\vt^\T\MW\MW^\T\vt\right)
+\exp\left(\frac{1}{2}\vt^\T\MSigma\vt\right)
+\exp\left(\vt^\T\vmu\right)
+\\
+&=
+\exp\left(\vt^\T\vmu+\frac{1}{2}\vt^\T(\MW\MW^\T+\MSigma)^\T\vt\right).
+\end{align*}
+From the form of the MGF \(M_\vx\) we can conclude that
+\[
+\vx\sim\cN(\vmu,\MW\MW^T + \MSigma).
+\]
+\qed
+
+\intertitle{Non-Identifiability of Factors}
+
+Now this seems to be nice, but again we have the \emph{non-identifiability
+problem}, since there exist an infinite amount of solutions for any \(\MW\) that
+is a solution. Just let \(\MQ\) be an orthogonal \(m\times m\)-matrix. Then \(\MW\MQ\)
+is also a solution, because
+\[
+(\MW\MQ)(\MW\MQ)^\T
+= 
+\MW\MQ\MQ^\T\MW^\T
+= \MW\MW^\T.
+\]
+The consequence of this is that the factors of the linear factor analysis are
+only identifieable up to some rotations/relfections in \(\R^m\). Since we care
+what the factors in \(\vz\) mean we need to factor the \emph{rotations} to get a
+better ``interpretability'' of the representation of the data in the latent
+space.
+
+\intertitle{Data Compression View}
+
+Now, how is the factor analysis related to data compression?
+
+\emph{Encoder Step:} Implicitly defined by posterior distribution
+\[
+\cDist{p}{\vz}{\vx}
+= 
+\frac{
+\cDist{p}{\vx}{\vz}
+p(\vz)
+}{
+p(\vx)
+}
+\qquad
+\text{(Bayes)}
+\]
+One can prove that the posterior also follows a normal distribution (see
+\href{http://cs229.stanford.edu}{http://cs229.stanford.edu}). So,
+\[
+\cDist{p}{\vz}{\vx}
+= \cN(\vz;\vmu_{\vz|\vx},\MSigma_{\vz|\vx}),
+\]
+where
+\begin{align*}
+\vmu_{\vz|\vx}
+&=
+\MW^\T\left(\MW\MW^\T+\MSigma\right)^{-1}
+(\vx-\vmu)
+\\
+\MSigma_{\vz|\vx}
+&=
+\MI-\MW^\T\left(\MW\MW^\T+\MSigma\right)^{-1}\MW
+\end{align*}
+Further, if we assume that \(\MSigma = \sigma^2\MI\) and we let \(\sigma^2\to 0\) (the
+reconstruction-error-variance for all the components is the same and we let the
+reconstruction error go to zero), then the following expression just reduces to
+the pseudo-invers:
+\[
+\MW^\T\left(\MW\MW^\T + \sigma^2\MI\right)^{-1}
+\stackrel{\sigma^2\to 0}{\to}
+= :
+\MW^\dagger\in\R^{m\times n}.
+\]
+Consequently with the assumption of zero reconstruction error:
+\begin{align*}
+\vmu_{\vz|\vx}
+&\to
+\MW^\dagger(\vx-\vmu)
+\\
+\MSigma_{\vz|\vx}
+&\to
+\MO
+\end{align*}
+So, if we know \(\MW\) and \(\MSigma\) is assumed to be isotropic with the error
+going to zero the encoding distribution gets very easy to compute.
+
+\intertitle{Maximum Likelihood Estimation}
+
+Now, how do we estimate \(\MW\) and \(\MSigma\)? The idea is fairly simple. 
+
+Let's assume that \(\vx_1,\ldots,\vx_k\riid\cN(\MO,\MA)\). Further let's define
+the data matrix \(\MX\) as
+\[
+\MX = \begin{bmatrix}
+\vertbar & \vertbar && \vertbar\\
+\vx_1 & \vx_2 & \cdots & \vx_k\\
+\vertbar & \vertbar && \vertbar\\
+\end{bmatrix}
+\]
+and the empirical co-variance matrix as
+\[
+\MS: =\frac{1}{k}\sum_{i = 1}^{k}\vx_i\vx_i^\T
+= 
+\frac{1}{k}\MX\MX^\T.
+\]
+Then, the log-likelihood of the data \(\MX\), given \(\MA\) can be written as:
+\[
+\log\left(\Prob{\MX;\MA}\right)
+= 
+-\frac{k}{2}\left(\Tr{\MS\MA^{-1}} - \log\left(\det(\MA)\right)\right)
++  \underset{\text{i.T. of }\MA}{\text{const.}}
+\]
+Note: this can be verified by using the definition of \(\MS\), the cyclic property
+of the trace, and then just write down the matrix-product as block-matrices and
+see what is the diagonal of the resulting matrix.
+
+Now, let's compute the matrix gradients w.r.t. \(\MA\) to know the equations that
+we need to compute the maximum likelihood:
+\begin{align*}
+\nabla_{\MA}\Tr{\MS\MA^{-1}}
+&=-\MA^{-1}\MS\MA^{-1}
+\\
+\nabla_{\MA}\log\left(\det(\MA)\right)&=\MA^{-1}
+\end{align*}
+Now, setting the gradient of the log-likelihood to zero gives us the following
+condition:
+\[
+\nabla_{\MA}\log\left(\Prob{\MX;\MA}\right)\mbeq 0
+\quad\Longleftrightarrow\quad
+\MS\MA^{-1} = \MI.
+\]
+So, the MLE for \(\MA\) is just \(\MA = \MS\).
+
+But recall, that what we want is not \(\MA\), but we want \(\MW\) and \(\MSigma\).
+However, we know that \(\MA\) is just the empirical covariance matrix, and \(\MW\)
+will be the mapping to the low-dimensional space and \(\MSigma\) is the
+reconstruction error.
+\[
+\MA = \MW\MW^\T + \MSigma
+\]
+Now, using the chain rule we get:
+\begin{align*}
+\nabla_{\MW}\MA&=2\MW
+\\
+\nabla_{\MSigma}\MA &= \MI
+\end{align*}
+This gives us the following stationary condition \todo{what does this mean?
+stationary condition?} for \(\MW\) given \(\MSigma\)
+\[
+\MS(\MSigma + \MW\MW^\T)^{-1}\MW = \MW.
+\]
+In general, finding \(\MW\) is not easy. However, a special case is if we assume
+that \(\MSigma = \sigma^2\MI\) (isotropic reconstruction error/noise) and
+\(\MW^\T\MW = \diag(\rho_i^2)\), then by Woodbury's formula we have
+simplifies to:
+\[
+\left(\sigma^2\MI_n + \MW\MW^\T\right)^{-1}\MW
+= 
+\MW\diag(\frac{1}{\sigma^2 + \rho_i^2}).
+\]
+Putting this back into the stationary condition, for each column \(\vw_i\) of
+\(\MW\) we get an eigenvector equation:
+\[
+\MS\vw_i =  (\sigma^2 + \rho_i^2)\vw_i
+\qquad
+\MS\MW
+= \diag(\vlambda)\MW.
+\]
+Then, if \(\vu_i\) is the \(i\)-th eigenvector of \(\MS\), then
+\[
+\vw_i = \rho_i\vu_i,
+\qquad
+\rho_i^2 = \max\set{0,\lambda_i - \sigma^2}.
+\]
+This gives us the \emph{probabilistic interpretation PCA} and showed us how
+we can derive the PCA as a special case for \(\sigma^2\to 0\) (Tipping \& Bishop,
+1999).
+
+\todo{Repeat this section! Was quite involved!!}
+
+\intertitle{Refresher on MGFs and Gaussians}
+
+\Def[Moment Generating Function (MGF)] The MGF \(M_{\rvX}\) of a random vector
+\(\rvX\in\R^n\) is defined as
+\begin{align*}
+M_{\rvX}\colon\R^n&\to\R\\\
+\vt &\mapsto\Exp[\rvX]{e^{\vt^\T\rvX}}.
+\end{align*}
+
+\ssep
+
+The reason \(M_{\rvX}\) is called \emph{moment} generating function is because it
+represents the \emph{moments} of \(\vx\) in the following way: Let
+\(k_1,\ldots,k_n\in\N\), then
+\[
+\Exp[\rvX]{
+x_1^{k_1}
+x_2^{k_2}
+\cdots
+x_n^{k_n}
+}
+= 
+\evalat{\frac{\partial k}{\partial t_1^{k_1}\partial t_2^{k_2}\cdots\partial
+t_n^{k_n}} M_{\rvX}}{\vt = \vo}.
+\]
+
+\ssep
+
+\Thm[Uniqueness Theorem] If \(M_{\rvX}\) and \(M_{\rvY}\) exist for the RVs \(\rvX\)
+and \(\rvY\) and \(M_{\rvX} = M_{\rvY}\) then
+\(\forall \vt\colon\Prob{\rvX = \vt} = \Prob{\rvY = \vt}\) (distributions are
+the same).
+
+\ssep
+
+Now, every distribution has its unique kind of MGF form. Hence, MGFs can be very
+useful to deal with \emph{sums of i.i.d. random variables}:
+
+\ssep
+
+\Thm If \(\rvX,\rvY\) are i.i.d. then \(M_{\rvX + \rvY} = M_{\rvX}\cdot
+M_{\rvY}\).
+
+\ssep
+
+\Def[Multivariable Normal Distribution]
+
+\(\rvX\sim\cN(\vmu,\MSigma)\), \(\rvX\in\R^n\)
+
+\(\mu = \Exp{\rvX}\) (mean)
+
+\(\MSigma = \Exp{(\vx - \vmu)(\vx - \vmu)^\T}\) (variance-covariance matrix)
+
+PDF:
+\[
+p(\vx;\vmu,\MSigma)
+= 
+\frac{1}{\sqrt{(2\pi)^n\cdot\det(\MSigma)}}
+e^{-\frac{1}{2}(\vx - \vmu)^\T\MSigma^{-1}(\vx - \vmu)}
+\]
+
+MGF:
+\[
+M_{\rvX}(\vt)
+= 
+\exp\left(\vt^\T\vmu + \frac{1}{2}\vt^\T\MSigma\vt\right)
+\]
+
+\subsection{Latent Variable Models}
+
+\subsubsection{DeFinetti's Theorem}
+
+There's another way of at looking at latent variable models which is by the
+DeFinetty exchangeable theorem from the 1930s. This is one of the foundations of
+Bayesian probability (although there is nothing Bayesian in this theorem).
+
+\sep
+
+\Thm[DeFinetti's Theorem] For \emph{exchangeable} data (order of dataset
+doesn't matter and they come from the same distribution), we can decompose
+the data by a \emph{latent variable model}
+\[
+\Prob{\vx_1,\vx_2,\ldots,\vx_N}
+= 
+\int
+\prod_{i = 1}^N
+\cDist{p_\theta}{\vx_i}{\vz}
+p_\theta(\vz)
+\,
+d\vz.
+\]
+
+\sep
+
+We \emph{expect} that those hidden variables are: interpretable and actionable
+and even show causal relations.
+
+Later we'll put our Bayesian priors into the distributions \(\Prob{\vz}\) and we
+then hope that the latent structure will tell us something about the data that
+we didn't know before.
+
+\sep
+
+The follwing paragraph of a paper shows why interpretability is important:
+
+F. Doshi-Veletz et al. (NIPS 2015)
+
+\tcgr{``Objectives such as data exploration present unique challenges and
+opportunities for problems in unsupervised learning. While in more typical scenarios, the
+discovered latent structures are simply required for some downstream task – such
+as features for a supervised prediction problem – in data exploration, the model
+must provide information to a domain expert in a form that they can readily
+interpret. It is not sufficient to simply list what observations are part of
+which cluster; one must also be able to explain why the data partition in that
+particular way. These explanations must necessarily be succinct, as people are
+limited in the number of cognitive entities that they can process at one
+time.''}
+
+\sep
+
+\subsubsection{Latent Variable Models}
+
+Classically we define complex models via the \emph{marginalization} of a
+\emph{latent variable model}
+\[
+p_\theta(\vx) = \int p_\theta(\vx,\vz)\,d\vz
+\text{ or }
+p_\theta(\vx) = \sum_{\vz} p_\theta(\vx,\vz)
+\]
+
+\todo{Complete this!!!}
+
+\todo{Complete this!!!}
+
+\todo{Complete this!!!}
+
+\todo{We didn't get into this. Basically we're trying to get the density of
+\(p_\theta(\vx)\), and that is an evidence lower bound that depends on these
+quantities, and if we maximize that given the family restricitions that we
+chose we get that solution.}
+
+\subsubsection{Dimensionality Reduction}
+
+One of the recurring things that we see in all of these models is
+\emph{dimensionality reduction}. So we have that
+\[
+\MX = f(\MZ\MB)
+\]
+where
+\begin{itemize}
+  \item \(\MX\) is \(N\times D\),
+  \item \(\MZ\) is \(N\times K\),
+  \item \(\MB\) is \(K\times D\), and
+  \item \(K\ll D\).
+\end{itemize}
+So we have the data \(\MX\) that we're trying to understand. We'll try to
+understand this data by a tall matrix \(\MZ\) and a fat matrix \(\MB\). The tall
+matrix are the latent factors that we've talking about (how do we summarize the
+information of each sample). And the matrix \(\MB\) is telling us how we can
+recover the original data from the summary. Most of the unsupervised algorithms
+can be captured in this general framework.
+
+Depending on \(f(\argdot)\) and \(\MZ\) and \(\MB\), we arrive at different models:
+\begin{itemize}
+  \item Principal Component Analysis / Factor Analysis \\(\(f\) linear)
+  \item Nonnegative Matrix Factorization\\ (\(f\) ``psomolu\todo{what?}'' or
+  Bernoulli model, and bot \(\MZ\) and \(\MB\) have to be a nonnegative matrix).
+  \item LLE/Isomap/GPLVM (here we also try to do PCA or Factor analysis with
+  nonlinear components (with p.w. linear components))
+  \item Restricted Boltzmann Machine \\(the idea is that \(\MZ\) is discrete)
+  \item Dirichlet Process (aka Chinese Restaurant Process)\\
+  \item Beta Process (aka Indian Buffet Process)
+  \item Implicit Models (e.g., Generative Adversarial Networks)\\
+  (here all the information is moved to the function \(f\) instead of computing
+  the matrices \(\MB\) and \(\MC\))
+\end{itemize}
+
+\todo{Most of these methods just say nothing to me.}
+
+\subsubsection{Implicit Models}
+
+Here we develop statistical models via: \emph{generating stochastic mechanism}
+or \emph{simulation process}.
+
+\emph{Deep implicit models}
+\begin{itemize}
+  \item latent code \(\vz\in\R^d\), \(\vz\sim\pi(\vz)\), e.g.
+  \(\pi(\vz) = \cN(\vo,\MI)\)
+  \item parametrized mechanism: \(F_\theta\colon\R^d\to\R^m\)
+  \item induced distribution \(\vx\in\R^m\), \(\vx\sim p_\theta(\vx)\)
+  \item sampling is easy: random vector + forward propagation.
+\end{itemize}
+
+\sep
+
+\todo{Write an example of how Latent Dirichlet Allocation works and illustrate
+of how all the complexity is put into the Bayesian prior \(\Prob{\vz}\). }
+
+\todo{Write an example of how Latent Dirichlet Allocation works and illustrate
+of how all the complexity is put into the Bayesian prior \(\Prob{\vz}\). }
+
+\todo{Write an example of how Latent Dirichlet Allocation works and illustrate
+of how all the complexity is put into the Bayesian prior \(\Prob{\vz}\). }
+
+\todo{this was done in the lecture. Then connect it to ELBO}.
+
+\todo{Go to next class and see how it will work.}
+
+\todo{Revisit how you can sample from a uniform distribution in order to get
+samples from a gaussian distribution. (Putting it throug the negative CDF
+something\ldots). This is what the implicit general models are doing, draw a
+sample from a unifform distribution, and then through some nonlinearity we'll
+get sample from some other complicated distribution. Until very recently
+generative models were like this. We were able to understand what was coming
+out because we designed it the way we chose. Now, since we put the complexity
+in the othe term, we have no means to interpret the compression, but it gives
+us a universal approximator. This also shows the big risk that we have with the
+implicit models, we cannot understand the latent representation, and we may not
+understand the data that we get out of it - we don't know how good they are.
+Usually, we don't have this nice conjugate prior setting either. Then to get
+the posterior, we need to do sampling, or the variational approximation that we
+skipped before (ELBO) method. TODO: find out what is the likelihood, posterior,
+prior and the marginal likelihood (or evidence of the model) and connect it to
+ELBO. That's just the previous way of doing things that is still very useful,
+and then say which is the new way of doing things (i think it's implicit
+models) and it looks promising.}
+
+\todo{Write here what I've found from the assignment exercise}
+

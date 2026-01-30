@@ -1,0 +1,112 @@
+\section{Feedforward Networks}
+
+\Def[Feedforward Network] set of computational
+units arranged in a DAGn (layer-wise processing)
+
+\( F = F^{L}\circ \cdots \circ F^{1} \)
+
+where each layer \(l\in\set{1,\ldots,L}\) is a composition of the following functions
+
+\(F^{l}\colon \R^{m_{l - 1}}\to\R^{m_l}\) \quad \(F^{l} = \sigma^l\circ \overline{F}^l\)
+
+where \(\overline{F}^l\colon \R^{m_{l - 1}}\to\R^{m_l}\) is the linear function in layer \(l\)
+
+\( \overline{F}^l(\vh^{l - 1}) = \MW^l\vh^{l - 1} + \vb, \quad \MW^l\in\R^{m_{l}\times m_{l - 1}}, \quad \vb\in\R^{m_l} \)
+
+and \( \sigma^l\colon\R^{m_l}\to\R^{m_l} \) element-wise non-linearity at layer \(l\).
+
+Note that \(\vh^0: =\vx\).
+
+\sep
+
+\Def[Hidden Layer] A layer that is neither the input, nor the output layer is called a \emph{hidden layer}.
+
+\sep
+
+So a feedforward neural network represents a \emph{family of functions} \(\cF\).
+
+The functions \(F_{\theta}\in\cF\) are \emph{parametrized} by parameters \(\theta\), \(\theta =  \bigcup_{l = 1}^L\set{\MW^l,\vb^l}\).
+
+\sep
+
+\textbf{Probability Distribution Perspective}
+
+It is often useful to view the output of a FF network as the parameters \(\vmu\) of some distribution over \(\cY\).
+
+\( F_\theta\colon\R^n\to\R^m\to\cP(\cY) \)
+
+\( \vx\stackrel{\text{learned}}{\mapsto}\vmu\stackrel{\text{fixed}}{\mapsto} \cProb{\vy}{\vx;F_\theta}= \cProb{\vy}{\vmu = F_\theta(\vx)}\quad \vy\sim P(\vy;\vmu) \)
+
+\subsection{Output Units and Objectives}
+
+Now, how can we find the \emph{most appropriate function} in \(\cF\) based on training data \(\set{(\vx_1,\vy_1),\ldots,(\vx_N,\vy_N)}\)? There are basically two options (both leading to similar loss functions):
+
+\begin{itemize}
+  \item Decision theory (min. some risk, max. some payoff, \ldots)
+  \item Maximum Likelihood (max. likelihood, min. prob. dens. dist.,\ldots)
+\end{itemize}
+
+\subsubsection{Decision Theory}
+
+In decision theory, we strive to minimize the expected risk (defined through a loss function \(\ell\)) of a function \(F\).
+
+\sep
+
+\Def[Expected Risk of a Function \(F\)]
+
+\(F^* =\argmin_{F} \sum_{y\in\cY} \int_{\cX} \ell(y,F(\vx))p(\vx,y)\,d\vx = \argmin_{F}\underbrace{\Exp[\rvX,\rY]{\ell(\rY,F(\rvX))}}_{\cR^*(F)\text{ expected risk of } F}\)
+
+However, we do not know \(\ell\), we aren't given \(p(\vx,y)\) (only samples).
+
+\sep
+
+\Def[Loss Function]
+
+\( \ell\colon\cY\times\cY\to\R_{\geq 0}\)
+\quad
+\((\underbrace{\vy^*}_{\text{true}},\underbrace{\vy}_{\text{pred.}})\mapsto \ell(\vy^*,\vy) \)
+
+s.t.\(\forall\vy\in\cY\colon \ell(\vy,\vy) = 0\quad\text{and}\quad\forall\vy^*,\vy\in\cY,\vy\neq\vy^*\colon \ell(\vy^*,\vy)>0.
+\).
+
+\sep
+
+\Def[Training Risk / Empirical Risk]
+
+\(\cS_N: =\dset{(\vx_i,y_i)\riid p}{i = 1,\ldots,N}.\)
+
+\(\cR(F;\cS_N) =  \frac{1}{N}\sum_{i = 1}^N \ell(y_i, F(\vx_i))\)
+
+So the \emph{training risk} is the \emph{expected risk} under the empirical distribution induced by the sample \(\cS_N\). 
+
+\sep
+
+\Def[Empirical Risk Minimization]
+
+\( \cF = \dset{F_\theta}{\theta\in\Theta} \quad\text{(e.g. neural network)} \)
+
+\(\hat{F}(\cS_N) = \argmin_{F\in\cF}\cR(F;S_N)\)
+
+\subsubsection{Why Regularization is Needed}
+
+
+Wish: \(\cR(\hat{F};\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F^*)\) (no overfitting)
+
+So as \(n\) grows we'd want to do as good as if we knew \(p(\vx,\vy)\).
+
+Law of large numbers guarantees: \(\cR(F;\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F)\) but this doesn't help us to move from some \(F\to F^*.\) 
+
+In order to ultimately get from \(\hat{F}\) to \(F^*\), which minimizes \(\cR^*(F^*)\), we need to \emph{restrict} \(\cF\) such that \(\cR(\hat{F};\cS_n) \stackrel{n\to\infty}{\to}\cR^*(F^*)\). This will prevent overfitting. However it's not so easy to
+determine how to constrain \(\cF\) such that \(\hat{F}\to F^*\).
+
+\sep
+
+\Def[Regularized Empirical Risk]
+
+\( \cR_r(F;\cS_n) := \cR(F;\cS_n) + \lambda\Omega(\norm{F}) \)
+
+\subsubsection{Regularization Approaches}
+
+Weight decay, data augmentation, noise robustness (to weights, inputs, labels (compensates for errors in labeling of data)), semi-supervised learning, dropout, early stopping (prevent overfitting through long training), multi-task learning (to learn general representation or use more data), parameter sharing (CNNs), ensembles (reduces variance, same bias, costly)
+
+Some regularization methods can be proven to be equivalent. However: only in the limit. Thus, it's good to use combinations of them in finite horizons.

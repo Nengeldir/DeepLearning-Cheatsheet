@@ -1,0 +1,64 @@
+% use font size 10pt for large document
+% use font size  8pt for small document
+\documentclass[a2paper,8pt]{extarticle}
+
+\usepackage{cheatsheet}
+% TITLE
+\title{Deep Learning}
+\author{Summary - Fall 2018}
+\date{Andreas Bloch}
+
+\begin{document}
+\begin{landscape}
+
+\pagenumbering{gobble}
+
+% GREY TEXT FOR SUMMARIES
+\iftoggle{greytext}{%
+  % grey out text
+  \definecolor{lighttext}{rgb}{0.95,0.95,0.95}
+  \color{lighttext}
+}{
+  % show text with normal color
+}
+
+% EQUATION SPACING
+\iftoggle{shortdocument}{
+\setlength{\abovedisplayskip}{0pt}%
+\setlength{\belowdisplayskip}{0pt}%
+\setlength{\abovedisplayshortskip}{0pt}%
+\setlength{\belowdisplayshortskip}{0pt}%
+\setlength{\jot}{0pt}% Inter-equation spacing
+}{
+\setlength{\abovedisplayskip}{3pt}%
+\setlength{\belowdisplayskip}{3pt}%
+\setlength{\abovedisplayshortskip}{3pt}%
+\setlength{\belowdisplayshortskip}{3pt}%
+\setlength{\jot}{3pt}% Inter-equation spacing
+}
+
+\begin{multicols*}{7}
+\small
+
+\input{chapters/1_Probability}
+\input{chapters/2_Analysis}
+\input{chapters/3_Linear_Algebra}
+\input{chapters/4_Derivatives}
+\input{chapters/5_Information_Theory}
+\input{chapters/6_NN_functions_and_derivatives}
+\input{chapters/7_Taylor_Approximations}
+\input{chapters/8_Newtons_Method}
+\input{chapters/9_Approximation_Theory}
+\input{chapters/10_Feedforward_Networks}
+\input{chapters/11_Backpropagation}
+\input{chapters/12_Convolutional_Neural_Networks}
+\input{chapters/13_Optimization}
+\input{chapters/14_Natural_Language_Processing}
+\input{chapters/15_Memory_Attention}
+\input{chapters/16_Unsupervised_Learning}
+\input{chapters/17_Chain_Rule_Jacobians}
+\input{chapters/18_Generative_Models}
+
+\end{multicols*}
+\end{landscape}
+\end{document}

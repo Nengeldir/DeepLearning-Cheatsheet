@@ -1,0 +1,41 @@
+\section{NN Functions and their Derivatives}
+
+\Def[Hard Tan]
+
+\(\text{HardTanh}\colon\R^n\to\R^n\)
+
+\(\vz = \text{HardTanh}(\vx) = \vx\odot\ind{\vx\in[-1,1]} + \ind{\vx>1} - \ind{\vx< -1}\)
+
+\(\vz' = \text{HardTanh}'(\vx) = \diag(\ind{\vx\in[-1,1]})\)
+
+\sep
+
+\Def[Max Layer]
+
+\(\max\colon\R^n\to\R\)
+
+\(z = \max(\vx)\)
+
+\(z' = \max'(\vx) = \diag(\ve_i),\quad\text{where }i = \argmax_i(\vx_i)\)
+
+\sep
+
+\Def[Softmax]
+
+Here the output of each activation ? depends on every input, thus the
+jacobian is not just a diagonal matrix.
+
+\(\softmax(\vx)_i = \frac{\ne^{x_i}}{\sum_{i = 1}^c e^{x_c}}\)
+
+\(\frac{\partial \softmax(\vx)_i}{\partial x_j} = 
+\begin{cases}
+    - \softmax(x)_i\softmax(x)_j, & i\neq j\\ 
+    \softmax(x)_i -  \softmax(x)_i\softmax(x)_j & i = j\\
+\end{cases}
+\)
+
+\begin{gather*}
+\begin{align*}
+    \nabla_{\vx}\softmax(\vx) = \MJ_{\softmax}(\vx) = \diag(\softmax(\vx)) - \softmax(\vx)\softmax(\vx)^\T
+\end{align*}
+\end{gather*}

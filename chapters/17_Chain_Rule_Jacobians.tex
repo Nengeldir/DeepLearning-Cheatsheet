@@ -1,0 +1,84 @@
+\section{Chain-Rule and Jacobians for Tensors}
+
+\Def[\(k\)-Dimensional Tensor]
+\(
+\TT\in\R^{d_1\times d_2\times \cdots\times d_k}
+\)
+
+\sep
+
+\Def[Tensor Multiplication]
+
+\(
+\underset{\in\R^{(a + c)}}{\TT}
+= 
+\underset{\in\R^{(a + b)}}{\TP}
+\times_b
+\underset{\in\R^{(b + c)}}{\TQ}
+\) \todo{Dimensions wrong on this line}
+
+\begin{gather*}
+\begin{align*}
+\underset{
+r_1\times \cdots\times r_a
+\times 
+s_1\times\cdots\times s_c
+}{\TT}
+=
+\underset{
+r_1\times \cdots\times r_a
+\times 
+s_1\times\cdots\times s_b
+}{\TP}
+\times_{s_1,\ldots,s_b}
+\underset{
+s_1\times\cdots\times s_b
+\times
+t_1\times\cdots\times t_c
+}{\TQ}
+\end{align*}
+\end{gather*}
+
+where each entry of \(\TT\) is computed as follows:
+
+\(
+T_{i_1,\ldots,i_a,k_1,\ldots,k_c}
+: =
+\sum_{j_1,\ldots,j_b}
+P_{i_1,\ldots,i_a,j_1,\ldots,j_b}
+Q_{j_1,\ldots,j_b,k_1,\ldots,k_c}
+\)
+
+Note that this is just the sum of the multiplications of two numbers which are
+in corresponding locations in \(\TP\) and \(\TQ\). Essentially, it's the dot product
+across the dimensions \(s_1,\ldots,s_b\).
+
+Note how this tensor-tensor-multiplication is isomorphic to some matrix-matrix
+product:
+\begin{gather*}
+T_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}},
+\underbrace{k_1,\ldots,k_c}_{\text{``k''}}}
+:=
+\sum_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}}}
+P_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}},
+\underbrace{j_1,\ldots,j_b}_{\text{``j''}}}
+Q_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}},
+\underbrace{k_1,\ldots,k_c}_{\text{``k''}}}
+\end{gather*}
+
+\sep
+
+\Thm[Tensor Chain Rule] 
+
+\(y(W)\colon\R^{d_1\times d_2}\to\R^{d_3\times d_4}\), \(L(y)\colon\R^{d_3\times d_4}\to\R\)
+
+\(
+\frac{\partial L}{\partial W} = \frac{\partial L}{\partial
+W}\times_{d_3,d_4}\frac{\partial y}{\partial W}
+\)
+\quad then we have: 
+\(
+T_{i,j,k,l} = \frac{\partial y_{i,j}}{\partial W_{k,l}}
+\)
+
+\todo{Write Chain Rule Here}

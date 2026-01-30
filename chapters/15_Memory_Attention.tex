@@ -1,0 +1,313 @@
+\section{Memory \& Attention}
+
+\subsection{Memory Units}
+
+\textbf{Problem with RNNs:} vanishing gradients (changes in the input a long time ago won't really affect the output/loss), so it's hard to learn long-term dependencies as the information in \(\vh_t\) fades-out when combined with current input \(\vx_t\).
+
+\textbf{Goal of Memory Units:} model long-term dependencies. have some kind of memory.
+
+\subsubsection{LSTMs}
+
+It would be nice to have something like a gated unit
+
+\sep
+
+\Def[Gated Unit]
+
+The following picture illustrates how we have a memory unit where we can store, read and delete information illustrated by the \emph{gated units}.
+
+\begin{center}
+  \includegraphics[width=0.6\linewidth]{img/memory-units}
+\end{center}
+
+Advantages: information can be remembered for a long time (doesn't fade away as with RNNs). Further, we can delete something in memory in one timestep (without having to fade it out).
+
+\sep
+
+\Def[LSTM] Long Short-Term Memory: Remembering information for long time and forgetting it fast.
+
+An LSTM is just a complex unit for memory management to achieve these objectives. It has the following computation graph:
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/lstm}
+\end{center}
+
+Now an LSTM has two memories:
+\begin{itemize}
+  \item \(C_t\) is the \emph{main memory} in the LSTM (a vector). That's where we store all of our information. The memory we'll control through the gated units.
+  \item \(h_t\) is our previous output. So it's not our memory, but it's what the sequence model outputs at timestep \(t\). This could then passed further to a prediction network.
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/lstm-combined-v3}
+\end{center}
+
+The LSTM adds three more gates. The idea is that the information \(C_t\) flows on a \textbf{\tcb{conveyor-belt}} where we selectively forget, store and output as follows:
+
+\begin{itemize}
+  \item \textbf{\textcolor{RubineRed}{Forget Gate:}} This is just a one-layer
+  neural network, where
+  \[\vf^t = \sigma(\MW_f\vh^{t - 1} + \MU_f\vx^t + \vb_f)\qquad(\vf\text{orget})\]
+  Using the previous output vector, and the current input it computes some weights, which are used to multiply the content of the memory (by a number between 0 and 1) in order to selectively forget some entries in the memory.
+  \item \textbf{\tcr{Store/Input Gate:}} Here we'll compute
+  \[\vi^t: =\sigma(\MW_i\vh^{t - 1} + \MU_i\vx^t + \vb_i)\qquad(\vi\text{nput})\]
+  which determines how much we want to input into the memory (how much we want to store). In many cases, this is just mapped as \(\vi^t = 1 - \vf^t\). But this model illustrates the flexibility that we may want to keep. Further, given that we'll be opening the gate, what should we store there? This is what is computed through
+  \[\overline{C}^t = \tanh(\MW_C\vh^{t - 1} + \MU_C\vx^t + \vb_C).\]
+  And in the end we'll update the memory by combining the weighted sums of the stored and new information
+  \[C^t = \underbrace{\vf^t}_{\text{forget factors}} \odot\underbrace{C^{t - 1}}_{\text{current mem}} +  \underbrace{\vi^t}_{\text{write factors}} \odot\underbrace{\overline{C}^t}_{\text{net in}}.\]
+  \item \textbf{\textcolor{brown}{Read/Output Gate:}} In this gate we decide which information that we want to get out into our output (the new hidden state):
+  \[\vo^t = \sigma(\MW_o\vh^{t - 1} + \MU_o\vx^t + \vb_o)\qquad(\vo\text{utput})\]
+  \[\vh^t = \underbrace{\vo^t}_{\substack{\text{what we want}\\\text{to let out}}}\odot\tanh(\underbrace{C^t}_{\text{new mem.}}).\]
+\end{itemize}
+
+\sep
+
+Note that when stacking \(\vh^{t - 1}\) and \(\vx^t\) we may just represent things as follows:
+\[
+\begin{bmatrix}
+\MW^\kappa & \MU^\kappa
+\end{bmatrix}
+\begin{bmatrix}
+\vh^{t - 1}\\
+\vx^{t}
+\end{bmatrix}
++ \vb^\kappa
+= 
+\MW^k\vh^{t - 1} + \MU^k\vx^t
++ \vb^\kappa.
+\]
+
+\subsubsection{Other Variants of LSTMs}
+
+\intertitle{LSTMs with Peepholes}
+
+There are a bunch of other LSTMs that have been invented. A change that was done
+with LSTMS was: \emph{LSTS with peepholes} where each of the gates also is
+allowed to look at the memory (Gers \& Schmidhuber, 2000).
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/lstm-peephole-connections}
+\end{center}
+
+This makes a lot of sense if we start multiplying by a lot of zeros when we're carrying the information out.
+
+\intertitle{Coupled Forget and Input Gates}
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/lstm-coupled-forget-and-input-gates}
+\end{center}
+
+Another variation is to use coupled forget and input gates. Instead of separately deciding what to forget and what we should add new information to, we make those decisions together. We only forget when we're going to input something in its place. We only input new values to the state when we forget something older.
+
+\intertitle{GRU Networks (Gated Memory Unit)}
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/lstm-grus}
+\end{center}
+
+This is basically a simplification of the LSTM that we've seen where we have only one state. Usually these ones tend to be much faster to train. It combines the forget and input gates into a single ``update gate.'' It also merges the
+cell state and hidden state, and makes some other changes.
+
+\subsubsection{Unsegmented Sequences}
+
+Problem: different durations for same thing
+
+``Theee houssse iis new.''
+
+``The hoouse iis new.''
+
+
+\subsubsection{Connectionist Temporal Classification}
+
+Let's have a look an approach with LSTMs on how to solve the problem of unsegmented sequences.
+
+The connectionist temporal classification allows to estimate the sequences of unsegmented data:
+
+Actually, it's a very simplified model (huge simplification)
+
+\[ \cProb{\pi}{\vx} = \prod_{t = 1}^T y_{\pi_t} \]
+where
+\begin{itemize}
+  \item \(\vx\) is the sound that we had, segmented every few milliseconds,
+  \item \(\pi_t\) is a distribution over all possible lables + blank. Note that a blank doesn't mean no sound, it means I don't know.
+\end{itemize} 
+So it assumes that each of the labels that we're getting are independent - so this is really the point where we can say that that doesn't make any sens! Even though it's a huge simplification it works very well.
+
+The next step is to take the sequence of the predictions (if we have two ``a'' ``a'', then most likely there should be just one ``a'' and the next should be something that correlates to a).
+
+So the next idea is after having the sequence \(\pi_1,\ldots,\pi_T\) of predictions we'll add all the potential probabilities that actually mean the same thing.
+
+\todo{I didn't understand this!!!}
+
+\subsection{Differentiable Memory}
+
+\Def[Neural Turing Machine]
+
+NTMs are very reminiscent of a Turing machine, but: each cell \(M_i\in\R^d\).
+
+\begin{center}
+  \includegraphics[width=0.7\linewidth]{img/ntms-1}
+\end{center}
+
+In contrast to RNNs, NTMs use an external memory to which they read and write according to some determined probabilities.Now here's an example how that can become very useful. We may have these vectors in memory, and then we may search for some vector. The greater the dot-product is with a vector, the greater our attention will be for that vector in the memory (via the attention distribution). 
+
+So the operations that can be done are the following:
+\begin{enumerate}
+  \item Compute the attention distribution: \((\alpha_i)_i\), \(\alpha_i\geq 0\) s.t. \(\sum_{\alpha_i} = 1\).
+  \item Read: out expected memory content: \(r\gets\sum_i \alpha_iM_i\).
+  \item Write: Now, given that we have one value that we'd like to write, we'll write it to the memory location with the biggest attention:
+  \[(\beta_i)_i,\quad \beta_i\in[0;1],\quad M_i\gets(1 - \beta_i)M_i + \beta_iw.\]
+  Usually, there's one value where we have a lot of attention (curse of
+  dimensionality), and lots where we have little attention. Further, as we can
+  see then we'll write a lot so somwhere and a little bit to everywhere else.
+  The reason we're using a slowly varying \(\beta_i\) is that we want to be able
+  to take the derivative (if it was just 0 or 1 we couldn't take the
+  derivative). So this is why these things tend to be soft.
+\end{enumerate}
+
+The typical memory controller works as follows:
+\begin{center}
+  \includegraphics[width=0.5\linewidth]{img/ntms-2}
+\end{center}
+
+\begin{enumerate}
+  \item For a \emph{query} vector see which memory cells get the most attention.
+  \item Normalize the attention distribution
+  \item Interpolate the attention with the previous attention
+  \item Convolve the the attention if needed (ability to shift attention relative to content-selected locations)
+  \item Additionally sharpen the final attention distribution.
+  \item Then do your operation (read or write) according to the attention distribution.
+\end{enumerate}
+
+These operations are all differentiable, as we're using probabilities and not only the values 0 or 1. Other resembling architectures are: neural random access machines, differentiable data structures (stacks, queues).
+
+Now, NTM architectures can learn loops and simple programs. However, no real-world applications have been developed with this so-far.
+
+\subsection{Attention Mechanisms}
+
+\Def[Attention Mechanisms] offer a simple way to overcome some challenges of RNN-based memorization. With attention mechanisms we selectively attend to \emph{inputs} or \emph{feature representations} computed from inputs.
+
+\begin{itemize}
+  \item RNNs: learn to encode information relevant for the future.
+  \item Attention: selects what is relevant from the past in hindsight!
+\end{itemize}
+Both ideas can be combined!
+
+\sep
+
+\Ex If we have a sentence in English and one in German the question is how do we match one to the other. The problem with CTC was that if things are changed in order, then CTC cannot deal with it. Because the CTC doesn't process every input before it produces an output. Attention will provide a mechanism to deal with this.
+
+\sep
+
+So we'll see how we can do sequence to sequence learning. The idea fairly simple: Let's say we have a sequence \(ABC\) and we want to map it to \(WXYZ\). To achieve this we'll use the so-called \emph{encoder-decoder architecture}:
+
+\begin{center}
+  \includegraphics[width=1\linewidth]{img/seq-to-seq-encoder-decoder}
+\end{center}
+
+So what we'll do is
+\begin{itemize}
+  \item we'll \emph{encode} the sequence (e.g., sentence) into a vector, and
+  then
+  \item we'll \emph{decode} the sequence (e.g., translate) from the vector (w/ output feedback) into another sequence.
+\end{itemize}
+
+So the probability that we want to determine is
+\[
+\cProb{\vy^1,\ldots,\vy^{T_y}}{\vx_1,\ldots,\vx^{T_x},F(\vx^{T_x})}.
+\]
+The issue that we have here is that \(T_x\) and \(T_y\) have variable lengths, and
+the difference between the two lengths is not always the same. So it's very hard
+to match one sequence to another. Now, sequence learning will compute a function
+\[
+F(\vx^1,\ldots,\vx^{T_x}) =  \text{``thought vector''}
+\]
+which will be a vector which will have all the information that we need from the input sequence to compute the output sequence. This \(F\) is the so-called ``thought vector'' (Hinton). So \(F\) will be computed via an LSTM. 
+
+To produce the output sequence we'll use another LSTM that takes as input the thought vector \(F\) plus the output that we'll be producing (output feedback).
+
+\intertitle{How to make the RNN Encoder/Decoder Work?}
+
+The following things were discovered by Sutskever, Vinals \& Le in 2014:
+\begin{itemize}
+  \item Use Deep LSTMs (multiple layers, e.g., 4)
+  \item Use different RNNs for encoding and decoding
+  \item Apply beam search for decoding
+  \item Reverse the order of the source sequence
+  \item Ensemble-ing
+\end{itemize} 
+
+For a machine translation task this gave state-of-the-art results on WMT benchmarks. However, traditional approaches use \emph{sentence alignment models}. We still don't know what is the equivalent in a neural architecture.
+
+\subsubsection{Seq2Seq with Attention}
+
+The issue with the encoder-decoder architecture is that if we're translating a very long sequence, it might have the issue that suddenly we have to store the entire sequence in a single vector. But when we as humans translate we translate small parts into small parts. In order to understand this better let's have a look at a concrete example. Let's say that we want to translate the following sentence from English to French.
+\begin{itemize}
+  \item bi-directionality (it's good to know future and past context)
+  \item select useful hidden states based on atention
+  \item sizes of sentences might not be the same
+  \item outputted workds might have slightly different order
+  \item Note that if we don't have dependencies that are out of order we can use
+  the CTC approach.
+\end{itemize}
+
+\begin{comment}
+    \subsection{Memory Networks}
+
+    Let's consider the following examples.
+
+    \begin{center}
+    \includegraphics[width=1\linewidth]{img/memory-networks-use-case}
+    \end{center}
+
+    In each of these examples we have a piece of information and then we get a query
+    that we have to answer. So we have to read a text, and then we'll get a question
+    about it. This is what memory networks try to achieve.
+
+    So, the approach that was taken (by Weston et al, 2014; Kumar et al, 2015) is
+    the following:
+    \begin{itemize}
+    \item operate over a large data corpus (e.g., text documents)
+    \item given a question, learn to infer the answers (QA retrieval)
+    \item simplest form: memory is not altered
+    \item \emph{recursive associative reall:} given a query \(q\), find the best
+    matching memory cee \(i\); use \(M_i\) and \(\vx\) as a new key; repeat
+    \end{itemize}
+
+
+
+    \begin{center}
+    \includegraphics[width=1\linewidth]{img/memory-network-architecture}
+    \end{center}
+
+    So we'll first embed every word by word into a memeory. And then, \todo{what??}.
+
+    Then we'll get a question \(q\) which we'll use to recover the relevant
+    information from the memory. This will give us some softmax output that will
+    tell us which of the pieces that are relevant.
+
+    \todo{I didn't understand the part with the output.}
+
+    So what we'll be training ar the three embeddings (A, B, C). 
+
+    So that's an architecture that we may use when building a chatbot.
+
+    \todo{Find out equations that were given.}
+
+    \sep
+
+    Note how again here the architecture encodes a lot of prior knowledge about the
+    problem. Once we've found this architecture we can just do end-to-end learning
+    and do not have to worry about anything. The next steps in deep learning will be
+    to figure out whether we can build NNs that figure out these architectures by
+    themselves.
+\end{comment}
+
+\subsection{Recursive Networks}
+
+Good to process tree-structure, e.g., from a parser (more depth efficient
+\(\BigO(\log(n))\)). Gives a single output at the root.
+
+\(F\colon\R^d\times\R^d\to\R^d\)
+
+\(\vh^n = F(\vh^{n_{\text{left}}},\vh^{n_{\text{right}}})\)

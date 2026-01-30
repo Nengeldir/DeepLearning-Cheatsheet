@@ -1,0 +1,44 @@
+\section{Analysis}
+
+\textbf{Log-Trick (Identity):}
+\( \nabla_\theta \left[p_\theta(\vx)\right] =  p_\theta(\vx)\nabla_\theta \left[\log(p_\theta(\vx))\right] \)
+
+\sep
+
+\Thm[Cauchy-Schwarz]
+
+\(\forall\vu,\vv\in V\colon\scprod{\vu,\vv}\leq\abs{\scprod{\vu,\vv}}\leq\norm{\vu}\norm{\vv}\).
+
+\(\forall\vu,\vv\in V\colon 0\leq\abs{\scprod{\vu,\vv}}\leq\norm{\vu}\norm{\vv}\).
+
+Special case: \((\sum x_i y_i)^2\leq(\sum x_i^2)(\sum y_i^2)\).
+
+Special case: \(\Exp{XY}^2\leq\Exp{X^2}\Exp{Y^2}\).
+
+\sep
+
+\Thm[Fundamental Theorem of Calculs]
+
+\(f(\vy) -  f(\vx) =  \int_{\gamma[\vx,\vy]} \nabla f(\vtau)\cdot d\vtau =  \int_{t = 0}^1\nabla f(\vgamma(t))^\T\vgamma'(t)\,dt\)
+
+\(f(\vy) -  f(\vx) =  \int_{0}^1 \nabla f((1 - t)\vx + t\vy)^\T(\vy - \vx)\,dt\)
+
+\Com Create a path \(\vgamma\) from \(\vx\) to \(\vy\) and integrate the dot product of the gradient of the function-values at the path with the derivative of the path.
+
+\sep
+
+\Def[Saddle Points etc.]
+
+\sep
+
+\Thm[Jensen] \(f\) convex/\tcr{concave}, \(\forall i\colon\lambda_i\geq 0\), \(\sum_{i = 1}^n\lambda_i = 1\)
+
+\( f\left(\sum_{i = 1}^n\lambda_i\vx_i\right) \leq\mcr{/\geq} \sum_{i = 1}^n\lambda_if\left(\vx_i\right) \)
+
+Special case: \(f(\Exp{X})\leq \Exp{f(X)}\).
+
+\sep
+
+\Def[Lagrangian Formulation] of \(f(x,y)\, \text{s.t.}\, g(x,y) =  c\) \\
+
+\(\mathcal{L}(x, y, \gamma) =  f(x,y) -  \gamma ( g(x,y) - c)\)

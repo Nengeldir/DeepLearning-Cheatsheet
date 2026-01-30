@@ -1,0 +1,423 @@
+\section{Approximation Theory}
+
+\subsection{Compositional Models}
+
+We want to learn: \(F^*\colon\R^n\to\R^m,\)
+
+\textbf{Learning:} Now we reduce this task to learning a function \(F\) in some parameter space \(\R^d\) that approximates \(F^*\) well.
+
+\(F\colon\R^n\times\mcb{\R^d}\to\R^m,\qquad\cF: =\set{F(\argdot,\vtheta)}\quad\vtheta\in\R^d\)
+
+DL: the composition of simple functions can give rise to very complex functions.
+
+\(F\colon\R^n\xrightarrow[]{G_1}\R^*\xrightarrow[]{G_2}\R^*\xrightarrow[]{G_3}\cdots\xrightarrow[]{G_L}\R^m\)
+
+\(F = G_L\circ\cdots\circ G_2\circ G_1\)
+
+\(F(\vx,\mcr{\vtheta}) =  G_L(\cdots G_2(G_1(\vx;\mcr{\vtheta_1});\mcr{\vtheta_2});\cdots;\mcr{\vtheta_L}).\)
+
+\subsection{Compositions of Maps}
+
+\Def[Linear Function] A function \(f\colon\R^n\to\R^m\) is a linear function if the following properties hold
+\begin{itemize}
+  \item \(\displaystyle\forall\vx,\vx'\in\R^n\colon f(\vx + \vx') = f(\vx) + f(\vx')\)
+  \item \(\displaystyle\forall\vx\in\R\,\forall\alpha\in\R\colon f(\alpha\vx) = \alpha f(\vx)\)
+\end{itemize}
+
+\sep
+
+\Thm \(f\colon\R^n\to\R\text{ is linear }\Longleftrightarrow f(\vx) = \vw^\T\vx\) for some \(\vw\in\R^n\)
+
+\sep
+
+\Def[Hyperplane]
+
+\(H: =\dset{\vx}{\scprod{\vw,\vx - \vp} = 0} = \dset{\vx}{\scprod{\vw,\vx} = b}\)
+
+where \(b = \scprod{\vw,\vp}\). \(\vw = \)normal vector, \(\vp\) points onto a point on the plane.
+
+\sep
+
+\Def[Level Sets] of a function \(f\colon\R^n\to\R\) is a one-parametric family of sets defined as
+
+\[L_f(c): =\dset{\vx}{f(\vx) = c} = f^{-1}(c)\subseteq\R^n.\]
+
+\sep
+
+\Thm[Comp. of Lin. Maps/- is a Lin. Map/Unit]
+
+Let \(F_1,\ldots,F_L\) be linear maps, then \(F = F_L\circ \cdots\circ F_2\circ F_1\) is also a linear map.
+
+\ssep
+
+\Cor Every \(L\)-layer NN of linear layer collapses to a 1-layer NN. Further note that hereby
+
+\( \rank(F)\equiv\dim(\im(F))\leq\min_{i\in\set{1,\ldots,L}}\rank(F_i).\)
+
+\sep
+
+So this strongly suggests, that we need to move beyond linearity and use generalizations of linear maps (e.g., p.w. linear functions, or ridge
+functions).
+
+\subsection{Universal Approximation with Ridge Functions}
+
+\Def[Ridge Function] \(f\colon\R^n\to\R\) is a \emph{ridge function}, if it can be written as \(f(\vx) = \sigma(\vw^\T\vx + b)\) for some \(\sigma\colon\R\to\R\), \(\vw\in\R^n\), \(b\in\R\).
+
+\begin{itemize}
+  \item \(\overline{f}(\vx) = \vw^\T\vx + b\) (linear part)
+  \item \(L_f(c) =  \bigcup_{d\in\sigma^{-1}(c)}L_{\overline{f}}(d) =  \bigcup_{d\in L_{\sigma}(c)}L_{\overline{f}}(d)\)
+  \item if \(\sigma\) is differentiable at \(z = \vw^\T\vx + b\) then\\
+  \(\nabla_{\vx} f(\vx) =  \sigma'(z)\nabla_{\vx}\overline{f}(\vx) = \sigma'(z)\vw = \sigma'(\vw^\T\vx + b)\vw\)
+  \item a ridge function picks out one direction of change (linear part), and then models the rate of change in that chosen direction via \(\sigma\)
+\end{itemize}
+
+\sep
+
+\Thm Let \(f\colon\R^n\to\R\) be differentiable at \(\vx\). Then either \(\nabla_{\vx}f(\vx) = 0\), or  \(\nabla_{\vx}f(\vx)\perp L_f(f(\vx))\)
+
+\todo{What's the difference between orthogonality and \(=0\)???}
+
+\sep
+
+\Def[Universe of Ridge Functions for some \(\sigma\colon\R\to\R\)]\\
+
+\(\cG_{\sigma}^n : = \dset{g}{g(\vx) = \sigma(\vw^\T\vx + b),\, \vw\in\R^n,\, b\in\R,\, \sigma\colon\R\to\R}\)
+
+\sep
+
+\Def[Universe of Continuous Ridge Functions]
+
+\(\cG^n: =\bigcup_{\sigma\in C(\R)}\cG_{\sigma}^n.\)
+
+\sep
+
+\Thm Composition of continuous functions is continuous.
+
+\Thm (Hence) \(\cG^n\subseteq C(\R^n)\).
+
+\sep
+
+\Def[Span of Universe of Continuous Ridge Functions]
+
+\(\cH^n: =\spn(\cG^n) =  \dset{h}{h = \sum_{j = 1}^r g_j,\, g_j\in\cG^n}.\)
+
+\sep
+
+\Def[Dense Function Class \(\cH\) in \(C(\R^d)\)] 
+
+A \emph{function class} \(\cH\subseteq C(\R^d)\) is \emph{dense} in \(C(\R^d)\), iff
+
+\[\forall f\in C(\R^d)\quad\forall\epsilon>0 \quad\forall K\subset\R^d, \, K\text{ compact}\]
+
+\[\exists h\in\cH\colon\max_{x\in K}\abs{f(\vx) - h(\vx)} = \norm{f - h}_{\infty,K}<\epsilon.\]
+
+\sep
+
+\Thm[Density of Span of Continuous Ridge Functions]
+
+\(\cH^n\) is \emph{dense} in \(C(\R^n)\). Note: we can absorb the linear combination weights within the functions \(g_j\).
+
+\sep
+
+So, we can approximate any \(f\in C(\R^n)\) through linear combinations of members in \(\cG^n\). This gives rise to the idea of building a 1-layer network with adaptive ridge functions (rather impractical). In the following we'll see how we can limit ourselves to one specific \(\sigma\) s.t. \(\spn(\cG_\sigma^n)\) is still dence in \(C(\R^n)\). And we'll see how we can simplify the discussion through dimension lifting.
+
+\sep
+
+\Def[Smooth Function \(f\in C^\infty(\R)\)] A function is ``smooth'' if it has infinitely many continuous derivatives.
+
+\Com The function may even be just a constant function.
+
+\sep
+
+\Thm[Approximation Theorem, 1993]
+
+\(\sigma\in C^\infty(\R)\), \(\sigma\) not polynomial \(\Longrightarrow\) \(\cH_\sigma^1\) is dense in \(C(\R)\).
+
+\sep
+
+\Cor MLPs with one hidden layer, and any non-polynomial, \emph{smooth} activation function are a universal function approximators.
+
+\Com we don't know how many hidden units are needed; the requirement that \(f\) is smooth can be substantially weakened (see results with ReLUs).
+
+\sep
+
+\Lem MLPs with one hidden layer and a polynomial activation function are \emph{not} universal function approximators.
+
+\sep
+
+\Lem[Dimension Lifting]
+
+\( \cH_{\sigma}^1\text{ \emph{dense} in }C(\R)\Longrightarrow\forall n\geq 1\colon\cH_{\sigma}^n\text{ \emph{dense} in }C(\R^n)\)
+
+\Com So we can lift the \emph{density property of ridge functions} from \(C(\R)\) to \(C(\R^n)\).
+
+\sep
+
+\textbf{Summary}
+\begin{gather*}
+\begin{align*}
+    \begin{matrix}
+        \sigma\in C^\infty(\R),\\
+        \sigma \text{ not polynomial}
+    \end{matrix} 
+    \stackrel{\text{Approx. Thm.}}{\Longrightarrow} \cH_\sigma^1 \text{ is dense in } C(\R) \\
+    \stackrel{\text{Dim. Lifting}}{\Longrightarrow} \forall n\colon \cH_\sigma^n \text{ is dense in } C(\R^n)
+\end{align*}
+\end{gather*}
+
+\subsection{Sigmoid Networks}
+
+\Def[Sigmoid Activation Function]
+
+\(\sigma(x): =\frac{1}{1 + e^{-x}}\in(0;1)\)
+
+\(\sigma^{-1}(y) =  \ln\left(\frac{y}{1 - y}\right)\)
+
+\(\sigma'(x): =\sigma(x)\cdot(1 - \sigma(x))\)
+
+\(\nabla_{\vx}\sigma(\vx) = \MJ_{\sigma}(\vx) = \diag(\sigma(\vx)\odot(1 - \sigma(\vx)))\)
+
+\(\sigma'(x) = \frac{1}{4}\tanh'(\frac{1}{2}x) =  \frac{1}{4}(1 - \tanh^2(\frac{1}{2}x))\)
+
+\sep
+
+\Thm \(\sigma(-x) = 1 - \sigma(x)\)
+
+\sep
+
+\Def[Tanh Activation Function]
+
+\(\tanh(x) = \frac{e^{x} - e^{-x}}{e^{x} + e^{-x}}\in(-1;1)\)
+
+\(\tanh'(x) = 1 - \tanh^2(x)\)
+
+\(\nabla_{\vx}\tanh(\vx) = \MJ_{\tanh}(\vx) =  \MI - \diag(\tanh^2(\vx))\)
+
+\(\tanh'(x) = 4\sigma'(2x) = 4\sigma(2x)(1 - \sigma(2x))\)
+
+\sep
+
+\textbf{Connection between Sigmoid and Tanh} (Equal Representation Strength)
+
+\(\sigma(x) =  \frac{1}{2}\tanh\left(\frac{1}{2}x\right) + \frac{1}{2} \Longleftrightarrow \tanh(x) =  2\sigma(2x) - 1 \)
+
+\sep
+
+\begin{align*}
+    \tanh(x) &= \frac{e^x-e^{-x}}{e^x+e^{-x}} = \frac{e^x}{e^x+e^{-x}}\cdot\frac{e^{-x}}{e^{-x}}-\frac{e^{-x}}{e^x+e^{-x}}\cdot\frac{e^{x}}{e^{x}} \\
+    &= \frac{1}{1+e^{-2x}} - \frac{1}{1+e^{2x}} = \sigma(2x) - \frac{1+e^{2x}-e^{2x}}{1+e^{2x}} \\
+    &= \sigma(2x) - \frac{1+e^{2x}}{1+e^{2x}} + \frac{e^{2x}}{1+e^{2x}}\cdot\frac{e^{-2x}}{e^{-2x}}
+    =\sigma(2x) - 1 + \frac{1}{1+e^{-2x}}\\ 
+    &= 2\sigma(2x)-1.
+\end{align*}
+
+\sep
+
+\todo{Do remainder on Approximation Guarantees}
+
+\subsection{Rectification Networks}
+
+\Def[Rectified Linear Unit (ReLU)]
+
+
+\((x)_{+}: =\max(0,x) = \ReLU(x)\in[0,\infty]\)
+
+\((x)_{+}': =\ind{x>0}\)
+
+\(\nabla_{\vx}(\vx)_{+} = \MJ_{(\argdot)_{+}}(\vx): =\diag(\ind{\vx>0})\)
+
+\(\underbrace{\partial(z)_{+}}_{\mathclap{\text{subdiff.}}} = 
+\begin{cases}
+    \set{1}, & x>0,\\
+    \set{0}, & x<0,\\
+    [0;1],   & x = 0.
+\end{cases}
+\)
+
+\begin{itemize}
+  \item a linear function over a half-space \(\cH\),
+  \item and zero on the complement \(\cH^c = \R^n\setminus\cH\).
+  \item non-smooth
+\end{itemize}
+
+\sep
+
+\Def[Absolute Value (Rectification) Unit (AVU)]
+
+\(\abs{z}: =
+\begin{cases}
+    z, & z\geq 0 \\
+    - z, & z<0. \\
+\end{cases}\)
+
+\quad
+
+\(\partial\abs{z} = \begin{cases}
+    1, & x>0,\\
+    [-1;1], & x = 0,\\
+    - 1, & x<0.
+\end{cases}\)
+
+\sep
+
+\textbf{Relationship between ReLU and AVU}
+
+\(\displaystyle(x)_{+} = \frac{x + \abs{x}}{2}, \qquad \abs{x} = (x)_{+} + (-x)_{+} = 2(x)_{+} - x\)
+
+\sep
+
+\Thm Any \(f\in C([0;1])\) can be uniformly approximated to arbitrary precision by a polygonal line (c.f. Shektman, 1982). Or in other words:
+
+\(\cH = \set{\text{p.w. linear functions}}\) is \emph{dense} in \(C([0,1])\).
+
+\sep
+
+\Thm Lebesgue showed how a polygonal line with \(m\) pieces can be written 
+
+\(\displaystyle g(x) = ax + b + \sum_{i = 1}^{m - 1} c_k(x - x_i)_{+}\) (ReLU function approx.)
+
+\begin{itemize}
+  \item Knots: \(0 = x_0<x_1<\cdots <x_{m - 1}<x_{m} = 1\)
+  \item \(m + 1\) parameters: \(a,b,c_1,\ldots,c_{m - 1}\)
+\end{itemize}
+
+\todo{Write down how to compute the parameters}.
+
+With the dimension lifting theorem we can lift this property from 1D to \(n\)D.
+
+\ssep
+
+Note that there's an alternative representation of the above through AVUs
+
+\(g(x) = a'x + b' + \sum_{i = 1}^m - 1 c_i'\abs{x - x_i}\)
+
+\todo{Write down how to compute the parameters}.
+
+\sep
+
+\Thm Networks with one hidden layer of ReLUs or AVUs are universal function approximators.
+
+\Com We can thus use a restricted set of activation functions (ReLUs or AVUs). But still we don't know how many hidden units we need.
+
+\Proof (Sketch)
+
+\begin{enumerate}
+  \item Universally approximate \(C(K)\) functions (\(K\), compact) by polygonal lines
+  \item Represent polygonal lines by (linear function \(+\)) linear combinations of \((\argdot)_+\) or \(\abs{\argdot}\)-functions
+  \item Apply dimension lifting lemma to show density of the linear span of resulting ridge function families \(\cG_{(\argdot)_{+}}^n\) and \(\cG_{\abs{\argdot}}^n\).
+\end{enumerate}
+
+\todo{Carry out this as an exercise! Actually we don't have to do this because we've proved this for any \(\sigma\in C^{\infty}(\R^n)\), where \(\sigma\) is not a polynomial (said by Prof.) but actually it's doesn't have a continuous derivative\ldots???}
+
+\subsubsection{Piecewise Linear Functions and Half Spaces}
+
+So the ReLU and the AVU define a \emph{piecewise linear function} with 2 pieces. Hereby, \(\R^n\) is partitioned into two open half spaces (and a border face):
+
+\begin{itemize}
+  \item \(H^+: =\dset{\vx}{\vw^\T\vx + b>0}\subset\R^n\)
+  \item \(H^-: =\dset{\vx}{\vw^\T\vx + b<0}\subset\R^n\)
+  \item \(H^0: =\dset{\vx}{\vw^\T\vx + b = 0} = \R^n\setminus H^+\setminus H^-\subset\R^n\)
+\end{itemize}
+
+Further note that
+
+\begin{itemize}
+  \item \(g_{(\argdot)_+}(H^0) = g_{\abs{\argdot}}(H^0) = 0\)
+  \item \(g_{(\argdot)_+}(H^{-}) = 0\)
+  \item \(g_{\abs{\argdot}}(\vx) = g_{\abs{\argdot}}(\vv - \vx)\) with \(\vv = -2b\frac{\vw}{\norm{\vw}_2^2}\) (mirroring at \(\vw\): equivalent to subtracting the projection of \(\vx\) onto \(\vw\) twice from \(\vx\))
+\end{itemize}
+
+\sep
+
+Partitions of ReLUs go to infinity, even if we have no examples there \(\to\) weak to extrapolation errors (adversarial examples). However, if you have enough data, then you can overcome this, because there won't be any new examples that lie outside of the training data regions.
+
+\subsubsection{Linear Combinations of ReLUs}
+
+\Thm[Zaslavsky, 1975] By linearly combining \(m\) rectified units \(\R^n\) can be partitioned at most into \(R(m)\) cells: 
+
+\[R(m)\leq\sum_{i = 0}^{\min\set{m,n}}\binom{m}{i}\]
+
+\Cor If classes \(m\leq n\) we have \(R(m) = 2^m\) (exponential growth).
+
+\Cor For any input size \(n\) we have \(R(m)\in\BigO(m^n)\) (polynomial slow-down in number of cells, limited by the input space dimension).
+
+\subsubsection{Deep Combination of ReLUs}
+
+Question: Process \(n\) inputs through \(L\) ReLU layers with widths \(m_1,\ldots,m_L\in\BigO(m)\). Into how many \((=R(m,L))\) cells can \(\cR^n\) be maximally partitioned? 
+
+\sep
+
+\Thm[Montufar et al, 2014] If we process \(n\)-dim. inputs through \(L\) ReLU layers with widths \(m_1,\ldots,m_L\in\BigO(m)\).Then \(\R^n\) can be partitioned into at most \(R(m,L)\) layers:
+
+\[R(m,L)\in\BigO\left(\left(\frac{m}{n}\right)^{n(L - 1)}m^n\right)\]
+
+\Com So for a fixed \(n\) the exponential growth (that may be lost if classes \(m>n\) input dim, and we use one hidden layer) of the number of partitions can be recuperated by increasing the number of layers. Further, by adding layers, one may reduce the total number of hidden units in total (\(\to\) less params) 
+
+\subsubsection{Hinging Hyperplanes}
+
+\Def[Hinge Function (extension of ReLU)]
+
+If \(g\colon\R^n\to\R\) can be written with parameters \(\vw_1,\vw_2\in\R^n\) and \(b_1,b_2\in\R\) as below it is called a hinge function
+
+\[g(\vx) = \max\left(\vw_1^\T\vx + b_1,\vw_2^\T\vx + b_2\right)\]
+
+\begin{itemize}
+  \item two hyperplanes, ``glued'' together at their intersection. So for the intersection it holds that: \(\vw_1^\T\vx + b_1 = \vw_2^\T\vx + b_2\).
+  \item Representational power: \(2\max(f,g) = f + g + \abs{f - g}.\)
+  \todo{Didnt' understand that}
+\end{itemize}
+
+The good thing is that these hyperplanes (as opposed to the ReLU) don't interact only in one dimension (\(\vw\)), but they interact in two dimensions \(\vw_1,\vw_2\).
+
+\sep
+
+\Thm Given a continuous p.w. linear function in \(\R^n\), we can represent the function as
+
+\( \vw_1^\T\vx + b_1 \pm \abs{\vw_2^\T\vx + b_2} \pm \abs{\vw_3^\T\vx + b_3 + \abs{\vw_4^\T\vx + b_4}} \pm\abs{\vw_5^\T\vx + b_5 + \abs{\vw_6^\T\vx + b_6 + \abs{\vw_7^\T\vx + b_7}}} \pm \cdots \)
+
+So for a continuous p.w. linear function in \(\R^n\) we need \(n\) nested (as above) absolute value functions (\(\to\) \(n\) layers with AVUs needed (same as data dimensionality!)
+
+\Com So, every \(\pm\)-term has one more nesting.
+
+\sep
+
+Luckily, these smart guys managed to prove that if we use a hinge function with \(k\) inputs, then the number of AVU nestings can be reduced to logarithmic growth.
+
+\sep
+
+\Def[\(k\)-Hinge Function] \(g(\vx) = \max(\vw_1^\T\vx + b_1,\ldots,\vw_k^\T\vx + b_k)\).
+
+\sep
+
+\Thm[Wang and Sun, 2005] Every continuous p.w. linear function from \(\R^n\to\R\) can be written as a signed sum of \(k\)-Hinges with \(k_i\leq\ceil{\log_2(n + 1)}\). So \(f(\vx) = \sum_{i}\theta_ig_i(\vx)\) where \(\theta_i\in\set{\pm 1}\).
+
+\Com This reduces the growth of absolute value nesting to logarithmic growth, instead of linear growth.
+
+\todo{what does this inequality say exactly? What is \(k_i\)?}
+
+\sep
+
+\Cor P.w. linear functions are dense in \(C(\R^n)\).
+
+\subsubsection{Maxout Networks}
+
+In 2013 \(k\)-Hinges were re-discovered under the name of \emph{Maxout} by Goodfellow et al.
+
+\sep
+
+\Def[Maxout] is just the \(\max\) non-linearity applied to \(k\) groups of linear functions. So the input \([1:d]\) (of the previous layer) is \emph{partitioned} into \(k\) sets \(A_1,\ldots,A_k\), and then we define the activations \(G_j(\vx)\) for \(j\in\set{1,\ldots,k}\) as
+
+\( G_j(\vx) = \max_{i\in A_j}\set{\vw_i^\T\vx + b_i} \qquad(i\in\set{1,\ldots,d}) \)
+
+\Com So, here we apply the nonlinearity in \(\R^d\) (among some set members \(A_j\)) instead applying the nonlinearity in \(\R\) (as with ridge functions).
+
+\sep
+
+\Thm[Goodfellow, 2013] Maxout networks with two maxout units that are applied to \(2m\) linear functions are universal function approximators.
+
+\Proof (Sketch)
+
+\begin{enumerate}
+  \item Wang's theorem: Linear network with two maxout units and a linear output unit (subtraction) can represent any continous p.w. linear function (exactly!)
+  \item continous p.w. linear function are dense in \(C(\R^n)\)
+\end{enumerate}

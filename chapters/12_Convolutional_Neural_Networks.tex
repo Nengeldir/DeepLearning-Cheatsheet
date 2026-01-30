@@ -1,0 +1,431 @@
+\section{Convolutional Neural Networks}
+
+\subsection{Convolutional Layers}
+
+\Def[Transform (aka Operator)] A transform \(T\) is just a mapping from one function space \(\cF\) (or a cross product of it) to another function space \(\cF'\). So \(T\colon\cF\to\cF'\).
+
+\sep
+
+\Def[Linear Transform (/Operator)] A transform \(T\) is linear, if for all functions \(f,g\) and scalars \(\alpha,\beta\), \(T(\alpha f + \beta g) = \alpha (T f) + \beta (T g)\).
+
+\sep
+
+\Def[Integral Transform (/Operator)] An \emph{integral transform} is any transform \(T\) of the following form
+
+\[(T f)(u) = \int_{t_1}^{t_2} K(t,u) f(t) \, dt.\]
+
+The input of this transform is a function \(f\) of \(t\), and the output is another function \(Tf\) in terms of some other variable \(u\).
+
+Note that the integral boundaries, the class of input function \(f\), and the kernel \(K\) must be defined such that \(T f\) exists for any \(f\) in order for \(T\) to be an integral operator.
+
+There are numerous useful integral transforms. Each is specified by a choice of the function \(K\) in two \emph{variables}, the \emph{kernel function}, \emph{integral kernel}, or \emph{nucleus} of the transform.
+
+Some kernels have an associated \emph{inverse kernel} \(K^{-1}(u,t)\), which (roughly speaking) yields an inverse transform:
+
+\[ f(t) = \int_{u_1}^{u_2} K^{-1}(u,t) (Tf)(u) \, du. \]
+
+\sep
+
+\Thm Any integral transform is a linear transform.
+
+\Cor The expectation operator is a linear operator.
+
+\sep
+
+\Def[Symmetric Kernel]
+A \emph{symmetric kernel} \(K\) is one that is unchanged when the two variables are \emph{permuted}. So, \(K\) is symmetric, if \(K(t,u) = K(u,t).
+\)
+
+\sep
+
+Mathematical motivation: some problems are easier to solve if transformed and solved in another domain (and then possibly the solution is transformed back).
+
+DL motivation: we'll learn the kernels. 
+
+\sep
+
+\Def[Convolution] Given two functions \(f, h\colon\R\to\R\), their convolution is defined as
+
+\[(f * h)(u) := \int_{-\infty}^{\infty} h(t)f(u - t) \, dt = \int_{-\infty}^{\infty} h(u - t)f(t)  \, dt \]
+
+\Com Whether the convolution exists depends on the properties of \(f\) and \(h\) (the integral might diverge). However, a typical use is \(f = \text{signal}\), and \(h = \text{fast decaying kernel function}\).
+
+\sep
+
+\Thm[Every Conv. can be Written as an Integral Transf.]
+
+Now, a convolution of \(f\) with some function \(h\) can be seen as an \emph{integral operator} with a kernel
+
+\[K(u,t) =  h(u - t).\]
+
+Note that we can say the anologous thing for the convolution of \(h\) with \(f\).
+The definition of the convolution shows us directly that it's \emph{commutative}!
+
+\ssep
+
+\Lem The convolution \(T(\argdot) = (\argdot \conv g)\) is a linear transform (with \(K(u,t) = g(u - t)\)).
+
+\sep
+
+\Thm[Convolution Properties]
+
+\begin{itemize}
+  \item Associativity \((f*g)*h = f*(g*h)\)
+  \item Commutativity \(f*g = g*f\)
+  \item Bilinearity \((\alpha f + \beta g)\conv(\gamma y + \delta z) = \alpha\gamma(f\conv y) + \alpha\delta(f\conv z) + \cdots\)\\
+  (follows from commutativity and linearity)
+\end{itemize}
+
+\sep
+
+\Def[Translation- (or Shift-) Invariant] A transform \(T\) is translation (or shift) invariant, if for any \(f\) and scalar \(\tau\), 
+
+\[ f_{\tau}(t): =f(t - \tau)\qquad(\text{Def. shift operator }s_{\tau}) \]
+
+\[ (T f_{\tau})(t) = (T f)(t - \tau). \qquad\text{(commuting of operators holds)}\]
+
+So, an operator \(T\) is shift-invariant iff it commutes with the shift operator \(s_\Delta\).
+
+\[\forall f\colon (T(s_{\Delta} f)) =  (s_{\Delta}(T f)).\]
+
+So, the commutative diagram for this is:
+\[
+\begin{tikzcd}
+    f \arrow{r}{s_{\Delta}} \arrow[swap]{d}{T} & s_{\Delta} f =  f_{\Delta} \arrow{d}{T} \\
+    T f \arrow{r}{s_{\Delta}} & s_{\Delta}(T f) =  T( f_{\Delta})
+\end{tikzcd}
+\]
+
+\sep
+
+\Thm[Convolution is Translation- (or Shift-) Invariant]
+
+\Proof
+\( \tau_{(s,t)} ((f\conv g)(u,v)) = (\tau_{(s,t)}(f)\conv g)(u,v) = (f\conv\tau_{(s,t)}(g))(u,v) \)
+
+\begin{align*}
+    \tau_{(s,t)} ((f\conv g)(u,v)) &= \tau_{(s,t)}\left(\left(
+    \sum_{i=-p}^{p} \sum_{j=-q}^q f(u-i,v-j)g(i,j) \right)(u,v)\right) \\
+    &= \sum_{i=-p}^{p} \sum_{j=-q}^q f(u+s-i,v+t-j)g(i,j) \\
+    &= \sum_{i=-p}^{p} \sum_{j=-q}^q \tau_{(s,t)}(f(u-i,v-j))g(i,j) \\
+    &= (\tau_{(s,t)}(f)\conv g)(u,v)
+\end{align*}
+\qed
+
+\ssep
+
+So, to summarize a \emph{convolution} is a \emph{linear shift-invariant integral transform}.
+
+\sep
+
+\Thm[Convolution Theorem] Any linear, translation-invariant transformation \(T\) can be written as a \emph{convolution} with a suitable \(h\).
+
+\ssep
+
+\Proof
+
+Let \(\to\) represent the input-output relationship of a linear system.
+
+By definition \(\delta(t)\to h(t)\)
+
+Using linearity we have \(a\delta(t)\to ah(t)\)
+
+Let \(a = x(t')\) then \(x(t')\delta(t)\to x(t')h(t)\)
+
+By shift invariance we have \(\delta(t - t')\to h(t - t')\)
+
+Combining linearity and shift invariance \(x(t')\delta(t - t')\to x(t')h(t - t')\)
+
+Again by linearity, we can sum many terms of this kind.
+
+\( \int_{-\infty}^\infty x(t')\delta(t - t')\,dt' \to \int_{-\infty}^\infty x(t')h(t - t')\,dt' \)
+
+But by definition of \(\delta(t)\) we have that the LHS is \(x(t)\), so \( x(t) \to \int_{-\infty}^\infty x(t')h(t - t')\,dt' \)
+
+By a change of variable on the RHS to \(\tilde{t} = t - t'\) we also have
+
+\( x(t) \to \int_{-\infty}^\infty x(t - t')h(t')\,dt' = y(t) \)
+\qed
+
+\subsection{Discrete Time Convolutions}
+
+\Def[Discrete Convolution]
+
+For \(f,h\colon\Z\to\R\), we can define the discrete convolution via
+
+\[(f*h)[u] := \sum_{t = -\infty}^\infty f[t]h[u - t] = \sum_{t = -\infty}^\infty f[u - t]h[t]\]
+
+\Com Note that the use of rectangular brackets suggests that we're using ``arrays'' (discrete-time samples).
+
+\Com Typically we use a \(h\) with finite support (windows size).
+
+\sep
+
+\Def[Multidimensional Discrete Convolution] 
+
+For \(f,h\colon \R^d\to\R\) we have
+\begin{gather*}
+\begin{align*}
+    (f*h)[u_1,\ldots,u_d] &= \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(t_1,\ldots,t_d)h(u_1-t_1,\ldots,u_d-t_d) \\
+    &= \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(u_1-t_1,\ldots,u_d-t_d)h(t_1,\ldots,t_d)
+\end{align*}
+\end{gather*}
+
+\sep
+
+\Def[Discrete Cross-Correlation]
+
+Let \(f,h\colon\Z\to\R\), then
+\begin{align*}
+    (h\star f)[u] &:= \sum_{t=-\infty}^\infty h[t]f[u+t] = \sum_{t=-\infty}^\infty h[-t]f[u-t] \\
+    &=(\overline{h}*f)[u] =(f*\overline{h})[u] \qquad \text{where }\overline{h}(t)=h(-t).
+\end{align*}
+
+aka ``sliding inner product'', non-commutative, kernel ``flipped over'' (\(u + t\) instead of \(u - t\)). If kernel symmetric: cross-correlation = convolution.
+
+\subsection{Convolution via Matrices}
+
+Represent the input signal, the kernel and the output as \emph{vectors}. Copy the kernel as columns into the matrix ofsetting it by one more very time (gives a band matrix (special case of Toeplitz matrix)). Then the convolution is just a matrix-vector product.
+
+\subsection{Why to use Convolutions in DL}
+
+Transforms in NNs are usually: linear transform + nonlinearity. (given in convolution).
+
+Many signals obey translation invariance, so we'd like to have translation invariant feature mpas. If the relationship of translation invariance is given in the input-output relation then this is perfect.
+
+\subsection{Border Handling}
+
+There are different options to do this
+\begin{itemize}
+  \item \Def[Padding of \(p\)] Means we extend the image (or each dimension) by \(p\) on both sides (so +2\(p\)) and just fill in a constant there (e.g., zero).
+  \item \Def[Same Padding] our definition: padding with zeros = \emph{same padding} (``same'' constant, i.e., 0, and we'll get a tensor of the ``same'' dimensions)
+  \item \Def[Valid Padding] only retain values from windows that are fully-contained within the support of the signal \(f\) (see 2D example below) = \emph{valid padding}
+\end{itemize}
+
+\subsection{Backpropagation for Convolutions}
+
+Exploits structural sparseness.
+
+\sep
+
+\Def[Receptive Field \(\cI_i^l\) of \(x_i^l\)] 
+
+The \emph{receptive field} \(\cI_i^l\) of node \(x_i^l\) is defined as \( \cI_i^l := \dset{j}{W^l_{ij}\neq 0} \) where \(\MW^l\) is the Toeplitz matrix of the convolution at layer \(l\).
+
+\Com Hence, the receptive field of a node \(x_i^l\) are just nodes the which are connected to it and have a non-zero weight.
+
+\Com One may extend the definition of the receptive field over several layers. The further we go back in layer, the bigger the receptive field becomes due to the nested convolutions. The receptive field may be even the entire image
+after a few layers. Hence, the convolutions have to be small.
+
+\sep
+
+Obviously, we have \(\forall j\neq \cI_i^l\colon\frac{\partial x_i^l}{\partial x_j^{l - 1}} = 0,\) simply because
+
+\begin{itemize}
+  \item a node \(x_j^{l - 1}\) may not be connected to \(x_i^l\),
+  \item or a node \(x_j^{l - 1}\) may be connected to \(x_i^l\) through an edge with zero weight, so \(W_{ij} = 0\) - hence, tweaking \(x_j^{l - 1}\) has no effect on \(x_i^{l}\).
+\end{itemize}
+
+\sep
+
+So due to the \emph{weight-sharing}, the kernel weight \(h_j^l\) is re-used for every unit in the target layer at layer \(l\), so when computing the derivative \(\frac{\partial\cR}{\partial h_j^l}\) we just build an additive combination of all the derivatives (note that some of them might be zero).
+
+\[\frac{\partial \cR}{\partial h_j^l} = \sum_{i = 1}^{m_l}\frac{\partial \cR}{\partial x_i^l}\frac{\partial x_i^l}{\partial h_j^l}\]
+
+\sep
+
+\textbf{Backpropagations of Convolutions as Convolutions}
+
+\(\vy^{(l)}\) output of \(l\)-th layer \(\vy^{(l - 1)}\) output of \((l - 1)\)-th layer / input to \(l\)-th layer \(\vw\) convolution filter \(\frac{\partial\cR}{\partial \vy^{(l)}}\) known \(\vy^{(l + 1)} = \vy^{(l)}\conv \vw\)
+
+\begin{align*}
+\frac{\partial\cR}{\partial w_i} &= \sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k}\frac{\partial y^{(l)}_k}{\partial w_i} = \sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k}\frac{\partial}{\partial w_i} \left[\vy^{(l)}\conv\vw\right]_k \\
+&=\sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k}\frac{\partial}{\partial w_i} \left[\sum_{o=-p}^{p} y^{(l-1)}_{k-o}w_o\right] = \sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k} y^{(l-1)}_{k-i} \\
+&=\sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k} y^{(l-1)}_{-(k-i)} = \sum_{k}\frac{\partial\cR}{\partial y^{(l)}_k} \text{rot180}(y^{(l-1)})_{k-i} \\
+&=\left(\frac{\partial\cR}{\partial \vy^{(l)}} \conv\text{rot180}(y^{(l-1)})\right)_i
+\end{align*}
+
+The derivative \(\frac{\partial\cR}{\partial\vy^{(l)}}\) is analogous. 
+
+Note that we just used generalized indices \(i,k,o\) which may be multi-dimensional.
+
+This example omits activation functions and biases, but that could be easily included with the chain-rule.
+
+\sep
+
+\Def[Rotation180] \(\forall i\colon\text{rot180}(\vx)_i = \vx_{(-i)}.\)
+
+\subsection{Efficient Comp. of Convolutional Activities}
+
+A naive way to compute the convolution of a signal of length \(n\) and a kernel of length \(m\) gives an effort of \(\BigO(m\cdot n)\). A faster way is to transform both with the FFT and then just do element-wise multiplication (effort: \(\BigO(n\log n)\)). However, this is rarely done in CNNs as the filters usually are small (\(m\ll n\), \(m\approx \log(n)\)).
+
+\subsection{Typical Convolutional Layer Stages}
+
+A typical setup of a convolutional layer is as follows:
+
+\begin{enumerate}
+  \item Convolution stage: affine transform
+  \item Detector stage: nonlinearity (e.g., ReLU)
+  \item Pooling stage: locally combine activities in some way (max, avg, \ldots)\\
+  Locality of the item that activated the neurons isn't too important, further we profit from dimensionality reduction. Alternative: do convolution with stride. Another thing that turns out to be so is that most of the kernels that are learned resemble a low-pass filter. Hence, when we sub-sample the images most of the information is still contained.
+\end{enumerate}
+
+\subsection{Pooling}
+
+The most frequently used pooling function is: \emph{max pooling}. But one can imagine using other pooling functions, such as: min, avg, and softmax.
+
+\sep
+
+\Def[Max-Pooling] 
+
+Max pooling works, as follows, if we define a window size of \(r = 3\) (in 1D or 2D), then
+
+\begin{itemize}
+  \item 1D: \(x_i^{\max} = \max \dset{x_{i + k}}{0\leq k < r}\)
+  \item 2D: \(x_{ij}^{\max} = \max \dset{x_{i + k,j + l}}{0\leq k,l < r}\)
+\end{itemize}
+
+So, in general we just take the maximum over a small ``patch''/''neighbourhood'' of some units.
+
+\sep
+
+\Thm[Max-Pooling: Invariance]
+
+Let \(\cT\) be the set of invertible transformations (e.g., integral transforms, integal operators). Then \(\cT\) forms a group w.r.t. function composition: \(\alg{\cT,\circ,{}^{-1},\id }\).
+
+\todo{Understand what is meant on this slide!!!!}
+
+\subsection{Sub-Sampling (aka ``Strides'')}
+
+Often, it is desirable to reduce the size of the feature maps. That's why sub-sampling was introduced.
+
+\sep
+
+\Def[Sub-Sampling] Hereby the temporal/spatial resolution is reduced.
+
+\Com Often, the sub-sampling is done via a max-pooling according to some interval step size (a.k.a. stride)
+
+\sep
+
+\begin{itemize}
+  \con Loss of information
+  \pro \todo{Depending on the transform we may get translation invariance???}
+  \pro Dimensionality reduction
+  \pro Increase of efficiency
+\end{itemize}
+
+\todo{Work out the backpropagation details for max-pooling}
+
+\subsection{Channels}
+
+\Ex Here we have
+\begin{itemize}
+  \item an input signal that is 2D with 3 channels (7x7x3) (image x channels)
+  \item and we want to learn two filters \(W0\) and \(W1\), which each process the 3 channels, and sum the results of the convolutions across each channel leading to a tensor of size 3x3x2 (convolution result x num convolutions)
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=0.5\linewidth]{img/convolutions-with-channels}
+\end{center}
+
+Usually we convolve over all of the channels together, such that each convolution has the information of all channels at its disposition and the order of the channels hence doesn't matter.
+
+\subsection{CNNs in Computer Vision}
+
+So the typical use of convolution that we have in vision is: a sequence of convolutions
+
+\begin{enumerate}
+  \item that \emph{reduce} the spatial dimensions (sub-sampling)
+  \item that \emph{increase} the number of channels
+\end{enumerate}
+
+The deeper we go in the network, we transform the spatial information into a semantic representation. Usually, most of the parameters lie in the fully connected layers
+
+\subsection{Famous CNN Architectures}
+
+\subsubsection{LeNet, 1989}
+
+MNIST, 2 Convolutional Layers + 2 Fully-connected layers
+
+\subsubsection{LeNet5}
+
+MNIST, 3 Convolutional Layers (with max-pool subsampling) + 1 Fully connected layer
+
+\subsubsection{AlexNet}
+
+ImageNet: similar to LeNet5, just deeper and using GPU (performance breakthrough)
+
+\subsubsection{Inception Module}
+
+Now, a problem that arose with this ever deeper and deeper channels was that the filters at every layer were getting longer and longer and lots of their coefficients were becoming zero (so no information flowing through). So, Arora et al. came up with the idea of an inception module.
+
+What this inception module does is just taking all the channels for one element in the space, and reduces their dimensionality. Such that we don't get too deep channels, and also compress the information (learning the low-dimensional manifold).
+
+This is what gave rise to the inception module:
+
+\sep
+
+\Def[Dimension Reduction] \(m\) channels of a 1x1x\(k\) convolution \(m\leq k\):
+
+\[\vx^+{ij} = \sigma(\MW\vx_{ij}),\quad\MW\in\MR^{m\times k}. \]
+
+So it uses a 1x1 filter over the \(k\) input channels (which is actually not a convolution), aka ``network within a network''.
+
+
+\subsubsection{Google Inception Network}
+
+\begin{center}
+  \includegraphics[width=0.5\linewidth]{img/inception-module-mixing}
+\end{center}
+
+The Google Inception Network uses many layers of this inception module along with some other tricks
+
+\begin{itemize}
+  \item dimensionality reduction through the inception modules
+  \item convolutions at various sizes, as different filter sizes turned out to be useful
+  \item a max-pooling of the previous layer, and a dimensionality reduction of the result
+  \item 1x1 convs for dimension reduction before convolving with largerkernels
+  \item then all these informations are passed to the next layer
+  \item gradient shortcuts: connect softmax layer at intermediate stages to have the gradient flow until the beginnings of the network
+  \item decomposition of convolution kernels for computational performance
+  \item all-in-all the dimensionality reductions improved the efficiency
+\end{itemize}
+
+\subsection{Networks Similar to CNNs}
+
+\Def[Locally Connected Network] A locally connected network has the same connections that a CNN would have, however, the parameters are not shared. So the output nodes do not connect to all nodes, just to a set of input nodes that are considered ``near'' (locally connected).
+
+\subsection{Comparison of \#Parameters (CNNs, FC, LC)}
+
+\Ex input image \(m\times n\times c\) (\(c = \) number of channels)
+
+\(K\) convolution kernels: \(p\times q\)  (valid padding and stride 1)
+
+output dimensions: \((m - p + 1)\times (n - q + 1)\times K\)
+
+\ssep
+
+\#parameters CNN: \(K(pqc + 1)\)
+
+\ssep
+
+\#parameters of fully-conn. NN with same number of outputs as CNN:\\
+\(mnc((m - p + 1)(n - q + 1) + 1)K\)
+
+\ssep
+
+\#parameters of locally-conn. NN with same connections as CNN:\\
+\(pqc((m - p + 1)(n - q + 1) + 1)K\)
+
+\sep
+
+\Ex Assume we have an \(m\times n\) image (with one channel).
+
+And we convolve it with a filter \((2p + 1)\times (2q + 1)\)
+
+Then the convolved image has dimensions (assuming stride 1)
+
+\begin{itemize}
+  \item valid padding (only where it's defined): \((m - 2p)\times (n - 2q)\)
+  \item same padding (extend image with constant): \(m\times n\) where the extended image has size \((m + 2p)\times (n + 2q)\).
+\end{itemize}
