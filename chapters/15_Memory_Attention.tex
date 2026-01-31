@@ -100,37 +100,6 @@ Another variation is to use coupled forget and input gates. Instead of separatel
 
 This is basically a simplification of the LSTM that we've seen where we have only one state. Usually these ones tend to be much faster to train. It combines the forget and input gates into a single ``update gate.'' It also merges the cell state and hidden state, and makes some other changes.
 
-\subsubsection{Unsegmented Sequences}
-
-Problem: different durations for same thing
-
-``Theee houssse iis new.''
-
-``The hoouse iis new.''
-
-
-\subsubsection{Connectionist Temporal Classification}
-
-Let's have a look an approach with LSTMs on how to solve the problem of unsegmented sequences.
-
-The connectionist temporal classification allows to estimate the sequences of unsegmented data:
-
-Actually, it's a very simplified model (huge simplification)
-
-\[ \cProb{\pi}{\vx} = \prod_{t = 1}^T y_{\pi_t} \]
-where
-\begin{itemize}
-  \item \(\vx\) is the sound that we had, segmented every few milliseconds,
-  \item \(\pi_t\) is a distribution over all possible lables + blank. Note that a blank doesn't mean no sound, it means I don't know.
-\end{itemize} 
-So it assumes that each of the labels that we're getting are independent - so this is really the point where we can say that that doesn't make any sens! Even though it's a huge simplification it works very well.
-
-The next step is to take the sequence of the predictions (if we have two ``a'' ``a'', then most likely there should be just one ``a'' and the next should be something that correlates to a).
-
-So the next idea is after having the sequence \(\pi_1,\ldots,\pi_T\) of predictions we'll add all the potential probabilities that actually mean the same thing.
-
-\todo{I didn't understand this!!!}
-
 \subsection{Differentiable Memory}
 
 \Def[Neural Turing Machine]

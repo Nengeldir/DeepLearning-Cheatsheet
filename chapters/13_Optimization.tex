@@ -1,18 +1,10 @@
 \section{Optimization}
 
-\subsection{Learning as Optimization}
-
-Machine learning uses optimization, but it's \emph{not equal} to optimization for two reasons:
-\begin{itemize}
-  \item The empirical risk is only a \emph{proxy} for the expected risk
-  \item The loss function may only be a \emph{surrogate}
-\end{itemize}
-
 \subsection{Objectives as Expectations}
 
+%Not sure if I keep this
 \[\nabla_{\theta}\cR(D) = \Exp[\cS_N\sim p_D]{\nabla_{\theta}\cR(\cS_N)} = \Exp{\frac{1}{N}\sum_{i = 1}^N\nabla_{\theta}\cR(\theta;\set{\vx[i],\vy[i]})}\]
 
-The typical structure of a learning objective in a NN is a \emph{large finite sum} (over all training instances). Accuracy-complexity trade-off: in practice we subsample terms in the sum, by using \emph{mini-batches} of the training data (so we'll get something close to the true gradient - but not exactly). The idea behind it, is that everything will work out in expectation. Further, we favour cheap and imprecise computations over many datapoints rather than precise and expensive computations over a few datapoints.
 
 \subsection{Gradient Descent}
 
@@ -20,7 +12,6 @@ The typical structure of a learning objective in a NN is a \emph{large finite su
 
 \(\dot{\theta} = -\eta_t\nabla_\theta\cR(\theta)\)
 
-\todo{Mention how line search works: Euler Method. Search for the optimal \(\eta\) in the direction of the gradient such that we get to a minimum, so \(\argmin_\eta\)}
 
 \subsection{Gradient Descent: Classic Analysis}
 
@@ -86,35 +77,6 @@ Continously differentiable \(\subseteq\) Lipschitz continuous \(\subseteq\) (Uni
 
 \sep
 
-
-\Com Convex combination of two points \(<\) evaluation of convex combination of two points.
-
-\Com Another way to formulate that \(f\) is convex function is to say that the \emph{epigraph} of \(f\) is a convex set.
-
-\sep
-
-\Thm Every local optimum of a convex function is a global optimum.
-
-\sep
-
-\Thm[Operations that Preserve Convexity]
-\begin{itemize}
-  \item \(-f\) is concave if and only if \(f\) is convex
-  \item nonnegative weighted sums
-  \item point/element-wise maximum \(\max(f_1(\vx),\ldots,f_n(\vx))\)
-  \item composition with non-decreasing function, e.g. \(e^{f(\vx)}\)
-  \item composition with affine mapping: \(f(\MA\vx + \vb)\)
-  \item restriction to a line (of convex set domain)
-\end{itemize}
-
-\sep
-
-\Def[Strictly Convex Function] \(f\) is called \emph{strictly convex} if
-
-\[ \forall\vx,\vx'\in S,\vx\neq\vx' \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')<\lambda f(\vx) +  (1 - \lambda)f(\vx)  \]
-
-\sep
-
 \Def[Strongly Convex Function] A differentiable function \(f\) is called \emph{\(\mu\)-strongly convex} if the following inequality holds for all points \(\vx,\vy\) in its domain:
 
 \[ \forall\vx\vy\colon\quad \scprod{\nabla f(\vy) - \nabla f(\vx),\vy - \vx}\geq\mu\norm{\vy - \vx}_2^2 \]
@@ -161,19 +123,11 @@ So we have
 
 \subsection{Optimization Challenges in NNs: Curvatures}
 
-When it comes to NNs the objective is usually non-convex. So this is for example an objective that we may get that is non-convex. Still, we can apply gradient descent in this setting. And if we respect the rule of choosing the learning rate as \(\eta = \frac{1}{L}\) where \(L\) is the Lipschitz-constant of the function, then usually, we're fine.
-
-\begin{center}
-  \includegraphics[width=1\linewidth]{img/challenge-curvature}
-\end{center}
-
-So the problem is if we have sharp non-linearities, then there are two approaches to solve this
+A challenge in NNs arises when we have sharp non-linearities, then there are two approaches to solve this
 \begin{itemize}
   \item one is to be very conservative and only do small update steps by choosing a very small learning rate.
   \item or we are courageous and due huge jumps as depicted in the image.
 \end{itemize}
-
-So this is kindof the typical problem that, at least some people think, happens with NNs.
 
 Typical approaches are to clip the gradient when it gets too large, or use a decreasing learning rate (in terms of time).
 

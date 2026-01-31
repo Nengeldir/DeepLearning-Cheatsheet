@@ -1,17 +1,10 @@
 \section{Unsupervised Learning}
 
-Here we'll look at what we can say about a distribution of \(\rvX\), when we have some samples \(\vx_1,\ldots,\vx_N\). Unsupervised learning is the most dangerous thing that we can do (dangerous if we don't know what we're doing). Unsupervised learning usually is hard, because we don't have a goal. The final goal of unsupervised learning is \emph{density estimation} - so, understand the distribution that the data is coming from. Other things we might strive for is interpretability of the results we've learned about \(p(x)\). Another key aspect of unsupervised learning is: ``I don't know what I'm looking for until I find it.''
-
-\sep
-
 \todo{Have a look at the example algorithm: ``Latent Dirichlet Allocation'' A clustering algorithm for documents. This is a very useful algorithm if we're trying to summarize documents and trying to understand what there is in these documents. We'll come to LDA back later.}
 
 \subsection{Density Estimation}
 
-\Def[Density Estimation] is a standard problem in statistics and unsupervised learning. It's used to learn the distribution of the data. Classically, we use a \emph{parametric family of densities}
-
-\[\dset{p_{\theta}}{\theta\in\Theta}\]
-to describe the set of densities that we may model. Usually, the parameters are estimated with MLE (expectation w.r.t. the empirical distribution)
+\Def[Density Estimation] is used to learn the distribution of the data. Classically, we use a \emph{parametric family of densities} \(\dset{p_{\theta}}{\theta\in\Theta}\) to describe the set of densities that we may model. Usually, the parameters are estimated with MLE (expectation w.r.t. the empirical distribution)
 
 \[\theta^* = \argmax_{\theta} \Exp[\vx\sim p_{\text{emp.}}]{\log (p_{\theta}(\vx))}.\]
 
@@ -86,171 +79,6 @@ This expectation can be approximated by sampling.
 The main problem with this is that it assumes that the two normalization constants are the same! \todo{for which two distr?}
 
 \todo{This idea wasn't really explained.}
-
-\subsection{Autoencoders}
-
-\textbf{Given:} data points \(\set{\vx_1,\ldots,\vx_n}\subset\R^d\)
-
-\textbf{Goal:} \emph{Compress} the data into \(m\)-dim. \((m\leq d)\) representation.
-
-\sep
-
-\Def[Autoencoder] any NN that aims to learn the \emph{identity map}.
-
-\[\cR(\theta) = \frac{1}{2n}\sum_{i = 1}^n\norm{\vx - F_\theta(\vx)}_2^2 = \Exp[\vx\sim p_{\text{emp}}]{\ell(\vx,(H\circ G)(\vx))}\]
-
-\[\ell(\vx,\hat{\vx}) = \frac{1}{2}\norm{\vx - \hat{\vx}}^2_2\]
-
-Typically, the network can be broken into two parts \(G\) and \(H\) such that
-
-\begin{itemize}
-    \item \(F = H\circ G\approx \vx\mapsto\vx\)
-    \item \emph{Encoder}: \(G = F_l\circ\cdots\circ F_1\colon\R^n\to\R^m\), \(\vx\mapsto\vz = \vx^l\)
-    \item \emph{Decoder}: \(H = F_L\circ\cdots\circ F_{l + 1}\colon\R^m\to\R^n\), \(\vz\mapsto\vy = \hat{\vx}\).
-    \item layer \(l\) is usually a ``bottleneck'' layer.
-\end{itemize}
-
-\Com Just a special case of a feedforward NN, that can be trained through backpropagation.
-
-\sep
-
-Autoencoders provide a canonical way of \emph{representation learning} (since NNs naturally do this). Note, how the data compression (learning compressed representation) is just a ``proxy'' and not the real learning objective of the network (identity function).
-
-\subsubsection{Linear Autoencoding}
-
-\Def[Linear Autoencoder] A linear autoencoder just consists of two linear maps: an encoder
-\(\MC\in\R^{m\times d}\) and a decoder \(\MD^{d\times m}\). The objective it minimizes is then:
-
-\[\cR(\theta) = \frac{1}{2n}\sum_{i = 1}^n\norm{\vx_i - \MD\MC\vx_i}_2^2.\]
-
-So it's a NN with one hidden layer (no biases and linear activation functions) which will contain the compressed representation \(\vz = \MC\vx\in\R^{m}\).
-
-\sep
-
-\Def[Linear Autoencoder with Coupled Weights] 
-
-Then, we define \(\MD: =\MC^\T\).
-
-\sep
-
-\Def[Singular Value Decomposition]
-
-\todo{Define this cleanly!!!!}
-
-Recall that the SVD of a data matrix
-\[\MX = 
-\begin{bmatrix}
-    \vertbar & \vertbar & & \vertbar\\
-    \vx_1 & \vx_2 & \cdots & \vx_k\\
-    \vertbar & \vertbar & & \vertbar\\
-\end{bmatrix}\]
-is of the following form:
-
-\[\MX = \underset{n\times n}{\MU} \underbrace{\diag^\dagger(\sigma_1,\ldots,\sigma_{\min(n,k)})}_{=:\MSigma\in\R^{n\times k}}\underset{k\times k}{\MV^\T}.\]
-
-And the matrices \(\MU\) and \(\MV\) are orthogonal - so we have an orthogonal basis. Further recall that via the SVD we can get the best rank \(k\) approximation of a linear mapping. It also is a decomposition that preserves as much of the variance (or energy) of the data for a predefined number of desired basis vectors to represent it.
-
-\intertitle{Optimal Linear Compression}
-
-\Thm[Eckhart-Young] For \(m\leq\min(n,k)\) and the objective
-
-\[\argmin_{\hat{\MX}\colon\rank(\hat{\MX}) = m}\norm{\MX - \hat{\MX}}_F^2 = \MU_m\diag(\sigma_1,\ldots,\sigma_m)\MV_m^\T\]
-
-where the subscript \(m\) refers to the matrices of the SVD pruned to \(m\) columns.
-
-\ssep
-
-\Cor This means that a linear auto-encoder with \(m\) hidden units cannot improve the SVD since \(\rank(\MC\MD)\leq m\). However, the auto-encoder can achieve the result of the SVD.
-
-\ssep
-
-\Thm Given the SVD of the data \(\MX = \MU\diag(\sigma_1,\ldots,\sigma_n)\MV^\T\). The choice \(\MC = \MU^\T_m\) and \(\MD = \MU_m\) minimizes the squared reconstruction error of a two-layer linear auto-encoder with \(m\) hidden units.
-
-\Proof
-\begin{align*}
-    \MD\MC\MX = \MU_m\MU_m^\T\MU\MSigma\MV^T = \MU_m
-    \begin{bmatrix}
-        \MI_m & \MO
-    \end{bmatrix}
-    \MSigma\MV^T = \MU_m
-    \begin{bmatrix}
-        \MSigma_m & \MO
-    \end{bmatrix}
-    \MV^T = \MU_m\MSigma_m\MV_m^T.
-\end{align*}
-
-And as we know from the Eckhart-Young theorem \(\hat{\MX} = \MU_m\MSigma_m\MV_m^T\) is the best \(m\)-dimensional approximation of the original data \(\MX\).
-
-Now, since \(\MC = \MU_m^\T\) and \(\MD = \MU_m\) that means that we can do weight sharing between the decoder and encoder network, since \(\MC = \MD^\T\).
-
-Another thing to note is that the solution is \emph{not unique!} For any invertible matrix \(\MA\in GL(m)\) we have
-
-\[\underbrace{(\MU_m\MA^{-1})}_{\tilde{\MD}} \underbrace{(\MA\MU_m^\T)}_{\tilde{\MC}} = \MU_m\MU_m^\T\]
-
-Now, restricting through weight sharing that \(\MD = \MC^\T\) will enforce that \(\MA^{-1} = \MA^\T\), hence \(\MA\in O(m)\) (orthogonal group, rotation matrices). Then the mapping \(\vx\to\vz\) is determined (up some rotation that we do in-between, rotation and its inverse).
-
-\intertitle{Principal Component Analysis}
-
-\todo{Define this cleanly!!!!}
-
-A way to solve \todo{thsi problem, which?? the rotation??} this problem is
-through PCA. First, we center the data (pre-processing) as follows:
-
-\[\vx_i \mapsto \vx_i \sum_{i = 1}^k \vx_i \]
-
-Then we define
-
-\[\MS: =\MX\MX^\T\]
-
-which is the sample covariance matrix. And then, in order to get \(\MU\) we just do the singular value decomposition of \(\MS\). If we relate it to the SVD of \(\MX\) we can see that
-
-\[\MS = \MU\MSigma\MV^\T\MV\MSigma\MU^\T = \MU\MSigma^2\MU^\T.\]
-
-So, the column vectors of \(\MU\) are the eigenvectors of the covariance matrix. And \(\MU_m\MU_m^\T\) is the orthogonal projection onto \(m\) principal components of \(\MS\).
-
-\todo{Might there also be efficiency reasons for doing the PCA instead of the
-SVD of \(\MX\)???}
-
-Note that if we wanted to get \(\MV\) the we'd just do the PCA with \(\MS = \MX^\T\MX\).
-
-\subsubsection{Non-Linear Autoencoders}
-
-Non-linear autoencoders allow us to learn powerful non-linear generalizations of the PCA.
-
-\sep
-
-\Def[Non-Linear Autoencoder] contains many hidden layers with nonlinear-activation functions as we want (as long as there's a bottleneck layer) and train the parameters via MLE.
-
-\subsubsection{Regularized Autoencoders}
-
-One may also regularize the code \(\vz\) via a regularizers \(\Omega(\vz)\). This will give us a regularized autoencoder.
-
-There are various flavours of regularization:
-\begin{itemize}
-    \item standard \(L_2\) penalty: ability to learn ``overcomplete'' codes
-    \item \Def[Code Sparseness] e.g., via \(\Omega(\vz) = \lambda\norm{\vz}_1\)
-    \item \Def[Contractive Autoencoders] \(\Omega(\vz) = \lambda\norm{\frac{\partial\vz}{\partial\vx}}_F^2\). This penalizes the Jacobian and generalizes weight decay (cf. Rifai et al, 2011)
-\end{itemize}
-
-\subsubsection{Denoising Autoencoders}
-
-Autoencoders allso allow us to separate the signal from noise: De-noising autoencoders aim to learn features of the original data representation that are robust under noise.
-
-\sep
-
-\Def[Denoising Autoencoder] we perturb the inputs \(\vx\mapsto\vx_{\veta}\), where \(\eta\) \emph{is a random noise vector}, e.g., additive (white) noise 
-
-\[\vx_\eta = \vx + \veta, \qquad \veta\sim\cN(\vo,\sigma^2\MI) \]
-
-and instead of the original objective, we minimize the following
-
-\[\Exp[\vx]{\Exp[\veta]{\ell(\vx,(H\circ G)(\vx_{\veta}))}}\]
-
-The hope is that we'll achieve \emph{de-noising}, which happens if
-
-\[\norm{\vx - H(G(\vx_{\veta}))}^2 < \norm{\vx - \vx_{\veta}}^2\]
-
-So this would mean that the reconstruction error of the noisy data is less than the error we created by the noise we've added (then the de-noising works).
 
 \subsection{Factor Analysis}
 
@@ -490,16 +318,6 @@ d\vz.\]
 We \emph{expect} that those hidden variables are: interpretable and actionable and even show causal relations.
 
 Later we'll put our Bayesian priors into the distributions \(\Prob{\vz}\) and we then hope that the latent structure will tell us something about the data that we didn't know before.
-
-\sep
-
-The follwing paragraph of a paper shows why interpretability is important:
-
-F. Doshi-Veletz et al. (NIPS 2015)
-
-\tcgr{``Objectives such as data exploration present unique challenges and opportunities for problems in unsupervised learning. While in more typical scenarios, the discovered latent structures are simply required for some downstream task – such as features for a supervised prediction problem – in data exploration, the model must provide information to a domain expert in a form that they can readily interpret. It is not sufficient to simply list what observations are part of which cluster; one must also be able to explain why the data partition in that particular way. These explanations must necessarily be succinct, as people are limited in the number of cognitive entities that they can process at one time.''}
-
-\sep
 
 \subsubsection{Latent Variable Models}
 

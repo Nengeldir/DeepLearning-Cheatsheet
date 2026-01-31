@@ -19,64 +19,138 @@ Note that \(\vh^0: =\vx\).
 
 \sep
 
-\Def[Hidden Layer] A layer that is neither the input, nor the output layer is called a \emph{hidden layer}.
+\Thm Feedforward Networks are invariant under permutations of units: The units within a hidden layer are interchangeable (along with their corresponding weights).
+
+\Thm The units of feedforward networks are invariant along directions orthogonal to the weight vector $F[\vw, \vb](\vx) = F[\vw, \vb](\vx + \delta \vx): \forall \delta\vx \perp \vw$
+
+\Thm A layer of width $m$ can be embedded into a layer of width $m+1$ by adding "barren" (unused) units or by cloning existing units.
 
 \sep
 
-So a feedforward neural network represents a \emph{family of functions} \(\cF\).
+\subsection{Empirical \& Population Risk}
+In learning, we are interested in minimizing the population risk (test risk). We use the training risk (empirical risk) as an estimate of the population risk.
 
-The functions \(F_{\theta}\in\cF\) are \emph{parametrized} by parameters \(\theta\), \(\theta =  \bigcup_{l = 1}^L\set{\MW^l,\vb^l}\).
+\Def[Expected (training) Risk of a Function \(F\)]
+
+\(\ell[\theta](S) = \frac{1}{N}\sum_{i = 1}^N \ell[\theta](x_i, y_i)\)
+
+\Def[Population Risk/Test Risk]
+
+\(\cR(\ell[\theta];p) = \mathbb{E}_{(\vx,y)\sim p}\ell(\vx,y)\)
 
 \sep
 
-\textbf{Probability Distribution Perspective}
+\subsubsection{Linear Networks}
+Linear networks are composed of linear maps (with activation function $\phi = \id$). However, they do not gain representational power from depth because affine maps are closed under composition. They are primarily used for dimensionality reduction (contraction), c.f. Autoencoders.
 
-It is often useful to view the output of a FF network as the parameters \(\vmu\) of some distribution over \(\cY\).
+\subsection{Autoencoders}
 
-\( F_\theta\colon\R^n\to\R^m\to\cP(\cY) \)
+\textbf{Goal:} \emph{Compress} the data into \(m\)-dim. \((m\leq d)\) representation.
 
-\( \vx\stackrel{\text{learned}}{\mapsto}\vmu\stackrel{\text{fixed}}{\mapsto} \cProb{\vy}{\vx;F_\theta}= \cProb{\vy}{\vmu = F_\theta(\vx)}\quad \vy\sim P(\vy;\vmu) \)
+\Def[Autoencoder] tries to learn the identity function.
 
-\subsection{Output Units and Objectives}
+\[\cR(\theta) = \frac{1}{2n}\sum_{i = 1}^n\norm{\vx - F_\theta(\vx)}_2^2 = \Exp[\vx\sim p_{\text{emp}}]{\ell(\vx,(H\circ G)(\vx))}\]
 
-Now, how can we find the \emph{most appropriate function} in \(\cF\) based on training data \(\set{(\vx_1,\vy_1),\ldots,(\vx_N,\vy_N)}\)? There are basically two options (both leading to similar loss functions):
+Typically, a linear autoencoder can be broken into two parts \(G\) and \(H\) such that
+\(F = H\circ G\approx \vx\mapsto\vx\), where \(G \in \R^{m\times n}\) is the encoder and \(H \in \R^{n\times m}\) is the decoder.
 
+The representation of \(G\) and \(H\) is not unique and by the Eckhart-Young theorem we can find the optimal representation by performing the SVD of the data matrix \(\MX\) (PCA).
+
+\[\MX = 
+\begin{bmatrix}
+    \vertbar & \vertbar & & \vertbar\\
+    \vx_1 & \vx_2 & \cdots & \vx_k\\
+    \vertbar & \vertbar & & \vertbar\\
+\end{bmatrix}\]
+is of the following form:
+
+\[\MX = \underset{n\times n}{\MU} \underbrace{\diag^\dagger(\sigma_1,\ldots,\sigma_{\min(n,k)})}_{=:\MSigma\in\R^{n\times k}}\underset{k\times k}{\MV^\T}.\]
+
+And the matrices \(\MU\) and \(\MV\) are orthogonal - so we have an orthogonal basis. Further recall that via the SVD we can get the best rank \(k\) approximation of a linear mapping. It also is a decomposition that preserves as much of the variance (or energy) of the data for a predefined number of desired basis vectors to represent it.
+
+\intertitle{Optimal Linear Compression}
+
+\Thm[Eckhart-Young] For \(m\leq\min(n,k)\) and the objective
+
+\[\argmin_{\hat{\MX}\colon\rank(\hat{\MX}) = m}\norm{\MX - \hat{\MX}}_F^2 = \MU_m\diag(\sigma_1,\ldots,\sigma_m)\MV_m^\T\]
+
+where the subscript \(m\) refers to the matrices of the SVD pruned to \(m\) columns.
+
+\ssep
+
+\Cor This means that a linear auto-encoder with \(m\) hidden units cannot improve the SVD since \(\rank(\MC\MD)\leq m\). However, the auto-encoder can achieve the result of the SVD.
+
+\ssep
+
+\Thm Given the SVD of the data \(\MX = \MU\diag(\sigma_1,\ldots,\sigma_n)\MV^\T\). The choice \(\MC = \MU^\T_m\) and \(\MD = \MU_m\) minimizes the squared reconstruction error of a two-layer linear auto-encoder with \(m\) hidden units.
+
+Another thing to note is that the solution is \emph{not unique!} For any invertible matrix \(\MA\in GL(m)\) we have
+
+\[\underbrace{(\MU_m\MA^{-1})}_{\tilde{\MD}} \underbrace{(\MA\MU_m^\T)}_{\tilde{\MC}} = \MU_m\MU_m^\T\]
+
+\intertitle{Principal Component Analysis}
+
+\todo{Define this cleanly!!!!}
+
+A way to solve this problem is through PCA. First, we center the data (pre-processing) as follows:
+
+\[\vx_i \mapsto \vx_i \sum_{i = 1}^k \vx_i \]
+
+Then we define
+
+\[\MS: =\MX\MX^\T\]
+
+which is the sample covariance matrix. And then, in order to get \(\MU\) we just do the singular value decomposition of \(\MS\). If we relate it to the SVD of \(\MX\) we can see that
+
+\[\MS = \MU\MSigma\MV^\T\MV\MSigma\MU^\T = \MU\MSigma^2\MU^\T.\]
+
+So, the column vectors of \(\MU\) are the eigenvectors of the covariance matrix. And \(\MU_m\MU_m^\T\) is the orthogonal projection onto \(m\) principal components of \(\MS\).
+
+\todo{Might there also be efficiency reasons for doing the PCA instead of the
+SVD of \(\MX\)???}
+
+Note that if we wanted to get \(\MV\) the we'd just do the PCA with \(\MS = \MX^\T\MX\).
+
+\subsubsection{Non-Linear Autoencoders}
+
+Non-linear autoencoders allow us to learn powerful non-linear generalizations of the PCA.
+
+\sep
+
+\Def[Non-Linear Autoencoder] contains many hidden layers with nonlinear-activation functions as we want (as long as there's a bottleneck layer) and train the parameters via MLE.
+
+\subsubsection{Regularized Autoencoders}
+
+One may also regularize the code \(\vz\) via a regularizers \(\Omega(\vz)\). This will give us a regularized autoencoder.
+
+There are various flavours of regularization:
 \begin{itemize}
-  \item Decision theory (min. some risk, max. some payoff, \ldots)
-  \item Maximum Likelihood (max. likelihood, min. prob. dens. dist.,\ldots)
+    \item standard \(L_2\) penalty: ability to learn ``overcomplete'' codes
+    \item \Def[Code Sparseness] e.g., via \(\Omega(\vz) = \lambda\norm{\vz}_1\)
+    \item \Def[Contractive Autoencoders] \(\Omega(\vz) = \lambda\norm{\frac{\partial\vz}{\partial\vx}}_F^2\). This penalizes the Jacobian and generalizes weight decay (cf. Rifai et al, 2011)
 \end{itemize}
 
-\subsubsection{Decision Theory}
+\subsubsection{Denoising Autoencoders}
 
-In decision theory, we strive to minimize the expected risk (defined through a loss function \(\ell\)) of a function \(F\).
-
-\sep
-
-\Def[Expected Risk of a Function \(F\)]
-
-\(F^* =\argmin_{F} \sum_{y\in\cY} \int_{\cX} \ell(y,F(\vx))p(\vx,y)\,d\vx = \argmin_{F}\underbrace{\Exp[\rvX,\rY]{\ell(\rY,F(\rvX))}}_{\cR^*(F)\text{ expected risk of } F}\)
-
-However, we do not know \(\ell\), we aren't given \(p(\vx,y)\) (only samples).
+Autoencoders allso allow us to separate the signal from noise: De-noising autoencoders aim to learn features of the original data representation that are robust under noise.
 
 \sep
 
-\Def[Training Risk / Empirical Risk]
+\Def[Denoising Autoencoder] we perturb the inputs \(\vx\mapsto\vx_{\veta}\), where \(\eta\) \emph{is a random noise vector}, e.g., additive (white) noise 
 
-\(\cS_N: =\dset{(\vx_i,y_i)\riid p}{i = 1,\ldots,N}.\)
+\[\vx_\eta = \vx + \veta, \qquad \veta\sim\cN(\vo,\sigma^2\MI) \]
 
-\(\cR(F;\cS_N) =  \frac{1}{N}\sum_{i = 1}^N \ell(y_i, F(\vx_i))\)
+and instead of the original objective, we minimize the following
 
-So the \emph{training risk} is the \emph{expected risk} under the empirical distribution induced by the sample \(\cS_N\). 
+\[\Exp[\vx]{\Exp[\veta]{\ell(\vx,(H\circ G)(\vx_{\veta}))}}\]
 
-\sep
+The hope is that we'll achieve \emph{de-noising}, which happens if
 
-\Def[Empirical Risk Minimization]
+\[\norm{\vx - H(G(\vx_{\veta}))}^2 < \norm{\vx - \vx_{\veta}}^2\]
 
-\( \cF = \dset{F_\theta}{\theta\in\Theta} \quad\text{(e.g. neural network)} \)
+So this would mean that the reconstruction error of the noisy data is less than the error we created by the noise we've added (then the de-noising works).
 
-\(\hat{F}(\cS_N) = \argmin_{F\in\cF}\cR(F;S_N)\)
 
-\subsubsection{Regularization}
 
 Wish: \(\cR(\hat{F};\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F^*)\) (no overfitting)
 

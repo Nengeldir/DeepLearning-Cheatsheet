@@ -72,8 +72,7 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \sep
 
-\Thm
-\(
+\Thm \(
     \Prob{
         \begin{bmatrix}
             \va_1 \\
@@ -96,22 +95,12 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
             \MSigma_{21} & \MSigma_{22}
         \end{bmatrix}
     }
-\)\\
+\) \\
 \(\va_1,\vu_1\in\R^{e}\), \(\MSigma_{11}\in\R^{e\times e}\) p.s.d.
 \(\MSigma_{12}\in\R^{e\times f}\) p.s.d.\\
 \(\va_2,\vu_2\in\R^{f}\), \(\MSigma_{22}\in\R^{f\times f}\) p.s.d.
 \(\MSigma_{21}\in\R^{f\times e}\) p.s.d.\\
-\(
-    \cProb{\va_2}{\va_1 = \vz}
-    = 
-    \cDist{\cN}{
-        \va_2
-    }{
-        \vu_2 + \MSigma_{21}\MSigma_{11}^{-1}(\vz - \vu_1)
-        ,
-        \MSigma_{22} - \MSigma_{21}\MSigma_{11}^{-1}\MSigma_{12}
-    }
-\)
+\begin{align*}& \cProb{\va_2}{\va_1 = \vz} = \\ &\cDist{\cN}{\va_2}{\vu_2 + \MSigma_{21}\MSigma_{11}^{-1}(\vz - \vu_1),\MSigma_{22} - \MSigma_{21}\MSigma_{11}^{-1}\MSigma_{12}}\end{align*}
 
 \sep
 

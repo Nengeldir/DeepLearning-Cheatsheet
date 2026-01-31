@@ -1,82 +1,144 @@
-## Connectionism
-### Overview
-#### Connectionism is a movement in cognitive science aiming to explain intellectual abilities using artificial neural networks.
-#### Deep Learning (DL) focuses on Deep Neural Networks (DNN), comprising high-dimensional models composed of simple building blocks that are trainable with simple methods like stochastic gradient descent.
-#### Early inspiration came from biological systems, specifically the structure of interconnected neurons (e.g., work by Ramón y Cajal).
+## Chapter 2: Feedforward Networks
 
-### Intermezzo (~1950)
-#### The Quest for Learning
-##### Early Boolean logic models of neural networks were crude and failed to explain the ability to adapt and learn.
-##### Alan Turing envisioned "unorganized machines" that could learn from experience, moving beyond fixed logic.
+### Linear Regression
+$$f(x) = w^Tx + b$$
 
-### Perceptron (1958, 1969)
-#### Pattern Recognition
-##### The perceptron was the first major breakthrough, introducing a universal machine capable of learning to recognize patterns from examples (supervised learning).
-##### Patterns are represented as feature vectors $x \in \mathbb{R}^n$ with binary class membership $y \in \{-1, +1\}$.
-#### Threshold Unit
-##### It utilized a linear threshold unit defined as $f[w,b](x) = \text{sign}(x \cdot w + b)$ where $x \cdot w = \sum^n_{i=1} x_i w_i$.
-##### The sign function returns $+1$ if the input is positive, $0$ if zero, and $-1$ otherwise.
-#### Perceptron Learning
-##### Parameters are adapted only when an example is misclassified using the update: $w_{new} = w_{old} + y_i x_i$ (and similarly for the bias $b$).
-##### The algorithm is guaranteed to converge to a solution if the data is linearly separable (Novikoff's Theorem).
-#### Capacity and Shattering
-##### Cover’s function counting theorem describes the capacity of the perceptron; a perceptron in $n$ dimensions can arbitrarily classify $2n$ random patterns.
-##### Asymptotic Shattering: The probability of finding a linear separator drops sharply when the number of samples $s$ exceeds $2n$.
-#### Deep Perceptrons
-##### Rosenblatt realized single units were insufficient and envisioned multi-layer networks with feature extractors.
-##### Lacking a learning rule for hidden layers, early deep models used fixed (random) weights for the association units, training only the final response unit,.
+$$SSE[w,b](S) = \frac{1}{2}\sum_{i=1}^n (y_i - f(x_i))^2$$
 
-### Parallel Distributed Processing (1986-1987)
-#### The PDP Framework
-##### Rumelhart, Hinton, and McClelland consolidated connectionist models into a general framework, offering a "LEGO toolbox" for designing models.
-##### Key concepts included processing units, propagation rules, connectivity patterns, and a general learning rule based on experience,.
+$$\hat{w} = argmin_{w,b} SSE[w,b](S) = (X^TX)^{-1}X^Ty$$
+
+### Regularized Linear Regression
+
+Ridge Regression:
+$$\hat{w} = argmin_{w,b} SSE[w,b](S) + \lambda ||w||_2^2$$
+
+$$w = (X^TX + \lambda I)^{-1}X^Ty$$
+
+Lasso Regression:
+$$\hat{w} = argmin_{w,b} SSE[w,b](S) + \lambda ||w||_1$$
+
+### Logistic Regression
+
+$$\ell(y,z) = -y \log(\sigma(z)) - (1-y) \log(1-\sigma(z))$$
+
+$$\sigma(z) = \frac{1}{1+e^{-z}}$$
+
+$$\hat{w} = argmin_{w,b} \sum_{i=1}^n \ell(y_i, f(x_i))$$
+
+### Layer & Units
+Units within a hidden layer are interchangeable. 
+
+### Autencoder
+MSE on reconstruction error.
+
+$$\ell(y,z) = \frac{1}{2}\sum_{i=1}^n (y_i - z_i)^2$$
+
+Linear autoencoders perform PCA.
+
+### Residual Layers
+$$F[W,b](x) = x + [\phi(Wx + b)]$$
+
+DenseNet: Takes in all previous layers and outputs a new layer.
+
+### Projections
+You can also change the dimensionality of the residual layer with a projection matrix.
+
+$$F[W,b](x) = Vx + [\phi(Wx + b)]$$
+
+### Universal Approximation
+MLP w/ single hidden layer can approximate any function.
+
+Uniform Approximation,
+
+$$||f||_{\infty} = \sup_{x \in [a,b]} |f(x)|$$
+
+We say $f$ is uniformly approximated by $g_n$ if $||f-g_n||_{\infty} \rightarrow 0$ as $n \rightarrow \infty$.
+
+### Weierstrass Theorem
+Polynomials can uniformly approximate any continuous function on a closed interval.
+
+### Dimension Lifting
+Leshno's Theorem: Any function can be approximated by a function with a single hidden layer with $n$ units.
+
+$$\text{span}(\{\phi(ax+b): a,b \in \mathbb{R}\})$$
+
+universally approximates $C(\mathbb{R})$. The lifting theorem then allows us to lift the dimension of the function space to a higher dimension, i.e. $\text{span}(\{\phi(ax+b): a,b \in \mathbb{R}\})$ universally approximates $C(\mathbb{R}^n)$.
+
+### Montufar Theorem
+Consider a ReLU MLP with $L$ hidden layers of width $m > n$. The dimensionality is $n$. The number of linear regions is lower bounded by
+
+$$R(m,L) \geq R(m) \frac{m}{n}^{n(L-1)}$$
+
+where $R(m)$ is the number of connected regions of $\mathbb{R}^m$ spanned by $m$ linear functions.
+
+$$R(m) = \sum_{i=0}^{\min(n,m)} \binom{m}{i}$$
+
+### Shekhtman's Theorem
+Piecewise linear functions are dense in $C([0,1])$.
+
+## Feedforward Networks
+### Regression Models
+#### Linear Regression
+##### The simplest model predicts a response $y$ based on input $x$ assuming a linear relationship $f[w](x) = w'x$.
+##### It typically minimizes the Mean Squared Error (MSE): $h[w] = \frac{1}{2s} \sum (w'x_i - y_i)^2$.
+#### Logistic Regression
+##### Utilizes the logistic function $\sigma(z) = \frac{1}{1 + e^{-z}}$ to model probabilities.
+##### It minimizes the cross-entropy loss (negative log-likelihood), which acts as a surrogate loss for the 0/1 classification error.
+##### The logistic function has the property $\sigma(-z) = 1 - \sigma(z)$ and its derivative is $\sigma(z)(1-\sigma(z))$.
+
+### Layers & Units
+#### Feedforward Architecture
+##### The network processes inputs through a sequence of hidden layer transformations (forward propagation) to extract features of increasing complexity,.
+##### The map is a composition of layer functions: $G = F_L \circ \dots \circ F_1$.
+#### Layers
+##### A layer is a parameterized map $F[\theta](x) = \phi(Wx + b)$ combining an affine transformation with a pointwise non-linearity.
+##### This design allows "all units to be created equal" by sharing a single scalar activation function $\phi$.
+#### Units (Neurons)
+##### Units are the "malleable atoms" of the network, defined as ridge functions $f[w, b](x) = \phi(w'x + b)$,.
+##### They possess an invariance where the function value is constant along directions orthogonal to the weight vector $w$.
+#### Symmetries
+##### Networks exhibit permutation symmetry; the map is invariant if units within a hidden layer are permuted (along with their corresponding weights).
+##### Consequently, parameterizations in feedforward networks are never unique.
+#### Nesting
+##### A layer of width $m$ can be embedded into a layer of width $m+1$ by adding "barren" (unused) units or by cloning existing units.
+#### Outputs and Losses
+##### Softmax is used for multi-class classification to map pre-activations to a probability simplex.
+##### Models are assessed on Risk (expected loss), distinguishing between training risk (empirical) and test/population risk (expected loss on future data).
+
+### Linear & Residual Networks
+#### Linear Networks
+##### Composed of linear maps ($\phi = id$), they are analytically simple but do not gain representational power from depth because affine maps are closed under composition,.
+##### Their primary use is dimensionality reduction (contraction).
+#### Autoencoders
+##### Linear autoencoders with a bottleneck layer ($m < n$) essentially perform Principal Component Analysis (PCA) when minimizing squared reconstruction error,.
+##### They project data to the subspace spanned by the principal components.
+#### Residual Networks (ResNets)
+##### Residual layers learn an incremental improvement: $F(x) = x + [\phi(Wx+b) - \phi(0)]$.
+##### They utilize "skip connections" to propagate inputs forward, allowing the layer to be initialized near the identity map.
+##### This architecture enabled the training of very deep networks (e.g., 100+ layers) by improving gradient flow.
+#### Projections and DenseNets
+##### Residual blocks can use linear projections ($Vx$) instead of identity shortcuts to change dimensionality.
+##### DenseNets feed the output of *all* upstream layers into the current layer, accumulating input dimensionality.
+
+### Sigmoid Networks
 #### Activation Functions
-##### To enable learning, threshold functions were replaced with differentiable non-linearities, such as generalized affine maps.
-#### Delta Rule
-##### Derived by differentiating the squared loss, the delta rule updates weights based on the error, input, and the sensitivity (derivative) of the activation function.
-#### Generalized Delta Rule (Backpropagation)
-##### The framework generalized the delta rule to deep architectures by using error backpropagation to automatically derive training signals ($\delta$ terms) for hidden units.
-##### This allows for local parameter updates per unit based on backpropagated deltas.
-#### Multilayer Perceptron (MLP)
-##### A classic architecture featuring an input layer, hidden layers with sigmoid activations ($\phi(z) = \frac{1}{1+e^{-z}}$), and an output layer.
-##### While MLPs are universal function approximators (as width $\to \infty$), this theoretical capability does not guarantee they are efficient to train or the best architecture for all tasks.
+##### Common choices include the logistic function and the hyperbolic tangent ($\tanh$).
+##### $\tanh$ is representationaly equivalent to the logistic function, related by scaling and shifting: $\tanh(z) = 2\sigma(2z) - 1$.
+#### Universal Approximation
+##### A single hidden layer MLP with sufficiently large width ($m \to \infty$) can uniformly approximate any continuous function on a compact domain,.
+##### This relies on theorems stating that non-polynomial smooth activation functions are universal approximators.
+#### Barron’s Theorem
+##### This theorem relates approximation error to the number of units ($m$), showing an error rate of $O(1/m)$,.
+##### This rate is independent of input dimension $n$ (avoiding the curse of dimensionality), provided the function's Fourier transform satisfies specific regularity conditions.
 
-### Hopfield Networks (1982)
-#### Associative Memory
-##### These networks model how systems can retrieve memories (patterns) in an associative manner, functioning as collective computation.
-#### Hebbian Learning
-##### Weights are determined by the correlation of patterns: $w_{ij} = \frac{1}{n} \sum x_i x_j$.
-##### This follows the principle that "neurons that fire together wire together," creating positive coupling for similar states and negative coupling for opposite states.
-#### Energy Landscape
-##### The network dynamics minimize an energy function $E(x) = -\frac{1}{2} x^\top W x$.
-##### Provided the weight matrix is symmetric with a zero diagonal, the dynamics will converge to a stable state (local minimum) without oscillating.
-
-## Chapter 1: Connectionism
-### McCulloch & Pitts (1943)
-One of the first approaches to model functions of nervous systesm with an abstract mathematical model.
-
-Neurons are abstracted as linear threshold units, which receive and integrate a large number of inputs and produce a boolean output.
-
-**MP-Neuron** Inputs $x \in \{0, 1\}^n$, synapses $\sigma \in \{-1, 1\}^n$, threshold $\theta \in \mathbb{R}$, 
-
-$$f[\sigma, \theta](x) = \begin{cases} 1 & \text{if } \sum_{i=1}^n \sigma_i x_i \geq \theta \\ 0 & \text{otherwise} \end{cases}$$
-
-The MP-Neuron lacked the ability to learn, as the weights were fixed and the threshold was a constant. It was also not able to model non-linear functions.
-
-**Alan Turing** envisioned "unorganized machines" that could learn from experience, moving beyond fixed logic.
-
-**Claude Shannon** created the Theseus machine, it was able to learn to navigate a maze. 
-
-**Marvin Minsky** built SNARC (Stochastic Neural Analog Reiforcement Calcualtor) in 1952. 
-
-**Rosenblatt** built the Perceptron in 1958. It was able to learn to recognize patterns from examples. It's function is:
-
-$$f[w,b] = sign(xw + b)$$
-
-where $xw = \sum^n_{i=1} x_i w_i$ and $sign(z) = \begin{cases} 1 & \text{if } z \geq 0 \\ -1 & \text{if } z < 0 \\ 0 & \text{if } z = 0 \end{cases}$
-
-It's learning is done if a sample is misclassified, updating the weights as $w_{new} = w_{old} + y_i x_i$. For the bias $b$, we update as $b_{new} = b_{old} + y_i$.
-
-Novikoff's Theorem guarantees convergence of the Perceptron algorithm if the data is linearly separable. 
-
-Cover's Theorem; Let $S \subseteq \mathbb{R}^n$ be a set of $s$ points in general position. The maximum number of dichotomies of $S$ that can be realized by a linear classifier is $C(s + 1,n) = 2\sum^{n}_{i=0} \binom{s}{i}$. S are the data points, n is the dimension of the data points. $C$ can be interpreted as the number of shatterings of $S$ by linear classifiers.
+### ReLU Networks
+#### ReLU Activation
+##### The Rectified Linear Unit is defined as $\phi(z) = \max\{0, z\}$.
+##### It is piecewise linear; to address the lack of gradient in the negative regime, variants like Leaky ReLU are used.
+#### Complexity and Zoning
+##### A ReLU layer partitions the input space into convex polytopes (cells) via hyperplanes defined by weights.
+##### Within each cell, the network mapping is affine.
+##### Zaslavsky’s Theorem bounds the number of linear regions created by $m$ hyperplanes; while polynomial in width, the number of regions can grow exponentially with depth.
+#### Universality
+##### ReLU networks with a single hidden layer are universal function approximators.
+##### This is proven using the fact that piecewise linear functions can be constructed using differences of convex functions (specifically, two max operations).
