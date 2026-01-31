@@ -20,228 +20,53 @@
 
 where \(b = \scprod{\vw,\vp}\). \(\vw = \)normal vector, \(\vp\) points onto a point on the plane.
 
-\sep
+\subsection{Universal Approximation}
 
-\Def[Level Sets] of a function \(f\colon\R^n\to\R\) is a one-parametric family of sets defined as
+\Thm[Universal Approximation Theorem] MLPs with one hidden layer and a non-polynomial activation function can approximate any continuous function on a compact subset of \(\R^d\) to arbitrary accuracy \(\epsilon > 0\). Let \(\varphi\) be a non-constant, bounded, and continuous activation function (e.g., Sigmoid, ReLU). There exist weights \(v, w, b\) and an integer \(N\) (number of neurons) such that the network output \(F(x)\) satisfies the condition:
 
-\[L_f(c): =\dset{\vx}{f(\vx) = c} = f^{-1}(c)\subseteq\R^n.\]
+\[|f(x) - F(x)| < \epsilon, \quad \forall x \in K\]
 
-\sep
+\textbf{Uniform Approximation}: This specific type of convergence guarantees that the maximum error across the \textit{entire} domain \(K\) is bounded by \(\epsilon\). It is stricter than pointwise approximation.
 
-\Thm[Comp. of Lin. Maps/- is a Lin. Map/Unit]
-
-Let \(F_1,\ldots,F_L\) be linear maps, then \(F = F_L\circ \cdots\circ F_2\circ F_1\) is also a linear map.
-
-\ssep
-
-\Cor Every \(L\)-layer NN of linear layer collapses to a 1-layer NN. Further note that hereby
-
-\( \rank(F)\equiv\dim(\im(F))\leq\min_{i\in\set{1,\ldots,L}}\rank(F_i).\)
-
-\subsection{Universal Approximation with Ridge Functions}
-
-\Def[Ridge Function] \(f\colon\R^n\to\R\) is a \emph{ridge function}, if it can be written as \(f(\vx) = \sigma(\vw^\T\vx + b)\) for some \(\sigma\colon\R\to\R\), \(\vw\in\R^n\), \(b\in\R\).
-
-\begin{itemize}
-  \item \(\overline{f}(\vx) = \vw^\T\vx + b\) (linear part)
-  \item \(L_f(c) =  \bigcup_{d\in\sigma^{-1}(c)}L_{\overline{f}}(d) =  \bigcup_{d\in L_{\sigma}(c)}L_{\overline{f}}(d)\)
-  \item if \(\sigma\) is differentiable at \(z = \vw^\T\vx + b\) then\\
-  \(\nabla_{\vx} f(\vx) =  \sigma'(z)\nabla_{\vx}\overline{f}(\vx) = \sigma'(z)\vw = \sigma'(\vw^\T\vx + b)\vw\)
-  \item a ridge function picks out one direction of change (linear part), and then models the rate of change in that chosen direction via \(\sigma\)
-\end{itemize}
+\Thm[Weierstrass Approximation]
+Let $f$ be a continuous real-valued function defined on a closed interval $[a, b]$. For every $\epsilon > 0$, there exists a polynomial $P(x)$ such that for all $x \in [a, b]$:
+$$ |f(x) - P(x)| < \epsilon $$
+\textit{Implication:} Polynomials are dense in the space of continuous functions $C[a,b]$. This is the foundation for Universal Approximation, as neural networks can approximate polynomials.
 
 \sep
 
-\Thm Let \(f\colon\R^n\to\R\) be differentiable at \(\vx\). Then either \(\nabla_{\vx}f(\vx) = 0\), or  \(\nabla_{\vx}f(\vx)\perp L_f(f(\vx))\)
-
-\todo{What's the difference between orthogonality and \(=0\)???}
-
-\sep
-
-\Def[Universe of Ridge Functions for some \(\sigma\colon\R\to\R\)]\\
-
-\(\cG_{\sigma}^n : = \dset{g}{g(\vx) = \sigma(\vw^\T\vx + b),\, \vw\in\R^n,\, b\in\R,\, \sigma\colon\R\to\R}\)
+\Thm[Dimension Lifting (Leshno's Theorem)]
+By the universal approximation theorem, we know that we can approximate $C(\R)$ with a single hidden layer of ReLUs. The lifting theorem then allows us to lift the dimension of the function space to a higher dimension, i.e. $\text{span}(\{\phi(ax+b): a,b \in \mathbb{R}\})$ universally approximates $C(\mathbb{R}^n)$.
 
 \sep
 
-\Def[Universe of Continuous Ridge Functions]
+\Thm[Montufar (Linear Regions)]
+The number of linear regions carved out by a Deep ReLU Network grows exponentially with depth $L$, but only polynomially with width $n$. For a network with $L$ layers and width $n$ (where $n \ge d$):
+$$ \#\text{Regions} = O\left( \left(\frac{n}{d}\right)^{(L-1)d} n^d \right) $$
 
-\(\cG^n: =\bigcup_{\sigma\in C(\R)}\cG_{\sigma}^n.\)
-
-\sep
-
-\Thm Composition of continuous functions is continuous.
-
-\Thm (Hence) \(\cG^n\subseteq C(\R^n)\).
+\Com Deep networks are exponentially more expressive (in terms of complex decision boundaries) than shallow networks of the same parameter count.
 
 \sep
 
-\Def[Span of Universe of Continuous Ridge Functions]
+\Thm[Shekhtman (ReLU Basis)]
+Any continuous piecewise linear function $g(x)$ on $[0,1]$ (a polygonal line) with breakpoints (knots) $t_1 < \dots < t_k$ can be represented exactly as a weighted sum of ReLU units:
+$$ g(x) = a + bx + \sum_{i=1}^k c_i \text{ReLU}(x - t_i) $$
 
-\(\cH^n: =\spn(\cG^n) =  \dset{h}{h = \sum_{j = 1}^r g_j,\, g_j\in\cG^n}.\)
+\Com A single hidden layer of ReLUs acts as a universal basis for 1D splines. This establishes the theoretical link between splines and ReLU networks.
 
-\sep
+\Thm[Barron's Theorem]
+For a function $f$ with a finite Fourier moment $C_f$ (a measure of smoothness), there exists a neural network $f_n$ with one hidden layer of $n$ sigmoidal units such that the integrated squared error is bounded by:
+$$ ||f - f_n||_{L_2}^2 \leq \frac{(2C_f)^2}{n} $$
 
-\Def[Dense Function Class \(\cH\) in \(C(\R^d)\)] 
-
-A \emph{function class} \(\cH\subseteq C(\R^d)\) is \emph{dense} in \(C(\R^d)\), iff
-
-\[\forall f\in C(\R^d)\quad\forall\epsilon>0 \quad\forall K\subset\R^d, \, K\text{ compact}\]
-
-\[\exists h\in\cH\colon\max_{x\in K}\abs{f(\vx) - h(\vx)} = \norm{f - h}_{\infty,K}<\epsilon.\]
+\Com The approximation error decays at a rate of $O(1/\sqrt{n})$, which is independent of the input dimension $d$. This suggests neural networks can overcome the "Curse of Dimensionality" for specific classes of functions.
 
 \sep
 
-\Thm[Density of Span of Continuous Ridge Functions]
+\Thm[Zaslavsky's Theorem]
+The number of distinct regions $R(m, d)$ created by an arrangement of $m$ hyperplanes in a $d$-dimensional space is bounded by:
+$$ R(m, d) \leq \sum_{i=0}^{d} \binom{m}{i} $$
 
-\(\cH^n\) is \emph{dense} in \(C(\R^n)\). Note: we can absorb the linear combination weights within the functions \(g_j\).
-
-\sep
-
-So, we can approximate any \(f\in C(\R^n)\) through linear combinations of members in \(\cG^n\). This gives rise to the idea of building a 1-layer network with adaptive ridge functions (rather impractical). In the following we'll see how we can limit ourselves to one specific \(\sigma\) s.t. \(\spn(\cG_\sigma^n)\) is still dence in \(C(\R^n)\). And we'll see how we can simplify the discussion through dimension lifting.
-
-\sep
-
-\Thm[Approximation Theorem, 1993]
-
-\(\sigma\in C^\infty(\R)\), \(\sigma\) not polynomial \(\Longrightarrow\) \(\cH_\sigma^1\) is dense in \(C(\R)\).
-
-\sep
-
-\Cor MLPs with one hidden layer, and any non-polynomial, \emph{smooth} activation function are a universal function approximators.
-
-\Com we don't know how many hidden units are needed; the requirement that \(f\) is smooth can be substantially weakened (see results with ReLUs).
-
-\sep
-
-\Lem MLPs with one hidden layer and a polynomial activation function are \emph{not} universal function approximators.
-
-\sep
-
-\Lem[Dimension Lifting]
-
-\( \cH_{\sigma}^1\text{ \emph{dense} in }C(\R)\Longrightarrow\forall n\geq 1\colon\cH_{\sigma}^n\text{ \emph{dense} in }C(\R^n)\)
-
-\Com So we can lift the \emph{density property of ridge functions} from \(C(\R)\) to \(C(\R^n)\).
-
-\sep
-
-\textbf{Summary}
-\begin{align*}
-    \begin{matrix}
-        \sigma\in C^\infty(\R),\\
-        \sigma \text{ not polynomial}
-    \end{matrix} 
-    \stackrel{\text{Approx. Thm.}}{\Longrightarrow} \cH_\sigma^1 \text{ is dense in } C(\R) \\
-    \stackrel{\text{Dim. Lifting}}{\Longrightarrow} \forall n\colon \cH_\sigma^n \text{ is dense in } C(\R^n)
-\end{align*}
-
-\subsection{Rectification Networks}
-
-\sep
-
-\Thm Any \(f\in C([0;1])\) can be uniformly approximated to arbitrary precision by a polygonal line (c.f. Shektman, 1982). Or in other words:
-
-\(\cH = \set{\text{p.w. linear functions}}\) is \emph{dense} in \(C([0,1])\).
-
-\sep
-
-\Thm Lebesgue showed how a polygonal line with \(m\) pieces can be written 
-
-\(\displaystyle g(x) = ax + b + \sum_{i = 1}^{m - 1} c_k(x - x_i)_{+}\) (ReLU function approx.)
-
-\begin{itemize}
-  \item Knots: \(0 = x_0<x_1<\cdots <x_{m - 1}<x_{m} = 1\)
-  \item \(m + 1\) parameters: \(a,b,c_1,\ldots,c_{m - 1}\)
-\end{itemize}
-
-\todo{Write down how to compute the parameters}.
-
-With the dimension lifting theorem we can lift this property from 1D to \(n\)D.
-
-\ssep
-
-Note that there's an alternative representation of the above through AVUs
-
-\(g(x) = a'x + b' + \sum_{i = 1}^m - 1 c_i'\abs{x - x_i}\)
-
-\todo{Write down how to compute the parameters}.
-
-\sep
-
-\Thm Networks with one hidden layer of ReLUs are universal function approximators.
-
-\Com We can thus use a restricted set of activation functions (ReLUs). But still we don't know how many hidden units we need.
-
-\subsubsection{Piecewise Linear Functions and Half Spaces}
-
-So the ReLU and the AVU define a \emph{piecewise linear function} with 2 pieces. Hereby, \(\R^n\) is partitioned into two open half spaces (and a border face):
-
-\begin{itemize}
-  \item \(H^+: =\dset{\vx}{\vw^\T\vx + b>0}\subset\R^n\)
-  \item \(H^-: =\dset{\vx}{\vw^\T\vx + b<0}\subset\R^n\)
-  \item \(H^0: =\dset{\vx}{\vw^\T\vx + b = 0} = \R^n\setminus H^+\setminus H^-\subset\R^n\)
-\end{itemize}
-
-Further note that
-
-\begin{itemize}
-  \item \(g_{(\argdot)_+}(H^0) = g_{\abs{\argdot}}(H^0) = 0\)
-  \item \(g_{(\argdot)_+}(H^{-}) = 0\)
-  \item \(g_{\abs{\argdot}}(\vx) = g_{\abs{\argdot}}(\vv - \vx)\) with \(\vv = -2b\frac{\vw}{\norm{\vw}_2^2}\) (mirroring at \(\vw\): equivalent to subtracting the projection of \(\vx\) onto \(\vw\) twice from \(\vx\))
-\end{itemize}
-
-\sep
-
-Partitions of ReLUs go to infinity, even if we have no examples there \(\to\) weak to extrapolation errors (adversarial examples). However, if you have enough data, then you can overcome this, because there won't be any new examples that lie outside of the training data regions.
-
-\subsubsection{Linear Combinations of ReLUs}
-
-\Thm[Zaslavsky, 1975] By linearly combining \(m\) rectified units \(\R^n\) can be partitioned at most into \(R(m)\) cells: 
-
-\[R(m)\leq\sum_{i = 0}^{\min\set{m,n}}\binom{m}{i}\]
-
-\Cor If classes \(m\leq n\) we have \(R(m) = 2^m\) (exponential growth).
-
-\Cor For any input size \(n\) we have \(R(m)\in\BigO(m^n)\) (polynomial slow-down in number of cells, limited by the input space dimension).
-
-\subsubsection{Deep Combination of ReLUs}
-
-\Thm[Montufar et al, 2014] If we process \(n\)-dim. inputs through \(L\) ReLU layers with widths \(m_1,\ldots,m_L\in\BigO(m)\).Then \(\R^n\) can be partitioned into at most \(R(m,L)\) layers:
-
-\[R(m,L)\in\BigO\left(\left(\frac{m}{n}\right)^{n(L - 1)}m^n\right)\]
-
-\subsubsection{Hinging Hyperplanes}
-
-\Def[Hinge Function (extension of ReLU)]
-
-If \(g\colon\R^n\to\R\) can be written with parameters \(\vw_1,\vw_2\in\R^n\) and \(b_1,b_2\in\R\) as below it is called a hinge function
-
-\[g(\vx) = \max\left(\vw_1^\T\vx + b_1,\vw_2^\T\vx + b_2\right)\]
-
-\begin{itemize}
-  \item two hyperplanes, ``glued'' together at their intersection. So for the intersection it holds that: \(\vw_1^\T\vx + b_1 = \vw_2^\T\vx + b_2\).
-  \item Representational power: \(2\max(f,g) = f + g + \abs{f - g}.\)
-  \todo{Didnt' understand that}
-\end{itemize}
-
-The good thing is that these hyperplanes (as opposed to the ReLU) don't interact only in one dimension (\(\vw\)), but they interact in two dimensions \(\vw_1,\vw_2\).
-
-\sep
-
-\Def[\(k\)-Hinge Function] \(g(\vx) = \max(\vw_1^\T\vx + b_1,\ldots,\vw_k^\T\vx + b_k)\).
-
-\sep
-
-\Thm[Wang and Sun, 2005] Every continuous p.w. linear function from \(\R^n\to\R\) can be written as a signed sum of \(k\)-Hinges with \(k_i\leq\ceil{\log_2(n + 1)}\). So \(f(\vx) = \sum_{i}\theta_ig_i(\vx)\) where \(\theta_i\in\set{\pm 1}\).
-
-\Com This reduces the growth of absolute value nesting to logarithmic growth, instead of linear growth.
-
-\todo{what does this inequality say exactly? What is \(k_i\)?}
-
-\sep
-
-\Cor P.w. linear functions are dense in \(C(\R^n)\).
+\Com In the context of ReLU networks, this bounds the number of linear regions a single layer with $m$ neurons can create. For large $m$, this approximates to $O(m^d)$, showing polynomial growth with width (contrast with Montufar's exponential growth with depth).
 
 \subsubsection{Maxout Networks}
 

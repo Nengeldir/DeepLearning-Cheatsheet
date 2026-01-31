@@ -54,7 +54,7 @@ Linear networks are composed of linear maps (with activation function $\phi = \i
 Typically, a linear autoencoder can be broken into two parts \(G\) and \(H\) such that
 \(F = H\circ G\approx \vx\mapsto\vx\), where \(G \in \R^{m\times n}\) is the encoder and \(H \in \R^{n\times m}\) is the decoder.
 
-The representation of \(G\) and \(H\) is not unique and by the Eckhart-Young theorem we can find the optimal representation by performing the SVD of the data matrix \(\MX\) (PCA).
+The representation of \(G\) and \(H\) is not unique and by the Eckhart-Young theorem we can find the optimal representation (under the squared reconstruction error) by performing the SVD of the data matrix \(\MX\) (PCA).
 
 \[\MX = 
 \begin{bmatrix}
@@ -66,10 +66,15 @@ is of the following form:
 
 \[\MX = \underset{n\times n}{\MU} \underbrace{\diag^\dagger(\sigma_1,\ldots,\sigma_{\min(n,k)})}_{=:\MSigma\in\R^{n\times k}}\underset{k\times k}{\MV^\T}.\]
 
-And the matrices \(\MU\) and \(\MV\) are orthogonal - so we have an orthogonal basis. Further recall that via the SVD we can get the best rank \(k\) approximation of a linear mapping. It also is a decomposition that preserves as much of the variance (or energy) of the data for a predefined number of desired basis vectors to represent it.
+And the matrices \(\MU\) and \(\MV\) are orthogonal; we have an orthogonal basis. 
 
-\intertitle{Optimal Linear Compression}
+\sep
 
+\Thm[Non-uniqueness] For any invertible matrix \(\MA\) we have
+
+\[\underbrace{(\MU_m\MA^{-1})}_{\tilde{\MD}} \underbrace{(\MA\MU_m^\T)}_{\tilde{\MC}} = \MU_m\MU_m^\T\]
+
+\ssep
 \Thm[Eckhart-Young] For \(m\leq\min(n,k)\) and the objective
 
 \[\argmin_{\hat{\MX}\colon\rank(\hat{\MX}) = m}\norm{\MX - \hat{\MX}}_F^2 = \MU_m\diag(\sigma_1,\ldots,\sigma_m)\MV_m^\T\]
@@ -80,88 +85,83 @@ where the subscript \(m\) refers to the matrices of the SVD pruned to \(m\) colu
 
 \Cor This means that a linear auto-encoder with \(m\) hidden units cannot improve the SVD since \(\rank(\MC\MD)\leq m\). However, the auto-encoder can achieve the result of the SVD.
 
-\ssep
+% \subsubsection{Non-Linear Autoencoders}
 
-\Thm Given the SVD of the data \(\MX = \MU\diag(\sigma_1,\ldots,\sigma_n)\MV^\T\). The choice \(\MC = \MU^\T_m\) and \(\MD = \MU_m\) minimizes the squared reconstruction error of a two-layer linear auto-encoder with \(m\) hidden units.
+% Non-linear autoencoders allow us to learn powerful non-linear generalizations of the PCA.
 
-Another thing to note is that the solution is \emph{not unique!} For any invertible matrix \(\MA\in GL(m)\) we have
+% \sep
 
-\[\underbrace{(\MU_m\MA^{-1})}_{\tilde{\MD}} \underbrace{(\MA\MU_m^\T)}_{\tilde{\MC}} = \MU_m\MU_m^\T\]
+% \Def[Non-Linear Autoencoder] contains many hidden layers with nonlinear-activation functions as we want (as long as there's a bottleneck layer) and train the parameters via MLE.
 
-\intertitle{Principal Component Analysis}
+% \subsubsection{Regularized Autoencoders}
 
-\todo{Define this cleanly!!!!}
+% One may also regularize the code \(\vz\) via a regularizers \(\Omega(\vz)\). This will give us a regularized autoencoder.
 
-A way to solve this problem is through PCA. First, we center the data (pre-processing) as follows:
+% There are various flavours of regularization:
+% \begin{itemize}
+%     \item standard \(L_2\) penalty: ability to learn ``overcomplete'' codes
+%     \item \Def[Code Sparseness] e.g., via \(\Omega(\vz) = \lambda\norm{\vz}_1\)
+%     \item \Def[Contractive Autoencoders] \(\Omega(\vz) = \lambda\norm{\frac{\partial\vz}{\partial\vx}}_F^2\). This penalizes the Jacobian and generalizes weight decay (cf. Rifai et al, 2011)
+% \end{itemize}
 
-\[\vx_i \mapsto \vx_i \sum_{i = 1}^k \vx_i \]
+% \subsubsection{Denoising Autoencoders}
 
-Then we define
+% Autoencoders allso allow us to separate the signal from noise: De-noising autoencoders aim to learn features of the original data representation that are robust under noise.
 
-\[\MS: =\MX\MX^\T\]
+% \sep
 
-which is the sample covariance matrix. And then, in order to get \(\MU\) we just do the singular value decomposition of \(\MS\). If we relate it to the SVD of \(\MX\) we can see that
+% \Def[Denoising Autoencoder] we perturb the inputs \(\vx\mapsto\vx_{\veta}\), where \(\eta\) \emph{is a random noise vector}, e.g., additive (white) noise 
 
-\[\MS = \MU\MSigma\MV^\T\MV\MSigma\MU^\T = \MU\MSigma^2\MU^\T.\]
+% \[\vx_\eta = \vx + \veta, \qquad \veta\sim\cN(\vo,\sigma^2\MI) \]
 
-So, the column vectors of \(\MU\) are the eigenvectors of the covariance matrix. And \(\MU_m\MU_m^\T\) is the orthogonal projection onto \(m\) principal components of \(\MS\).
+% and instead of the original objective, we minimize the following
 
-\todo{Might there also be efficiency reasons for doing the PCA instead of the
-SVD of \(\MX\)???}
+% \[\Exp[\vx]{\Exp[\veta]{\ell(\vx,(H\circ G)(\vx_{\veta}))}}\]
 
-Note that if we wanted to get \(\MV\) the we'd just do the PCA with \(\MS = \MX^\T\MX\).
+% The hope is that we'll achieve \emph{de-noising}, which happens if
 
-\subsubsection{Non-Linear Autoencoders}
+% \[\norm{\vx - H(G(\vx_{\veta}))}^2 < \norm{\vx - \vx_{\veta}}^2\]
 
-Non-linear autoencoders allow us to learn powerful non-linear generalizations of the PCA.
-
-\sep
-
-\Def[Non-Linear Autoencoder] contains many hidden layers with nonlinear-activation functions as we want (as long as there's a bottleneck layer) and train the parameters via MLE.
-
-\subsubsection{Regularized Autoencoders}
-
-One may also regularize the code \(\vz\) via a regularizers \(\Omega(\vz)\). This will give us a regularized autoencoder.
-
-There are various flavours of regularization:
-\begin{itemize}
-    \item standard \(L_2\) penalty: ability to learn ``overcomplete'' codes
-    \item \Def[Code Sparseness] e.g., via \(\Omega(\vz) = \lambda\norm{\vz}_1\)
-    \item \Def[Contractive Autoencoders] \(\Omega(\vz) = \lambda\norm{\frac{\partial\vz}{\partial\vx}}_F^2\). This penalizes the Jacobian and generalizes weight decay (cf. Rifai et al, 2011)
-\end{itemize}
-
-\subsubsection{Denoising Autoencoders}
-
-Autoencoders allso allow us to separate the signal from noise: De-noising autoencoders aim to learn features of the original data representation that are robust under noise.
-
-\sep
-
-\Def[Denoising Autoencoder] we perturb the inputs \(\vx\mapsto\vx_{\veta}\), where \(\eta\) \emph{is a random noise vector}, e.g., additive (white) noise 
-
-\[\vx_\eta = \vx + \veta, \qquad \veta\sim\cN(\vo,\sigma^2\MI) \]
-
-and instead of the original objective, we minimize the following
-
-\[\Exp[\vx]{\Exp[\veta]{\ell(\vx,(H\circ G)(\vx_{\veta}))}}\]
-
-The hope is that we'll achieve \emph{de-noising}, which happens if
-
-\[\norm{\vx - H(G(\vx_{\veta}))}^2 < \norm{\vx - \vx_{\veta}}^2\]
-
-So this would mean that the reconstruction error of the noisy data is less than the error we created by the noise we've added (then the de-noising works).
+% So this would mean that the reconstruction error of the noisy data is less than the error we created by the noise we've added (then the de-noising works).
 
 
 
-Wish: \(\cR(\hat{F};\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F^*)\) (no overfitting)
+% Wish: \(\cR(\hat{F};\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F^*)\) (no overfitting)
 
-\sep
+% \sep
 
-\Def[Regularized Empirical Risk]
+% \Def[Regularized Empirical Risk]
 
-\( \cR_r(F;\cS_n) := \cR(F;\cS_n) + \lambda\Omega(\norm{F}) \)
+% \( \cR_r(F;\cS_n) := \cR(F;\cS_n) + \lambda\Omega(\norm{F}) \)
+% 
+
+\subsection{Residual Networks}
+\Def{Residual Networks} learn an incremental improvement: \(F(x) = x + [\phi(Wx + b)]\). They utilize "skip connections to propagate inputs forward, allowing to mitigate the vanishing/exploding gradient problem. It allows us to increase depth even more. (Important paper: ResNet 2015). The skip connection can also be transformed with a matrix \(\MA\) to allow for more flexibility \(F(x) = \MA x + [\phi(Wx + b)]\).
 
 \subsubsection{Regularization Approaches}
 
-Weight decay, data augmentation, noise robustness (to weights, inputs, labels (compensates for errors in labeling of data)), semi-supervised learning, dropout, early stopping (stop training when validation error increases), multi-task learning (to learn general representation or use more data), parameter sharing (CNNs), ensembles (reduces variance, same bias, costly)
+\Def{Weight Decay ($L_2$ Regularization)}: Adds a penalty to the loss function proportional to the square of the weights' magnitude to constrain complexity.
+$$\ell(\theta) = \ell_{emp}(\theta) + \frac{\lambda}{2} \|\theta\|^2$$
 
-Some regularization methods can be proven to be equivalent. However: only in the limit. Thus, it's good to use combinations of them in finite horizons.
+\Def{Data Augmentation}: Artificially expands the training set by creating modified versions of existing data (e.g., flipping, rotating) to teach invariance.
+
+\Def{Noise Robustness}: Injects random noise into inputs, weights, or gradients to make the model insensitive to small perturbations.
+
+\Def{Semi-supervised Learning}: Uses a small set of labeled data alongside unlabeled data. Unlabeled data helps learn the distribution $P(x)$ to regularize $P(y|x)$.
+
+\Def{Dropout}: Prevents co-adaptation by randomly deactivating neurons.
+\begin{itemize}
+    \item \textbf{Training}: Each neuron is kept active with probability $p$ (and dropped with $1-p$). This is mathematically applied using a mask vector $\mathbf{m}$:
+    $$ y = \mathbf{m} \odot h, \quad \text{where } \mathbf{m} \sim \text{Bernoulli}(p) $$
+    \item \textbf{Inference (Weight Scaling)}: During testing, all neurons are active. To match the expected output magnitude from training (since $E[y_{train}] = p \cdot h$), we must scale the weights down:
+    $$ W_{test} = p \cdot W_{train} $$
+\end{itemize}
+
+\Def{Early Stopping}: Monitors validation error and stops training when performance degrades, effectively selecting parameters before overfitting occurs.
+
+\Def{Multi-task Learning}: Trains on multiple tasks simultaneously using shared representations, introducing inductive bias that aids generalization.
+
+\Def{Parameter Sharing}: Constraints the model by forcing sets of parameters to be identical (e.g., filter weights in CNNs).
+
+\Def{Ensembles}: Combines predictions of multiple independent models to average out individual errors.
+$$y_{final} = \frac{1}{k} \sum_{i=1}^{k} M_i(x)$$

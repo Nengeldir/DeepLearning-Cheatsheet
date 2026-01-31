@@ -1,5 +1,5 @@
 \section{Regression}
-\textbf{Linear Regression}: $f(x) = w^Tx + b$
+\Def[Linear Regression]: $f(x) = w^Tx + b$
 
 $$\ell(w) = \frac{1}{2n}\sum_{i=1}^n(y_i - f(x_i))^2$$
 
@@ -7,18 +7,18 @@ $$\ell(w) = \frac{1}{2n}\sum_{i=1}^n(y_i - f(x_i))^2$$
 
 \sep
 
-\textbf{Ridge Regression}: $f(x) = w^Tx + b$ with $\ell_2$ regularization
+\Def[Ridge Regression]: $f(x) = w^Tx + b$ with $\ell_2$ regularization
 $$\ell(w) = \frac{1}{2n}\sum_{i=1}^n(y_i - f(x_i))^2 + \lambda\|w\|^2$$
 \textit{Analytically solvable}: $w^* = (X^TX + \lambda I)^{-1}X^Ty$
 
 \sep
 
-\textbf{Lasso Regression}: $f(x) = w^Tx + b$ with $\ell_1$ regularization
+\Def[Lasso Regression]: $f(x) = w^Tx + b$ with $\ell_1$ regularization
 $$\ell(w) = \frac{1}{2n}\sum_{i=1}^n(y_i - f(x_i))^2 + \lambda\|w\|_1$$
 
 \sep
 
-\textbf{Logistic Regression}: $f(x) = \sigma(w^Tx + b)$
+\Def[Logistic Regression]: $f(x) = \sigma(w^Tx + b)$
 
 It minimizes the cross-entropy loss (negative log-likelihood), which acts as a surrogate loss for the 0/1 classification error.
 

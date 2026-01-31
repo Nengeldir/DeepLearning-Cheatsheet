@@ -1,6 +1,16 @@
 \section{Linear Algebra}
 
-\todo{Luca: Add definition of positive semi-definite matrix}
+Kernels are positive semi-definite matrices.
+
+\Def[Positive Semi-Definite Matrix] A symmetric matrix $\MA \in \R^{n \times n}$ is PSD if for all non-zero vectors $\vx \in \R^n$: $ \vx^T \MA \vx \geq 0 $
+\textbf{Properties}:
+\begin{itemize}
+    \item All eigenvalues $\lambda_i \geq 0$.
+    \item The trace $\text{Tr}(A) \geq 0$ and determinant $\det(A) \geq 0$.
+    \item Cholesky Decomposition exists: $A = L L^T$.
+\end{itemize}
+
+\sep
 
 \Thm[Sylvester Criterion] A \(d\times d\) matrix is positive semi-definite if and only if all the upper left \(k\times k\) for \(k = 1,\ldots,d\) have a positive determinant.
 
@@ -12,5 +22,22 @@ Otherwise: indefinite.
 
 \Def[Trace] of \(\MA\in\R^{n\times n}\) is \(\Tr{\MA} = \sum_{i = 1}^n a_{ii}\).
 
-\todo{Luca: Properties of Trace: Linearity, Cyclic, Frobenius norm
-\(\norm{\MA}_F^2 = \Tr{\MA^\T\MA} = \Tr{\MA\MA^\T}\)}
+\textbf{Properties}:
+\begin{itemize}
+    \item $\text{Tr}(A) = \sum_i \lambda_i$ (sum of eigenvalues).
+    \item Cyclic property: $\text{Tr}(ABC) = \text{Tr}(BCA) = \text{Tr}(CAB)$.
+    \item Linear: $\text{Tr}(A + B) = \text{Tr}(A) + \text{Tr}(B)$ and $\text{Tr}(cA) = c\text{Tr}(A)$.
+    \item $\text{Tr}(A) = \text{Tr}(A^T)$.
+\end{itemize}
+
+\sep
+
+\Def[Frobenius Norm ($||\cdot||_F$)] The square root of the sum of the absolute squares of its elements.
+$$ ||A||_F = \sqrt{\sum_{i,j} |A_{ij}|^2} $$
+\textbf{Properties}:
+\begin{itemize}
+    \item Relation to Trace: $||A||_F = \sqrt{\text{Tr}(A^T A)}$.
+    \item Invariant under orthogonal rotations: $||Q A||_F = ||A||_F$ for orthogonal $Q$.
+    \item Relation to Singular Values: $||A||_F = \sqrt{\sum_i \sigma_i^2}$.
+\end{itemize}
+

@@ -1311,14 +1311,14 @@
 \newcommand*{\mybox}[1]{%
     \noindent\colorbox{sectionbarcolor}{%
         \parbox{\dimexpr\columnwidth-2\fboxsep\relax}{%
-            \textcolor{white}{#1}}}}
+            \textcolor{white}{\strut #1}}}}
 }{
 % use blue color
 \definecolor{sectioncolor}{rgb}{0,0,205}
 \newcommand*{\mybox}[1]{%
     \noindent\colorbox{sectioncolor}{%
         \parbox{\dimexpr\columnwidth-2\fboxsep\relax}{%
-            \textcolor{white}{#1}}}}
+            \textcolor{white}{\strut #1}}}}
 }
 % Raised Rule Command:
 % - arg 1 (optional) how high to raise the rule
