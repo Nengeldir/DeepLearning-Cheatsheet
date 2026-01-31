@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1769867898.06847 "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" "document.pdf" "document" 1769867902.02011 0
+["pdflatex"] 1769868493.55513 "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" "document.pdf" "document" 1769868498.25021 0
   "C:/Users/LuCo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1769689411 82864 33af9636ee278c30beabba717010dc8f ""
   "C:/Users/LuCo/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1769285262 13147729 d18bdd7efddd0abe97f04fec3eb697b1 ""
   "C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/symbol/psyr.tfm" 1136768654 1408 5937f58aa508ea2cea4901c07d10f5fe ""
@@ -297,7 +297,7 @@
   "C:/Users/LuCo/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/LuCo/AppData/Local/Programs/MiKTeX/tex/latex/xifthen/xifthen.sty" 1448274436 5689 1bfa68243e89a54479e7d0580773c57e ""
   "C:/Users/LuCo/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" 1769866079 1902 50948d4bc3fa86a576da0756af4a2b8f ""
+  "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" 1769868492 1947 76e9bd592b66807dab17eaa03c2b0247 ""
   "chapters/10_Feedforward_Networks.tex" 1769867893 7843 707d7cc5c00063a27ebf35d82ab71354 ""
   "chapters/11_Backpropagation.tex" 1769808006 11154 92d4b6daf31e862dc3ec95c51442e358 ""
   "chapters/12_Convolutional_Neural_Networks.tex" 1769814563 14897 68c32fe15851d001234a150b1f0057fa ""
@@ -317,9 +317,9 @@
   "chapters/8_Regression.tex" 1769866120 857 24550aa57efc0c62fa905467dce68a59 ""
   "chapters/9_Approximation_Theory.tex" 1769810465 10279 811962a21f321d34c98d15813fee25f1 ""
   "cheatsheet.sty" 1769822692 44933 38df77b983701462c7ead53e5e9a7a01 ""
-  "document.aux" 1769867901 15411 a8a31c6eaa1e4f334e71e101a1637c2a "pdflatex"
-  "document.out" 1769867901 19898 f8b966206de50b897b4f0b3d6eefba32 "pdflatex"
-  "document.tex" 1769866079 1902 50948d4bc3fa86a576da0756af4a2b8f ""
+  "document.aux" 1769868497 15411 a8a31c6eaa1e4f334e71e101a1637c2a "pdflatex"
+  "document.out" 1769868497 19898 f8b966206de50b897b4f0b3d6eefba32 "pdflatex"
+  "document.tex" 1769868492 1947 76e9bd592b66807dab17eaa03c2b0247 ""
   "img/DRNN.png" 1769689117 80082 fe6862059f392aa4037585fd307811bc ""
   "img/GAN-training.png" 1769689117 104763 f5e7dd4b3c3205eb27280769cd20d589 ""
   "img/VAE-forward-prop.png" 1769689117 1092899 8bdaf0e2b8aacc6cd0ab526a8d216666 ""
