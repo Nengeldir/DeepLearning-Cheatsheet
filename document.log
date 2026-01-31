@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  31 JAN 2026 17:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  31 JAN 2026 21:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1297,31 +1297,37 @@ Overfull \hbox (2.89207pt too wide) in paragraph at lines 70--71
  []
 
 ) (chapters/5_Information_Theory.tex) (chapters/6_NN_functions_and_derivatives.tex) (chapters/7_Connectionism.tex) (chapters/8_Regression.tex) (chapters/9_Approximation_Theory.tex) (chapters/10_Feedforward_Networks.tex) (chapters/11_Backpropagation.tex
-Overfull \hbox (7.78896pt too wide) detected at line 44
+<img/Forward&BackwardMode.png, id=430, 531.1845pt x 355.5684pt>
+File: img/Forward&BackwardMode.png Graphic file (type png)
+<use img/Forward&BackwardMode.png>
+Package pdftex.def Info: img/Forward&BackwardMode.png  used on input line 31.
+(pdftex.def)             Requested size: 230.83818pt x 154.51907pt.
+
+Overfull \hbox (7.78896pt too wide) detected at line 51
 []
  []
 
 
-Overfull \hbox (10.49321pt too wide) detected at line 122
+Overfull \hbox (10.49321pt too wide) detected at line 119
 []
  []
 
-<img/backprop-graphs.jpg, id=426, 3695.8075pt x 2470.22874pt>
+<img/backprop-graphs.jpg, id=431, 3695.8075pt x 2470.22874pt>
 File: img/backprop-graphs.jpg Graphic file (type jpg)
 <use img/backprop-graphs.jpg>
-Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 220.
+Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 217.
 (pdftex.def)             Requested size: 161.58601pt x 107.98932pt.
 ) (chapters/12_Convolutional_Neural_Networks.tex
 Overfull \hbox (31.31236pt too wide) detected at line 116
 []
  []
 
-<img/convolutions-with-channels.png, id=427, 758.835pt x 674.52pt>
+<img/convolutions-with-channels.png, id=432, 758.835pt x 674.52pt>
 File: img/convolutions-with-channels.png Graphic file (type png)
 <use img/convolutions-with-channels.png>
 Package pdftex.def Info: img/convolutions-with-channels.png  used on input line 237.
 (pdftex.def)             Requested size: 115.41908pt x 102.59396pt.
-<img/inception-module-mixing.png, id=429, 1021.8175pt x 532.99126pt>
+<img/inception-module-mixing.png, id=434, 1021.8175pt x 532.99126pt>
 File: img/inception-module-mixing.png Graphic file (type png)
 <use img/inception-module-mixing.png>
 Package pdftex.def Info: img/inception-module-mixing.png  used on input line 287.
@@ -1334,7 +1340,7 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 [1{C:/Users/LuCo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
- <./img/backprop-graphs.jpg> <./img/convolutions-with-channels.png>]) (chapters/13_Optimization.tex
+ <./img/Forward&BackwardMode.png> <./img/backprop-graphs.jpg> <./img/convolutions-with-channels.png>]) (chapters/13_Optimization.tex
 Overfull \hbox (1.00772pt too wide) detected at line 6
 \OMS/cmsy/m/n/7 r[]R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 D\OT1/cmr/m/n/7 ) = [] [] = [] []
  []
@@ -1344,7 +1350,7 @@ Overfull \hbox (2.7506pt too wide) detected at line 138
 \OMS/cmsy/m/n/7 R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^Q\OMS/cmsy/m/n/7 r[]R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R\OT1/cmr/m/n/7 )) [] \OMS/cmsy/m/n/7 R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R\OT1/cmr/m/n/7 ) \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^Q [][] \OT1/cmr/m/n/7 + [] []
  []
 
-<img/challenges-curvature-and-gradients.png, id=468, 1839.87375pt x 854.19125pt>
+<img/challenges-curvature-and-gradients.png, id=470, 1839.87375pt x 854.19125pt>
 File: img/challenges-curvature-and-gradients.png Graphic file (type png)
 <use img/challenges-curvature-and-gradients.png>
 Package pdftex.def Info: img/challenges-curvature-and-gradients.png  used on input line 165.
@@ -1359,7 +1365,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 577--578
 
  []
 
-<img/l2-regularization-effects-in-risk-space.png, id=469, 1290.8225pt x 1266.7325pt>
+<img/l2-regularization-effects-in-risk-space.png, id=471, 1290.8225pt x 1266.7325pt>
 File: img/l2-regularization-effects-in-risk-space.png Graphic file (type png)
 <use img/l2-regularization-effects-in-risk-space.png>
 Package pdftex.def Info: img/l2-regularization-effects-in-risk-space.png  used on input line 662.
@@ -1378,8 +1384,8 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.112 
-       [2 <./img/inception-module-mixing.png> <./img/challenges-curvature-and-gradients.png> <./img/l2-regularization-effects-in-risk-space.png>]
+l.90 \end{align*}
+                  [2 <./img/inception-module-mixing.png> <./img/challenges-curvature-and-gradients.png> <./img/l2-regularization-effects-in-risk-space.png>]
 Overfull \hbox (23.3514pt too wide) detected at line 163
 []
  []
@@ -1389,7 +1395,7 @@ Overfull \hbox (87.69559pt too wide) detected at line 190
 []
  []
 
-<img/cnn-text-overview.png, id=478, 1928.20375pt x 1653.17625pt>
+<img/cnn-text-overview.png, id=480, 1928.20375pt x 1653.17625pt>
 File: img/cnn-text-overview.png Graphic file (type png)
 <use img/cnn-text-overview.png>
 Package pdftex.def Info: img/cnn-text-overview.png  used on input line 221.
@@ -1404,63 +1410,63 @@ Overfull \hbox (63.27538pt too wide) detected at line 377
 []
  []
 
-<img/bi-directional-rnn.png, id=479, 1026.83624pt x 790.955pt>
+<img/bi-directional-rnn.png, id=481, 1026.83624pt x 790.955pt>
 File: img/bi-directional-rnn.png Graphic file (type png)
 <use img/bi-directional-rnn.png>
 Package pdftex.def Info: img/bi-directional-rnn.png  used on input line 408.
 (pdftex.def)             Requested size: 46.16693pt x 35.55522pt.
-<img/DRNN.png, id=480, 331.2375pt x 902.37125pt>
+<img/DRNN.png, id=482, 331.2375pt x 902.37125pt>
 File: img/DRNN.png Graphic file (type png)
 <use img/DRNN.png>
 Package pdftex.def Info: img/DRNN.png  used on input line 434.
 (pdftex.def)             Requested size: 22.08347pt x 60.15701pt.
-<img/teacher-forcing.png, id=481, 1055.945pt x 909.3975pt>
+<img/teacher-forcing.png, id=483, 1055.945pt x 909.3975pt>
 File: img/teacher-forcing.png Graphic file (type png)
 <use img/teacher-forcing.png>
 Package pdftex.def Info: img/teacher-forcing.png  used on input line 459.
 (pdftex.def)             Requested size: 69.25215pt x 59.6402pt.
 ) (chapters/15_Memory_Attention.tex
-<img/memory-units.png, id=482, 1432.35126pt x 777.90625pt>
+<img/memory-units.png, id=484, 1432.35126pt x 777.90625pt>
 File: img/memory-units.png Graphic file (type png)
 <use img/memory-units.png>
 Package pdftex.def Info: img/memory-units.png  used on input line 20.
 (pdftex.def)             Requested size: 138.5043pt x 75.2194pt.
-<img/lstm.png, id=483, 1476.51625pt x 746.79pt>
+<img/lstm.png, id=485, 1476.51625pt x 746.79pt>
 File: img/lstm.png Graphic file (type png)
 <use img/lstm.png>
 Package pdftex.def Info: img/lstm.png  used on input line 32.
 (pdftex.def)             Requested size: 230.83818pt x 116.74261pt.
-<img/lstm-combined-v3.png, id=484, 300.28185pt x 196.21304pt>
+<img/lstm-combined-v3.png, id=486, 300.28185pt x 196.21304pt>
 File: img/lstm-combined-v3.png Graphic file (type png)
 <use img/lstm-combined-v3.png>
 Package pdftex.def Info: img/lstm-combined-v3.png  used on input line 42.
 (pdftex.def)             Requested size: 230.83818pt x 150.84198pt.
-<img/lstm-peephole-connections.png, id=485, 659.8251pt x 203.8014pt>
+<img/lstm-peephole-connections.png, id=487, 659.8251pt x 203.8014pt>
 File: img/lstm-peephole-connections.png Graphic file (type png)
 <use img/lstm-peephole-connections.png>
 Package pdftex.def Info: img/lstm-peephole-connections.png  used on input line 82.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-coupled-forget-and-input-gates.png, id=486, 659.8251pt x 203.8014pt>
+<img/lstm-coupled-forget-and-input-gates.png, id=488, 659.8251pt x 203.8014pt>
 File: img/lstm-coupled-forget-and-input-gates.png Graphic file (type png)
 <use img/lstm-coupled-forget-and-input-gates.png>
 Package pdftex.def Info: img/lstm-coupled-forget-and-input-gates.png  used on input line 90.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-grus.png, id=487, 659.8251pt x 203.8014pt>
+<img/lstm-grus.png, id=489, 659.8251pt x 203.8014pt>
 File: img/lstm-grus.png Graphic file (type png)
 <use img/lstm-grus.png>
 Package pdftex.def Info: img/lstm-grus.png  used on input line 98.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/ntms-1.png, id=488, 2078.76625pt x 742.775pt>
+<img/ntms-1.png, id=490, 2078.76625pt x 742.775pt>
 File: img/ntms-1.png Graphic file (type png)
 <use img/ntms-1.png>
 Package pdftex.def Info: img/ntms-1.png  used on input line 110.
 (pdftex.def)             Requested size: 161.58601pt x 57.73447pt.
-<img/ntms-2.png, id=489, 890.32625pt x 774.895pt>
+<img/ntms-2.png, id=491, 890.32625pt x 774.895pt>
 File: img/ntms-2.png Graphic file (type png)
 <use img/ntms-2.png>
 Package pdftex.def Info: img/ntms-2.png  used on input line 126.
 (pdftex.def)             Requested size: 115.41908pt x 100.44427pt.
-<img/seq-to-seq-encoder-decoder.png, id=490, 1872.9975pt x 391.4625pt>
+<img/seq-to-seq-encoder-decoder.png, id=492, 1872.9975pt x 391.4625pt>
 File: img/seq-to-seq-encoder-decoder.png Graphic file (type png)
 <use img/seq-to-seq-encoder-decoder.png>
 Package pdftex.def Info: img/seq-to-seq-encoder-decoder.png  used on input line 161.
@@ -1494,7 +1500,7 @@ Package resizegather Warning: Equation line 1 is too large by 41.63078pt
 (resizegather)                in environment `gather*' on input line 24.
 
 ) (chapters/18_Generative_Models.tex
-<img/taxonomy-of-generative-models.png, id=534, 2411.0075pt x 1112.155pt>
+<img/taxonomy-of-generative-models.png, id=536, 2411.0075pt x 1112.155pt>
 File: img/taxonomy-of-generative-models.png Graphic file (type png)
 <use img/taxonomy-of-generative-models.png>
 Package pdftex.def Info: img/taxonomy-of-generative-models.png  used on input line 12.
@@ -1509,12 +1515,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
  []
 
-<img/VAE-forward-prop.png, id=535, 2471.2325pt x 1206.5075pt>
+<img/VAE-forward-prop.png, id=537, 2471.2325pt x 1206.5075pt>
 File: img/VAE-forward-prop.png Graphic file (type png)
 <use img/VAE-forward-prop.png>
 Package pdftex.def Info: img/VAE-forward-prop.png  used on input line 117.
 (pdftex.def)             Requested size: 230.83818pt x 112.68637pt.
-<img/VAE-generation.png, id=536, 1325.95375pt x 753.81625pt>
+<img/VAE-generation.png, id=538, 1325.95375pt x 753.81625pt>
 File: img/VAE-generation.png Graphic file (type png)
 <use img/VAE-generation.png>
 Package pdftex.def Info: img/VAE-generation.png  used on input line 129.
@@ -1539,7 +1545,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 277--279
 [][] [] [] \OT1/cmr/m/n/7 (+20) +
  []
 
-<img/GAN-training.png, id=537, 591.20876pt x 299.1175pt>
+<img/GAN-training.png, id=539, 591.20876pt x 299.1175pt>
 File: img/GAN-training.png Graphic file (type png)
 <use img/GAN-training.png>
 Package pdftex.def Info: img/GAN-training.png  used on input line 288.
@@ -1561,20 +1567,20 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
  ***********
 Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: 4053263F3F8F401B8D204359B3623A09;18193.
+(rerunfilecheck)             Checksum: C145D880639839C34F3F81BDD7B2C3A0;18210.
  ) 
 Here is how much of TeX's memory you used:
- 45581 strings out of 469959
- 1009666 string characters out of 5470318
- 2101576 words of memory out of 5000000
- 71159 multiletter control sequences out of 15000+600000
- 643609 words of font info for 190 fonts, out of 8000000 for 9000
+ 45588 strings out of 469959
+ 1009930 string characters out of 5470318
+ 2093576 words of memory out of 5000000
+ 71167 multiletter control sequences out of 15000+600000
+ 643672 words of font info for 191 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 104i,25n,131p,1455b,1350s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 104i,25n,131p,1455b,1361s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on document.pdf (4 pages, 7420925 bytes).
+Output written on document.pdf (4 pages, 7477343 bytes).
 PDF statistics:
- 673 PDF objects out of 1000 (max. 8388607)
- 151 named destinations out of 1000 (max. 500000)
- 31683 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 674 PDF objects out of 1000 (max. 8388607)
+ 148 named destinations out of 1000 (max. 500000)
+ 31696 words of extra memory for PDF output out of 35830 (max. 10000000)
 

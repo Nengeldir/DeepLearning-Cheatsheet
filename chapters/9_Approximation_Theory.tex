@@ -28,6 +28,8 @@ where \(b = \scprod{\vw,\vp}\). \(\vw = \)normal vector, \(\vp\) points onto a p
 
 \textbf{Uniform Approximation}: This specific type of convergence guarantees that the maximum error across the \textit{entire} domain \(K\) is bounded by \(\epsilon\). It is stricter than pointwise approximation.
 
+\sep
+
 \Thm[Weierstrass Approximation]
 Let $f$ be a continuous real-valued function defined on a closed interval $[a, b]$. For every $\epsilon > 0$, there exists a polynomial $P(x)$ such that for all $x \in [a, b]$:
 $$ |f(x) - P(x)| < \epsilon $$
@@ -53,6 +55,8 @@ Any continuous piecewise linear function $g(x)$ on $[0,1]$ (a polygonal line) wi
 $$ g(x) = a + bx + \sum_{i=1}^k c_i \text{ReLU}(x - t_i) $$
 
 \Com A single hidden layer of ReLUs acts as a universal basis for 1D splines. This establishes the theoretical link between splines and ReLU networks.
+
+\sep
 
 \Thm[Barron's Theorem]
 For a function $f$ with a finite Fourier moment $C_f$ (a measure of smoothness), there exists a neural network $f_n$ with one hidden layer of $n$ sigmoidal units such that the integrated squared error is bounded by:
