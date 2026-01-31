@@ -17,13 +17,13 @@ It describes the expected information content \(I(\rvX)\) of \(\rvX\).
 %  \includegraphics[width=0.5\linewidth]{img/cross-entropy.png}
 %\end{center}
 
-\Com The second formulation clearly shows why \(q: =p\) is the minimizer of the cross-entropy (or hence: the maximizer of the likelihood).
+\Com The minimizer of the cross-entropy is \(q: =p\), due to the second formulation.
 
 \Com Usually, \(q\) is the approximation of the unknown \(p\).
 
 \Def[Kullback-Leibler Divergence]
 
-For discrete probability distributions \(p\) and \(q\) defined on the same probability space, the KL-divergence between \(p\) and \(q\) is defined as
+For probability distributions \(p\) and \(q\) defined on the same probability space, the KL-divergence between \(p\) and \(q\) is defined as
 
 \( KL(p,q) =  -\sum_{\vx\in\cX}p(\vx)\log\left(\frac{q(\vx)}{p(\vx)}\right) =  \sum_{\vx\in\cX}p(\vx)\log\left(\frac{p(\vx)}{q(\vx)}\right) \geq 0. \)
 

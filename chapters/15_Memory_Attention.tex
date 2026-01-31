@@ -45,45 +45,38 @@ Now an LSTM has two memories:
 The LSTM adds three more gates. The idea is that the information \(C_t\) flows on a \textbf{\tcb{conveyor-belt}} where we selectively forget, store and output as follows:
 
 \begin{itemize}
-  \item \textbf{\textcolor{RubineRed}{Forget Gate:}} This is just a one-layer
-  neural network, where
-  \[\vf^t = \sigma(\MW_f\vh^{t - 1} + \MU_f\vx^t + \vb_f)\qquad(\vf\text{orget})\]
-  Using the previous output vector, and the current input it computes some weights, which are used to multiply the content of the memory (by a number between 0 and 1) in order to selectively forget some entries in the memory.
-  \item \textbf{\tcr{Store/Input Gate:}} Here we'll compute
-  \[\vi^t: =\sigma(\MW_i\vh^{t - 1} + \MU_i\vx^t + \vb_i)\qquad(\vi\text{nput})\]
-  which determines how much we want to input into the memory (how much we want to store). In many cases, this is just mapped as \(\vi^t = 1 - \vf^t\). But this model illustrates the flexibility that we may want to keep. Further, given that we'll be opening the gate, what should we store there? This is what is computed through
-  \[\overline{C}^t = \tanh(\MW_C\vh^{t - 1} + \MU_C\vx^t + \vb_C).\]
-  And in the end we'll update the memory by combining the weighted sums of the stored and new information
-  \[C^t = \underbrace{\vf^t}_{\text{forget factors}} \odot\underbrace{C^{t - 1}}_{\text{current mem}} +  \underbrace{\vi^t}_{\text{write factors}} \odot\underbrace{\overline{C}^t}_{\text{net in}}.\]
-  \item \textbf{\textcolor{brown}{Read/Output Gate:}} In this gate we decide which information that we want to get out into our output (the new hidden state):
-  \[\vo^t = \sigma(\MW_o\vh^{t - 1} + \MU_o\vx^t + \vb_o)\qquad(\vo\text{utput})\]
-  \[\vh^t = \underbrace{\vo^t}_{\substack{\text{what we want}\\\text{to let out}}}\odot\tanh(\underbrace{C^t}_{\text{new mem.}}).\]
+    \item \textbf{\textcolor{RubineRed}{Forget Gate:}} This is just a one-layer neural network, where
+    \[\vf^t = \sigma(\MW_f\vh^{t - 1} + \MU_f\vx^t + \vb_f)\qquad(\vf\text{orget})\]
+    Using the previous output vector, and the current input it computes some weights, which are used to multiply the content of the memory (by a number between 0 and 1) in order to selectively forget some entries in the memory.
+    \item \textbf{\tcr{Store/Input Gate:}} Here we'll compute
+    \[\vi^t: =\sigma(\MW_i\vh^{t - 1} + \MU_i\vx^t + \vb_i)\qquad(\vi\text{nput})\]
+    which determines how much we want to input into the memory (how much we want to store). In many cases, this is just mapped as \(\vi^t = 1 - \vf^t\). But this model illustrates the flexibility that we may want to keep. Further, given that we'll be opening the gate, what should we store there? This is what is computed through
+    \[\overline{C}^t = \tanh(\MW_C\vh^{t - 1} + \MU_C\vx^t + \vb_C).\]
+    And in the end we'll update the memory by combining the weighted sums of the stored and new information
+    \[C^t = \underbrace{\vf^t}_{\text{forget factors}} \odot\underbrace{C^{t - 1}}_{\text{current mem}} +  \underbrace{\vi^t}_{\text{write factors}} \odot\underbrace{\overline{C}^t}_{\text{net in}}.\]
+    \item \textbf{\textcolor{brown}{Read/Output Gate:}} In this gate we decide which information that we want to get out into our output (the new hidden state):
+    \[\vo^t = \sigma(\MW_o\vh^{t - 1} + \MU_o\vx^t + \vb_o)\qquad(\vo\text{utput})\]
+    \[\vh^t = \underbrace{\vo^t}_{\substack{\text{what we want}\\\text{to let out}}}\odot\tanh(\underbrace{C^t}_{\text{new mem.}}).\]
 \end{itemize}
 
 \sep
 
 Note that when stacking \(\vh^{t - 1}\) and \(\vx^t\) we may just represent things as follows:
+
 \[
 \begin{bmatrix}
-\MW^\kappa & \MU^\kappa
+    \MW^\kappa & \MU^\kappa
 \end{bmatrix}
 \begin{bmatrix}
-\vh^{t - 1}\\
-\vx^{t}
-\end{bmatrix}
-+ \vb^\kappa
-= 
-\MW^k\vh^{t - 1} + \MU^k\vx^t
-+ \vb^\kappa.
-\]
+    \vh^{t - 1}\\
+    \vx^{t}
+\end{bmatrix} + \vb^\kappa = \MW^k\vh^{t - 1} + \MU^k\vx^t + \vb^\kappa.\]
 
 \subsubsection{Other Variants of LSTMs}
 
 \intertitle{LSTMs with Peepholes}
 
-There are a bunch of other LSTMs that have been invented. A change that was done
-with LSTMS was: \emph{LSTS with peepholes} where each of the gates also is
-allowed to look at the memory (Gers \& Schmidhuber, 2000).
+There are a bunch of other LSTMs that have been invented. A change that was done with LSTMS was: \emph{LSTS with peepholes} where each of the gates also is allowed to look at the memory (Gers \& Schmidhuber, 2000).
 
 \begin{center}
   \includegraphics[width=1\linewidth]{img/lstm-peephole-connections}
@@ -105,8 +98,7 @@ Another variation is to use coupled forget and input gates. Instead of separatel
   \includegraphics[width=1\linewidth]{img/lstm-grus}
 \end{center}
 
-This is basically a simplification of the LSTM that we've seen where we have only one state. Usually these ones tend to be much faster to train. It combines the forget and input gates into a single ``update gate.'' It also merges the
-cell state and hidden state, and makes some other changes.
+This is basically a simplification of the LSTM that we've seen where we have only one state. Usually these ones tend to be much faster to train. It combines the forget and input gates into a single ``update gate.'' It also merges the cell state and hidden state, and makes some other changes.
 
 \subsubsection{Unsegmented Sequences}
 
@@ -157,12 +149,7 @@ So the operations that can be done are the following:
   \item Read: out expected memory content: \(r\gets\sum_i \alpha_iM_i\).
   \item Write: Now, given that we have one value that we'd like to write, we'll write it to the memory location with the biggest attention:
   \[(\beta_i)_i,\quad \beta_i\in[0;1],\quad M_i\gets(1 - \beta_i)M_i + \beta_iw.\]
-  Usually, there's one value where we have a lot of attention (curse of
-  dimensionality), and lots where we have little attention. Further, as we can
-  see then we'll write a lot so somwhere and a little bit to everywhere else.
-  The reason we're using a slowly varying \(\beta_i\) is that we want to be able
-  to take the derivative (if it was just 0 or 1 we couldn't take the
-  derivative). So this is why these things tend to be soft.
+  Usually, there's one value where we have a lot of attention (curse of dimensionality), and lots where we have little attention. Further, as we can see then we'll write a lot so somwhere and a little bit to everywhere else. The reason we're using a slowly varying \(\beta_i\) is that we want to be able to take the derivative (if it was just 0 or 1 we couldn't take the derivative). So this is why these things tend to be soft.
 \end{enumerate}
 
 The typical memory controller works as follows:
@@ -207,21 +194,17 @@ So we'll see how we can do sequence to sequence learning. The idea fairly simple
 
 So what we'll do is
 \begin{itemize}
-  \item we'll \emph{encode} the sequence (e.g., sentence) into a vector, and
-  then
+  \item we'll \emph{encode} the sequence (e.g., sentence) into a vector, and then
   \item we'll \emph{decode} the sequence (e.g., translate) from the vector (w/ output feedback) into another sequence.
 \end{itemize}
 
 So the probability that we want to determine is
-\[
-\cProb{\vy^1,\ldots,\vy^{T_y}}{\vx_1,\ldots,\vx^{T_x},F(\vx^{T_x})}.
-\]
-The issue that we have here is that \(T_x\) and \(T_y\) have variable lengths, and
-the difference between the two lengths is not always the same. So it's very hard
-to match one sequence to another. Now, sequence learning will compute a function
-\[
-F(\vx^1,\ldots,\vx^{T_x}) =  \text{``thought vector''}
-\]
+
+\[\cProb{\vy^1,\ldots,\vy^{T_y}}{\vx_1,\ldots,\vx^{T_x},F(\vx^{T_x})}.\]
+
+The issue that we have here is that \(T_x\) and \(T_y\) have variable lengths, and the difference between the two lengths is not always the same. So it's very hard to match one sequence to another. Now, sequence learning will compute a function
+
+\[F(\vx^1,\ldots,\vx^{T_x}) =  \text{``thought vector''}\]
 which will be a vector which will have all the information that we need from the input sequence to compute the output sequence. This \(F\) is the so-called ``thought vector'' (Hinton). So \(F\) will be computed via an LSTM. 
 
 To produce the output sequence we'll use another LSTM that takes as input the thought vector \(F\) plus the output that we'll be producing (output feedback).
@@ -229,6 +212,7 @@ To produce the output sequence we'll use another LSTM that takes as input the th
 \intertitle{How to make the RNN Encoder/Decoder Work?}
 
 The following things were discovered by Sutskever, Vinals \& Le in 2014:
+
 \begin{itemize}
   \item Use Deep LSTMs (multiple layers, e.g., 4)
   \item Use different RNNs for encoding and decoding

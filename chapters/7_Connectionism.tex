@@ -1,0 +1,30 @@
+\section{Connectionism}
+
+\textbf{McCulloch \& Pitts (1943)}: MP-Neuron. Abstract model of neurons as linear threshold units. Inputs $x \in \{0, 1\}^n$, synapses $\sigma \in \{-1, 1\}^n$. $f(x) = \mathbb{I}(\sum \sigma_i x_i \geq \theta)$. No learning (fixed weights).
+
+\sep
+
+\textbf{Perceptron (Rosenblatt 1958)}: Pattern recognition. $f(\vx) = \text{sign}(\vw^\T\vx + b)$. Update rule (if misclassified): $\vw_{new} \leftarrow \vw_{old} + y_i\vx_i$, $b_{new} \leftarrow b_{old} + y_i$. Cannot learn the XOR function.
+\Thm[Novikoff] Guaranteed convergence if data is linearly separable.
+\Thm[Cover] Capacity of perceptron in $\R^n$ is $2n$ random patterns. Max dichotomies of $S$ ($s$ points in gen. pos.) by linear classifier: $C(s + 1,n) = 2\sum^{n}_{i=0} \binom{s}{i}$.
+
+Assymptotic Shattering: $$\frac{C(s,n)}{2^s} = 
+\begin{cases} 
+    1 & \text{if } s \leq n \\
+    1 - \mathcal{O}(e^{-n}) & \text{if } n < s < 2n \\
+    \frac{1}{2} & \text{if } s = 2n \\
+    \mathcal{O}(e^{-n}) & \text{otherwise} 
+\end{cases}$$
+
+\sep
+
+\textbf{Hopfield Networks}: Associative Memory.
+Hebbian Learning: "Neurons that fire together, wire together".
+$w_{ij} \propto \sum x_i x_j$.
+Energy Min.: $E(\vx) = -\frac{1}{2} \vx^\T \MW \vx$.
+
+\sep
+
+\textbf{PDP (Rumelhart et al. 1986)}: Parallel Distributed Processing.
+Introduction of Backpropagation (Generalized Delta Rule).
+Differentiable activations allow $\delta$ propagation to hidden layers.

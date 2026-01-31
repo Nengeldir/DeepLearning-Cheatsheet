@@ -17,8 +17,35 @@ Special case: \(\Exp{XY}^2\leq\Exp{X^2}\Exp{Y^2}\).
 
 \sep
 
-\Def[Convexity]
-\todo{Luca: Add definition}
+\Def[Convex Set] A set \(S\subseteq\R^d\) is called \emph{convex} if
+
+\( \forall\vx,\vx'\in\S, \,\,\forall\lambda\in[0,1]\colon \quad \lambda\vx + (1 - \lambda)\vx'\in S. \)
+
+\Com Any point on the line between two points is within the set. \(\R^d\) is convex.
+
+\sep
+
+\Def[Convex Function] A function \(f\colon S\to\R\) defined on a \emph{convex set} \(S\subseteq\R^d\) is called \emph{convex} if
+
+\[\forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)\]
+
+\Com A function is strictly convex if the line segment between any two points on the graph of the function lies strictly above the graph.
+
+\Thm[Properties of Convex Functions]
+\begin{itemize}
+  \item \(f(y) \geq f(x) + \nabla f(x)^T(y-x)\)
+  \item \(f''(x) \geq 0\)
+  \item Local minima are global minima, strictly convex functions have a unique global minimum
+  \item If \(f,g\) are convex then \(\alpha f + \beta g\) is convex for \(\alpha,\beta\geq 0\)
+  \item If \(f,g\) are convex then \(\max(f,g)\) is convex
+  \item If \(f\) is convex and \(g\) is convex and non-decreasing then \(g\circ f\) is convex
+\end{itemize}
+
+\sep
+
+\Thm[Taylor-Lagrange Formula]
+
+\(f(x) = \sum_{k = 0}^n \frac{f^{(k)}(x_0)}{k!}(x - x_o)^k +  \int_{x_0}^x \frac{f^{(n + 1)}(x - t)}{n!}\,dt\)
 
 \sep
 
@@ -31,3 +58,7 @@ Special case: \(f(\Exp{X})\leq \Exp{f(X)}\).
 \sep
 
 \Def[Lagrangian Formulation] of \(\arg\max_{x,y}f(x,y)\) s.t. \(g(x,y) =  c\): \(\mathcal{L}(x, y, \gamma) =  f(x,y) -  \gamma ( g(x,y) - c)\)
+
+\sep
+
+\(\vx^{t + 1} = \vx^t - Hess(f)(\vx^{t})^{-1}\nabla_{\vx}f(\vx^t)\).

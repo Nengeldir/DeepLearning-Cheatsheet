@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  30 JAN 2026 12:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  31 JAN 2026 01:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -952,23 +952,17 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
-Package: bm 2023/12/19 v1.2f Bold Symbol Support (DPC/FMi)
-\symboldoperators=\mathgroup6
-\symboldletters=\mathgroup7
-\symboldsymbols=\mathgroup8
-Package bm Info: No bold for \OMX/cmex/m/n, using \pmb.
-Package bm Info: No bold for \U/msa/m/n, using \pmb.
-Package bm Info: No bold for \U/msb/m/n, using \pmb.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 ) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 ) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/wasysym\wasysym.sty
 Package: wasysym 2020/01/19 v2.4 Wasy-2 symbol support package
-\symwasy=\mathgroup9
+\symwasy=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
 (Font)                  U/wasy/m/n --> U/wasy/b/n on input line 93.
-) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/fonts/ifsym\ifsym.sty
+)
+LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
+(Font)                  U/wasy/b/n --> U/wasy/m/n on input line 194.
+ (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/fonts/ifsym\ifsym.sty
 Package: ifsym 2000/04/18 I.Kloeckl
 \c@ifsymcnt=\count364
 ) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/doublestroke\dsfont.sty
@@ -986,6 +980,16 @@ Package: scalerel 2016/12/29 v1.8 Routines for constrained scaling and stretchin
 \LMpt=\skip160
 ) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/cancel\cancel.sty
 Package: cancel 2013/04/12 v2.2 Cancel math terms
+) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
+Package: bm 2023/12/19 v1.2f Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup7
+\symboldletters=\mathgroup8
+\symboldsymbols=\mathgroup9
+Package bm Info: No bold for \OMX/cmex/m/n, using \pmb.
+Package bm Info: No bold for \U/msa/m/n, using \pmb.
+Package bm Info: No bold for \U/msb/m/n, using \pmb.
+Package bm Info: No bold for \U/wasy/m/n, using \pmb.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 ) (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip161
@@ -1020,7 +1024,7 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \ResultBox=\box172
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathsfit' in version `bold'
-(Font)                  OT1/cmss/m/sl --> OT1/cmss/bx/n on input line 1008.
+(Font)                  OT1/cmss/m/sl --> OT1/cmss/bx/n on input line 1010.
  (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/environ\environ.sty
 Package: environ 2014/05/04 v0.3 A new way to define environments
  (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/trimspaces\trimspaces.sty
@@ -1277,12 +1281,12 @@ Overfull \hbox (10.32999pt too wide) in paragraph at lines 76--115
 \OML/cmm/m/it/7 P[] [] \OT1/cmr/m/n/7 (-20) = \OMS/cmsy/m/n/7 N []$ 
  []
 
-) (chapters/2_Analysis.tex) (chapters/3_Linear_Algebra.tex
-Underfull \hbox (badness 10000) in paragraph at lines 33--1
+) (chapters/2_Analysis.tex
+Underfull \hbox (badness 10000) in paragraph at lines 60--61
 [][][][][][][] \OT1/cmr/m/n/7 (+20) of $[] [][] \OML/cmm/m/it/7 f\OT1/cmr/m/n/7 (+20) (\OML/cmm/m/it/7 x; y\OT1/cmr/m/n/7 (+20) )$ s.t.
  []
 
-) (chapters/4_Derivatives.tex
+) (chapters/3_Linear_Algebra.tex) (chapters/4_Derivatives.tex
 Underfull \hbox (badness 7064) in paragraph at lines 68--69
 []$[] [] \OT1/cmr/m/n/7 (+20) = [][] =
  []
@@ -1292,36 +1296,9 @@ Overfull \hbox (2.89207pt too wide) in paragraph at lines 70--71
 []$[] [] \OT1/cmr/m/n/7 (-20) = [][][]$ 
  []
 
-) (chapters/5_Information_Theory.tex) (chapters/6_NN_functions_and_derivatives.tex
-LaTeX Font Info:    Trying to load font information for U+dsrom on input line 7.
- (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/doublestroke\udsrom.fd
-File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
-)
-Package microtype Info: Fixing zero \fontdimen 6 for font `U/dsrom/m/n/7'
-(microtype)             (new value: 7.0pt) on input line 7.
-Package microtype Info: Fixing zero \fontdimen 6 for font `U/dsrom/m/n/5'
-(microtype)             (new value: 5.0pt) on input line 7.
+) (chapters/5_Information_Theory.tex) (chapters/6_NN_functions_and_derivatives.tex) (chapters/7_Connectionism.tex) (chapters/9_Approximation_Theory.tex
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 
-Overfull \hbox (33.24622pt too wide) detected at line 39
-[]
- []
-
-) (chapters/7_Taylor_Approximations.tex
-Package microtype Info: Fixing zero \fontdimen 6 for font `U/dsrom/m/n/10'
-(microtype)             (new value: 10.0pt) on input line 3.
-) (chapters/8_Newtons_Method.tex) (chapters/9_Approximation_Theory.tex
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
-
- []
-
-
-Overfull \hbox (14.29036pt too wide) detected at line 210
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 374--375
-[]$\OT1/cmr/bx/n/7 (+20) w[]x \OT1/cmr/m/n/7 (+20) + \OML/cmm/m/it/7 b[] \OMS/cmsy/m/n/7 ^^F [] ^^F [] ^^F
  []
 
 ) (chapters/10_Feedforward_Networks.tex
@@ -1330,30 +1307,35 @@ Underfull \hbox (badness 10000) in paragraph at lines 57--58
  []
 
 ) (chapters/11_Backpropagation.tex
-Overfull \hbox (7.78896pt too wide) detected at line 50
+Overfull \hbox (7.78896pt too wide) detected at line 44
 []
  []
 
 
-Overfull \hbox (10.49321pt too wide) detected at line 128
+Overfull \hbox (10.49321pt too wide) detected at line 122
 []
  []
 
-<img/backprop-graphs.jpg, id=490, 3695.8075pt x 2470.22874pt>
+<img/backprop-graphs.jpg, id=470, 3695.8075pt x 2470.22874pt>
 File: img/backprop-graphs.jpg Graphic file (type jpg)
 <use img/backprop-graphs.jpg>
-Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 226.
+Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 220.
 (pdftex.def)             Requested size: 161.58601pt x 107.98932pt.
 ) (chapters/12_Convolutional_Neural_Networks.tex
-Overfull \hbox (21.33124pt too wide) detected at line 112
+Overfull \hbox (31.31236pt too wide) detected at line 116
 []
  []
 
-
-Overfull \hbox (31.31236pt too wide) detected at line 170
-[]
- []
-
+<img/convolutions-with-channels.png, id=471, 758.835pt x 674.52pt>
+File: img/convolutions-with-channels.png Graphic file (type png)
+<use img/convolutions-with-channels.png>
+Package pdftex.def Info: img/convolutions-with-channels.png  used on input line 237.
+(pdftex.def)             Requested size: 115.41908pt x 102.59396pt.
+<img/inception-module-mixing.png, id=473, 1021.8175pt x 532.99126pt>
+File: img/inception-module-mixing.png Graphic file (type png)
+<use img/inception-module-mixing.png>
+Package pdftex.def Info: img/inception-module-mixing.png  used on input line 287.
+(pdftex.def)             Requested size: 115.41908pt x 60.19884pt.
 
 Package fancyhdr Warning: \footskip is too small (4.0pt): 
 (fancyhdr)                Make it at least 9.49998pt, for example:
@@ -1362,57 +1344,51 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 [1{C:/Users/LuCo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
- <./img/backprop-graphs.jpg>]
-<img/convolutions-with-channels.png, id=531, 758.835pt x 674.52pt>
-File: img/convolutions-with-channels.png Graphic file (type png)
-<use img/convolutions-with-channels.png>
-Package pdftex.def Info: img/convolutions-with-channels.png  used on input line 326.
-(pdftex.def)             Requested size: 115.41908pt x 102.59396pt.
-<img/inception-module-mixing.png, id=533, 1021.8175pt x 532.99126pt>
-File: img/inception-module-mixing.png Graphic file (type png)
-<use img/inception-module-mixing.png>
-Package pdftex.def Info: img/inception-module-mixing.png  used on input line 376.
-(pdftex.def)             Requested size: 115.41908pt x 60.19884pt.
-) (chapters/13_Optimization.tex
+ <./img/backprop-graphs.jpg> <./img/convolutions-with-channels.png> <./img/inception-module-mixing.png>]) (chapters/13_Optimization.tex
 Overfull \hbox (1.00772pt too wide) detected at line 13
 \OMS/cmsy/m/n/7 r[]R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 D\OT1/cmr/m/n/7 ) = [] [] = [] []
  []
 
 
-Overfull \hbox (7.01062pt too wide) detected at line 141
+Overfull \hbox (7.01062pt too wide) detected at line 114
 \OMS/cmsy/m/n/7 8\OT1/cmr/bx/n/7 x\OML/cmm/m/it/7 ; \OT1/cmr/bx/n/7 x[] \OMS/cmsy/m/n/7 2 \OML/cmm/m/it/7 S; \OT1/cmr/bx/n/7 x \OMS/cmsy/m/n/7 6\OT1/cmr/m/n/7 = \OT1/cmr/bx/n/7 x[] \OML/cmm/m/it/7 ^^U \OMS/cmsy/m/n/7 2 \OT1/cmr/m/n/7 [0\OML/cmm/m/it/7 ; \OT1/cmr/m/n/7 1] [] []  \OML/cmm/m/it/7 f\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^U\OT1/cmr/bx/n/7 x \OT1/cmr/m/n/7 + (1 \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^U\OT1/cmr/m/n/7 )\OT1/cmr/bx/n/7 x[]\OT1/cmr/m/n/7 ) \OML/cmm/m/it/7 < ^^Uf\OT1/cmr/m/n/7 (\OT1/cmr/bx/n/7 x\OT1/cmr/m/n/7 ) + (1 \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^U\OT1/cmr/m/n/7 )\OML/cmm/m/it/7 f\OT1/cmr/m/n/7 (\OT1/cmr/bx/n/7 x\OT1/cmr/m/n/7 )
  []
 
-<img/challenge-curvature.png, id=534, 1824.8175pt x 1182.4175pt>
+<img/challenge-curvature.png, id=514, 1824.8175pt x 1182.4175pt>
 File: img/challenge-curvature.png Graphic file (type png)
 <use img/challenge-curvature.png>
-Package pdftex.def Info: img/challenge-curvature.png  used on input line 194.
+Package pdftex.def Info: img/challenge-curvature.png  used on input line 167.
 (pdftex.def)             Requested size: 230.83818pt x 149.56996pt.
 
-Overfull \hbox (2.7506pt too wide) detected at line 211
+Overfull \hbox (2.7506pt too wide) detected at line 184
 \OMS/cmsy/m/n/7 R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^Q\OMS/cmsy/m/n/7 r[]R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R\OT1/cmr/m/n/7 )) [] \OMS/cmsy/m/n/7 R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 ^^R\OT1/cmr/m/n/7 ) \OMS/cmsy/m/n/7 ^^@ \OML/cmm/m/it/7 ^^Q [][] \OT1/cmr/m/n/7 + [] []
  []
 
-<img/challenges-curvature-and-gradients.png, id=535, 1839.87375pt x 854.19125pt>
+<img/challenges-curvature-and-gradients.png, id=515, 1839.87375pt x 854.19125pt>
 File: img/challenges-curvature-and-gradients.png Graphic file (type png)
 <use img/challenges-curvature-and-gradients.png>
-Package pdftex.def Info: img/challenges-curvature-and-gradients.png  used on input line 238.
+Package pdftex.def Info: img/challenges-curvature-and-gradients.png  used on input line 211.
 (pdftex.def)             Requested size: 230.83818pt x 107.16466pt.
 
-Overfull \hbox (8.45908pt too wide) detected at line 598
+Overfull \hbox (8.45908pt too wide) detected at line 571
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 650--651
+Underfull \hbox (badness 10000) in paragraph at lines 623--624
 
  []
 
-<img/l2-regularization-effects-in-risk-space.png, id=536, 1290.8225pt x 1266.7325pt>
+<img/l2-regularization-effects-in-risk-space.png, id=516, 1290.8225pt x 1266.7325pt>
 File: img/l2-regularization-effects-in-risk-space.png Graphic file (type png)
 <use img/l2-regularization-effects-in-risk-space.png>
-Package pdftex.def Info: img/l2-regularization-effects-in-risk-space.png  used on input line 735.
+Package pdftex.def Info: img/l2-regularization-effects-in-risk-space.png  used on input line 708.
 (pdftex.def)             Requested size: 115.41908pt x 113.24718pt.
+) (chapters/14_Natural_Language_Processing.tex
+Overfull \hbox (0.84335pt too wide) detected at line 50
+[]
+ []
+
 
 Package fancyhdr Warning: \footskip is too small (4.0pt): 
 (fancyhdr)                Make it at least 9.49998pt, for example:
@@ -1422,13 +1398,8 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.794 
-       [2 <./img/convolutions-with-channels.png> <./img/inception-module-mixing.png> <./img/challenge-curvature.png> <./img/challenges-curvature-and-gradients.png> <./img/l2-regularization-effects-in-risk-space.png>]) (chapters/14_Natural_Language_Processing.tex
-Overfull \hbox (0.84335pt too wide) detected at line 50
-[]
- []
-
-
+l.68 ...: =\dset{(i,j)}{1\leq\abs{i - j}\leq R}.\]
+                                                   [2 <./img/challenge-curvature.png> <./img/challenges-curvature-and-gradients.png> <./img/l2-regularization-effects-in-risk-space.png>]
 Overfull \hbox (23.3514pt too wide) detected at line 163
 []
  []
@@ -1438,7 +1409,7 @@ Overfull \hbox (87.69559pt too wide) detected at line 190
 []
  []
 
-<img/cnn-text-overview.png, id=551, 1928.20375pt x 1653.17625pt>
+<img/cnn-text-overview.png, id=525, 1928.20375pt x 1653.17625pt>
 File: img/cnn-text-overview.png Graphic file (type png)
 <use img/cnn-text-overview.png>
 Package pdftex.def Info: img/cnn-text-overview.png  used on input line 221.
@@ -1453,67 +1424,75 @@ Overfull \hbox (63.27538pt too wide) detected at line 377
 []
  []
 
-<img/bi-directional-rnn.png, id=552, 1026.83624pt x 790.955pt>
+<img/bi-directional-rnn.png, id=526, 1026.83624pt x 790.955pt>
 File: img/bi-directional-rnn.png Graphic file (type png)
 <use img/bi-directional-rnn.png>
 Package pdftex.def Info: img/bi-directional-rnn.png  used on input line 408.
 (pdftex.def)             Requested size: 46.16693pt x 35.55522pt.
-<img/DRNN.png, id=553, 331.2375pt x 902.37125pt>
+<img/DRNN.png, id=527, 331.2375pt x 902.37125pt>
 File: img/DRNN.png Graphic file (type png)
 <use img/DRNN.png>
 Package pdftex.def Info: img/DRNN.png  used on input line 434.
 (pdftex.def)             Requested size: 22.08347pt x 60.15701pt.
-<img/teacher-forcing.png, id=554, 1055.945pt x 909.3975pt>
+<img/teacher-forcing.png, id=528, 1055.945pt x 909.3975pt>
 File: img/teacher-forcing.png Graphic file (type png)
 <use img/teacher-forcing.png>
 Package pdftex.def Info: img/teacher-forcing.png  used on input line 459.
 (pdftex.def)             Requested size: 69.25215pt x 59.6402pt.
 ) (chapters/15_Memory_Attention.tex
-<img/memory-units.png, id=555, 1432.35126pt x 777.90625pt>
+<img/memory-units.png, id=529, 1432.35126pt x 777.90625pt>
 File: img/memory-units.png Graphic file (type png)
 <use img/memory-units.png>
 Package pdftex.def Info: img/memory-units.png  used on input line 20.
 (pdftex.def)             Requested size: 138.5043pt x 75.2194pt.
-<img/lstm.png, id=556, 1476.51625pt x 746.79pt>
+<img/lstm.png, id=530, 1476.51625pt x 746.79pt>
 File: img/lstm.png Graphic file (type png)
 <use img/lstm.png>
 Package pdftex.def Info: img/lstm.png  used on input line 32.
 (pdftex.def)             Requested size: 230.83818pt x 116.74261pt.
-<img/lstm-combined-v3.png, id=557, 300.28185pt x 196.21304pt>
+<img/lstm-combined-v3.png, id=531, 300.28185pt x 196.21304pt>
 File: img/lstm-combined-v3.png Graphic file (type png)
 <use img/lstm-combined-v3.png>
 Package pdftex.def Info: img/lstm-combined-v3.png  used on input line 42.
 (pdftex.def)             Requested size: 230.83818pt x 150.84198pt.
-<img/lstm-peephole-connections.png, id=558, 659.8251pt x 203.8014pt>
+<img/lstm-peephole-connections.png, id=532, 659.8251pt x 203.8014pt>
 File: img/lstm-peephole-connections.png Graphic file (type png)
 <use img/lstm-peephole-connections.png>
-Package pdftex.def Info: img/lstm-peephole-connections.png  used on input line 89.
+Package pdftex.def Info: img/lstm-peephole-connections.png  used on input line 82.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-coupled-forget-and-input-gates.png, id=559, 659.8251pt x 203.8014pt>
+<img/lstm-coupled-forget-and-input-gates.png, id=533, 659.8251pt x 203.8014pt>
 File: img/lstm-coupled-forget-and-input-gates.png Graphic file (type png)
 <use img/lstm-coupled-forget-and-input-gates.png>
-Package pdftex.def Info: img/lstm-coupled-forget-and-input-gates.png  used on input line 97.
+Package pdftex.def Info: img/lstm-coupled-forget-and-input-gates.png  used on input line 90.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-grus.png, id=560, 659.8251pt x 203.8014pt>
+<img/lstm-grus.png, id=534, 659.8251pt x 203.8014pt>
 File: img/lstm-grus.png Graphic file (type png)
 <use img/lstm-grus.png>
-Package pdftex.def Info: img/lstm-grus.png  used on input line 105.
+Package pdftex.def Info: img/lstm-grus.png  used on input line 98.
 (pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/ntms-1.png, id=561, 2078.76625pt x 742.775pt>
+<img/ntms-1.png, id=535, 2078.76625pt x 742.775pt>
 File: img/ntms-1.png Graphic file (type png)
 <use img/ntms-1.png>
-Package pdftex.def Info: img/ntms-1.png  used on input line 149.
+Package pdftex.def Info: img/ntms-1.png  used on input line 141.
 (pdftex.def)             Requested size: 161.58601pt x 57.73447pt.
-<img/ntms-2.png, id=562, 890.32625pt x 774.895pt>
+<img/ntms-2.png, id=536, 890.32625pt x 774.895pt>
 File: img/ntms-2.png Graphic file (type png)
 <use img/ntms-2.png>
-Package pdftex.def Info: img/ntms-2.png  used on input line 170.
+Package pdftex.def Info: img/ntms-2.png  used on input line 157.
 (pdftex.def)             Requested size: 115.41908pt x 100.44427pt.
-<img/seq-to-seq-encoder-decoder.png, id=563, 1872.9975pt x 391.4625pt>
+<img/seq-to-seq-encoder-decoder.png, id=537, 1872.9975pt x 391.4625pt>
 File: img/seq-to-seq-encoder-decoder.png Graphic file (type png)
 <use img/seq-to-seq-encoder-decoder.png>
-Package pdftex.def Info: img/seq-to-seq-encoder-decoder.png  used on input line 205.
+Package pdftex.def Info: img/seq-to-seq-encoder-decoder.png  used on input line 192.
 (pdftex.def)             Requested size: 230.83818pt x 48.24576pt.
+ Excluding 'comment' comment.) (chapters/16_Unsupervised_Learning.tex
+
+LaTeX Warning: Command \i invalid in math mode on input line 79.
+
+
+Overfull \hbox (52.69502pt too wide) detected at line 180
+[]
+ []
 
 
 Package fancyhdr Warning: \footskip is too small (4.0pt): 
@@ -1524,94 +1503,71 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.246   \item
-              bi-directionality (it's good to know future and past context) [3 <./img/cnn-text-overview.png> <./img/bi-directional-rnn.png> <./img/DRNN.png> <./img/teacher-forcing.png> <./img/memory-units.png> <./img/lstm.png> <./img/lstm-combined-v3.png> <./img/lstm-peephole-connections.png> <./img/lstm-coupled-forget-and-input-gates.png> <./img/lstm-grus.png> <./img/ntms-1.png> <./img/ntms-2.png>] Excluding 'comment' comment.) (chapters/16_Unsupervised_Learning.tex
-
-LaTeX Warning: Command \i invalid in math mode on input line 140.
-
-
-Overfull \hbox (52.69502pt too wide) detected at line 285
+l.220 \sep
+           [3 <./img/cnn-text-overview.png> <./img/bi-directional-rnn.png> <./img/DRNN.png> <./img/teacher-forcing.png> <./img/memory-units.png> <./img/lstm.png> <./img/lstm-combined-v3.png> <./img/lstm-peephole-connections.png> <./img/lstm-coupled-forget-and-input-gates.png> <./img/lstm-grus.png> <./img/ntms-1.png> <./img/ntms-2.png> <./img/seq-to-seq-encoder-decoder.png>]
+Overfull \hbox (9.83162pt too wide) detected at line 271
 []
- []
-
-
-Overfull \hbox (9.83162pt too wide) detected at line 429
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 923--924
-
  []
 
 ) (chapters/17_Chain_Rule_Jacobians.tex
-
-LaTeX Font Warning: Font shape `U/wasy/b/n' in size <7> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 5.
-
-
-LaTeX Font Warning: Font shape `U/wasy/b/n' in size <5> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 5.
-
-
-Overfull \hbox (24.63187pt too wide) detected at line 38
+Overfull \hbox (24.63187pt too wide) detected at line 14
 []
  []
 
 
 Package resizegather Warning: Equation line 1 is too large by 41.63078pt
-(resizegather)                in environment `gather*' on input line 65.
+(resizegather)                in environment `gather*' on input line 24.
 
 ) (chapters/18_Generative_Models.tex
-<img/taxonomy-of-generative-models.png, id=604, 2411.0075pt x 1112.155pt>
+<img/taxonomy-of-generative-models.png, id=578, 2411.0075pt x 1112.155pt>
 File: img/taxonomy-of-generative-models.png Graphic file (type png)
 <use img/taxonomy-of-generative-models.png>
-Package pdftex.def Info: img/taxonomy-of-generative-models.png  used on input line 20.
+Package pdftex.def Info: img/taxonomy-of-generative-models.png  used on input line 12.
 (pdftex.def)             Requested size: 161.58601pt x 74.53265pt.
 
-Overfull \hbox (53.10207pt too wide) detected at line 341
+Overfull \hbox (53.10207pt too wide) detected at line 87
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 348--353
+Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
  []
 
-<img/VAE-forward-prop.png, id=605, 2471.2325pt x 1206.5075pt>
+<img/VAE-forward-prop.png, id=579, 2471.2325pt x 1206.5075pt>
 File: img/VAE-forward-prop.png Graphic file (type png)
 <use img/VAE-forward-prop.png>
-Package pdftex.def Info: img/VAE-forward-prop.png  used on input line 383.
+Package pdftex.def Info: img/VAE-forward-prop.png  used on input line 117.
 (pdftex.def)             Requested size: 230.83818pt x 112.68637pt.
-<img/VAE-generation.png, id=606, 1325.95375pt x 753.81625pt>
+<img/VAE-generation.png, id=580, 1325.95375pt x 753.81625pt>
 File: img/VAE-generation.png Graphic file (type png)
 <use img/VAE-generation.png>
-Package pdftex.def Info: img/VAE-generation.png  used on input line 399.
+Package pdftex.def Info: img/VAE-generation.png  used on input line 129.
 (pdftex.def)             Requested size: 115.41908pt x 65.60909pt.
 
-Underfull \hbox (badness 7326) in paragraph at lines 419--421
+Underfull \hbox (badness 7326) in paragraph at lines 140--141
 [][][][][][][] \OT1/cmr/m/n/7 (+20) must be a dif-fer-en-tiable func-tion
  []
 
 
-Overfull \hbox (43.868pt too wide) detected at line 463
+Overfull \hbox (43.868pt too wide) detected at line 171
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 467--476
+Underfull \hbox (badness 10000) in paragraph at lines 175--176
 []$\OMS/cmsy/m/n/7 R[] \OT1/cmr/m/n/7 (+20) = \OMS/cmsy/m/n/7 ^^@[][] [] ^^@
  []
 
 Excluding 'comment' comment.
-Underfull \hbox (badness 10000) in paragraph at lines 623--630
+Underfull \hbox (badness 10000) in paragraph at lines 277--279
 [][] [] [] \OT1/cmr/m/n/7 (+20) +
  []
 
-<img/GAN-training.png, id=607, 591.20876pt x 299.1175pt>
+<img/GAN-training.png, id=581, 591.20876pt x 299.1175pt>
 File: img/GAN-training.png Graphic file (type png)
 <use img/GAN-training.png>
-Package pdftex.def Info: img/GAN-training.png  used on input line 645.
+Package pdftex.def Info: img/GAN-training.png  used on input line 288.
 (pdftex.def)             Requested size: 230.83818pt x 116.7877pt.
 Excluding 'comment' comment.)
 
@@ -1623,38 +1579,27 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.62 \end{multicols*}
-                      [4 <./img/seq-to-seq-encoder-decoder.png> <./img/taxonomy-of-generative-models.png> <./img/VAE-forward-prop.png> <./img/VAE-generation.png>]
-
-Package fancyhdr Warning: \footskip is too small (4.0pt): 
-(fancyhdr)                Make it at least 9.49998pt, for example:
-(fancyhdr)                \setlength{\footskip}{9.49998pt}.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.62 \end{multicols*}
-                      [5 <./img/GAN-training.png>] (document.aux)
+l.67 \end{multicols*}
+                      [4 <./img/taxonomy-of-generative-models.png> <./img/VAE-forward-prop.png> <./img/VAE-generation.png> <./img/GAN-training.png>] (document.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
  ***********
 Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: C475311CDC599AC014E2F0BD25F93600;21720.
+(rerunfilecheck)             Checksum: 8E3AB98D47131935F308FE5584A0F50C;20734.
  ) 
 Here is how much of TeX's memory you used:
- 45671 strings out of 469959
- 1011433 string characters out of 5470318
- 2128574 words of memory out of 5000000
- 71206 multiletter control sequences out of 15000+600000
- 644932 words of font info for 201 fonts, out of 8000000 for 9000
+ 45622 strings out of 469959
+ 1010326 string characters out of 5470318
+ 2115575 words of memory out of 5000000
+ 71178 multiletter control sequences out of 15000+600000
+ 644592 words of font info for 198 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 104i,25n,131p,1088b,1378s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/doublestroke/dsrom8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on document.pdf (5 pages, 7752831 bytes).
+ 104i,25n,131p,1455b,1364s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on document.pdf (4 pages, 7717540 bytes).
 PDF statistics:
- 760 PDF objects out of 1000 (max. 8388607)
- 175 named destinations out of 1000 (max. 500000)
- 33864 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 720 PDF objects out of 1000 (max. 8388607)
+ 162 named destinations out of 1000 (max. 500000)
+ 33824 words of extra memory for PDF output out of 35830 (max. 10000000)
 

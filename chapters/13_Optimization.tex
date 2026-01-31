@@ -41,20 +41,9 @@ So we have \(\forall\theta\neq\theta^*\colon\cR^*: =\cR(\theta^*)\leq\cR(\theta)
 
 \sep
 
-\Def[\(L\)-Lipschitz Continous Function] Given two \emph{metric spaces} \((X, d_X)\) and \((Y, d_Y)\), where \(d_X\) denotes the \emph{metric} on the set \(X\), and \(d_Y\) denotes the metric on set \(Y\), a function \(f\colon X\to Y\) is called \emph{Lipschitz continuous}, if there exists a real constant \(L\in\R^+_0\), such that
+\Def[\(L\)-Lipschitz Continous Function] Given two \emph{metric spaces} \((X, d_X)\) and \((Y, d_Y)\), a function \(f\colon X\to Y\) is called \emph{Lipschitz continuous}, if there exists a real constant \(L\in\R^+_0\) (\emph{Lipschitz constant}), such that
 
-\[\forall x_1,x_2\in X\colon\quad d_Y(f(x_1),f(x_2))\leq L\cdot d_X(x_1,x_2).\]
-
-Hereby, \(L\) is referred to as a \emph{Lipschitz constant} for \(f\).
-
-\begin{itemize}
-  \item If \(L = 1\) the function is called a \emph{short map}
-  \item If \(0\leq L < 1	\) and \(f\) maps a metric space to itself, so \(f\colon X\to X\), then the function \(f\) is called a \emph{contraction}.
-\end{itemize}
-
-In particular, a map \(f\colon\R^n\to\R^m\) is called Lipschitz continous if there exists a \(L\in\R^+_0\) such that
-
-\[ \forall\vx_1,\vx_2\in\R^n\colon\quad\underbrace{\norm{f(\vx_1) -  f(\vx_2)}}_{=d_{\R^m}(f(\vx_1),f(\vx_2))}\leq L\cdot\underbrace{\norm{\vx_1 - \vx_2}}_{d_{\R^n}(\vx_1,\vx_2)}. \]
+\[ \forall\vx_1,\vx_2\in\R^n\colon\quad\norm{f(\vx_1) -  f(\vx_2)}\leq L\cdot\norm{\vx_1 - \vx_2}. \]
 
 \ssep
 
@@ -74,14 +63,9 @@ is \(L\)-Lipschitz continous, if it holds that
 
 Continously differentiable \(\subseteq\) Lipschitz continuous \(\subseteq\) (Uniformly) continous
 
-\Com It's important that the space is bounded. Because for example only on a compact subset \([a,b]\subset\R\) the function \(e^x\) is Lipschitz continous. On \(\R\) the function \(e^x\) is not Lipschitz continuous, as it gets arbitrarily steep.
-
-\todo{Does this also hold for compact vector-spaces?}
-
 \todo{Add Properties listed on Wikipedia! Very useful for understanding!
 
-\url{https://en.wikipedia.org/wiki/Lipschitz_continuity#Properties}
-}
+\url{https://en.wikipedia.org/wiki/Lipschitz_continuity#Properties}}
 
 \sep
 
@@ -102,19 +86,8 @@ Continously differentiable \(\subseteq\) Lipschitz continuous \(\subseteq\) (Uni
 
 \sep
 
-\Def[Convex Set] A set \(S\subseteq\R^d\) is called \emph{convex} if
 
-\( \forall\vx,\vx'\in\S, \,\,\forall\lambda\in[0,1]\colon \quad \lambda\vx + (1 - \lambda)\vx'\in S. \)
-
-\Com Any point on the line between two points is within the set.
-
-\sep
-
-\Def[Convex Function] A function \(f\colon S\to\R\) defined on a \emph{convex set} \(S\subseteq\R^d\) is called \emph{convex} if
-
-\[ \forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)  \]
-
-\Com convex combination of two points \(<\) evaluation of convex combination of two points.
+\Com Convex combination of two points \(<\) evaluation of convex combination of two points.
 
 \Com Another way to formulate that \(f\) is convex function is to say that the \emph{epigraph} of \(f\) is a convex set.
 

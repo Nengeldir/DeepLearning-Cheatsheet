@@ -1,39 +1,35 @@
-\section{NN Functions and their Derivatives}
+\section{Activation Functions and their Derivatives}
 
-\Def[Hard Tan]
+\Def[Tanh]
 
-\(\text{HardTanh}\colon\R^n\to\R^n\)
-
-\(\vz = \text{HardTanh}(\vx) = \vx\odot\ind{\vx\in[-1,1]} + \ind{\vx>1} - \ind{\vx< -1}\)
-
-\(\vz' = \text{HardTanh}'(\vx) = \diag(\ind{\vx\in[-1,1]})\)
+\[\tanh(\vx) = \frac{e^{\vx} - e^{-\vx}}{e^{\vx} + e^{-\vx}} \qquad \tanh'(\vx) = 1 - \tanh^2(\vx)\]
 
 \sep
 
-\Def[Max Layer]
+\Def[ReLU]
 
-\(\max\colon\R^n\to\R\)
-
-\(z = \max(\vx)\)
-
-\(z' = \max'(\vx) = \diag(\ve_i),\quad\text{where }i = \argmax_i(\vx_i)\)
+\[\mathrm{ReLU}(x) = \max(x, 0) \qquad \qquad \mathrm{ReLU}'(x) = \begin{cases}1 & x > 0 \\ 0 & x \leq 0\end{cases}\]
 
 \sep
 
-\Def[Softmax]
+\Def[Sigmoid/Logistic]
 
-Here the output of each activation ? depends on every input, thus the
-jacobian is not just a diagonal matrix.
+\[\sigma(\vx)_i = \frac{1}{1 + e^{-x_i}} \in(0,1) \qquad \frac{\partial \sigma(\vx)}{\partial \vx} = \sigma(\vx)\odot(1-\sigma(\vx)) \]
 
-\(\softmax(\vx)_i = \frac{\ne^{x_i}}{\sum_{i = 1}^c e^{x_c}}\)
+\[\sigma^{-1}(y) = \ln\left(\frac{y}{1 - y}\right) \quad \nabla_{\vx}\sigma(\vx) = \MJ_{\sigma}(\vx) = \diag(\sigma(\vx)\odot(1 - \sigma(\vx)))\]
 
-\(\frac{\partial \softmax(\vx)_i}{\partial x_j} = 
-\begin{cases}
-    - \softmax(x)_i\softmax(x)_j, & i\neq j\\ 
-    \softmax(x)_i -  \softmax(x)_i\softmax(x)_j & i = j\\
-\end{cases}
-\)
+\[\sigma'(x) = \frac{1}{4}\tanh'(\frac{1}{2}x) =  \frac{1}{4}(1 - \tanh^2(\frac{1}{2}x)) \qquad \sigma(-x) = 1 - \sigma(x)\]
 
-\begin{align*}
-    \nabla_{\vx}\softmax(\vx) = \MJ_{\softmax}(\vx) = \diag(\softmax(\vx)) - \softmax(\vx)\softmax(\vx)^\T
-\end{align*}
+\sep
+
+\textbf{Connection between Sigmoid and Tanh} (Equal Representation Strength)
+
+\[\sigma(x) =  \frac{1}{2}\tanh\left(\frac{1}{2}x\right) + \frac{1}{2} \Longleftrightarrow \tanh(x) =  2\sigma(2x) - 1 \]
+
+\sep
+
+\Def[Softmax] \(\softmax(\vx)_i =f(x)_i \)
+
+\[f(x)_i = \frac{e^{x_i}}{\sum_{j=1}^K e^{x_j}} \quad \frac{\partial f(x)_i}{\partial x_j} = \begin{cases} -f(x)_i f(x)_j & i \neq j \\ f(x)_i - f(x)_i f(x)_j & i = j \end{cases}\]
+
+\[\nabla_x f(x) = \MJ_{f}(x) = \diag(f(x)) - f(x)f(x)^T\]

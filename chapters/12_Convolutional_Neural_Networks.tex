@@ -14,12 +14,6 @@
 
 \[(T f)(u) = \int_{t_1}^{t_2} K(t,u) f(t) \, dt.\]
 
-The input of this transform is a function \(f\) of \(t\), and the output is another function \(Tf\) in terms of some other variable \(u\).
-
-Note that the integral boundaries, the class of input function \(f\), and the kernel \(K\) must be defined such that \(T f\) exists for any \(f\) in order for \(T\) to be an integral operator.
-
-There are numerous useful integral transforms. Each is specified by a choice of the function \(K\) in two \emph{variables}, the \emph{kernel function}, \emph{integral kernel}, or \emph{nucleus} of the transform.
-
 Some kernels have an associated \emph{inverse kernel} \(K^{-1}(u,t)\), which (roughly speaking) yields an inverse transform:
 
 \[ f(t) = \int_{u_1}^{u_2} K^{-1}(u,t) (Tf)(u) \, du. \]
@@ -33,14 +27,11 @@ Some kernels have an associated \emph{inverse kernel} \(K^{-1}(u,t)\), which (ro
 \sep
 
 \Def[Symmetric Kernel]
-A \emph{symmetric kernel} \(K\) is one that is unchanged when the two variables are \emph{permuted}. So, \(K\) is symmetric, if \(K(t,u) = K(u,t).
-\)
+A \emph{symmetric kernel} \(K\) is one that is unchanged when the two variables are \emph{permuted}. So, \(K\) is symmetric, if \(K(t,u) = K(u,t).\)
 
 \sep
 
 Mathematical motivation: some problems are easier to solve if transformed and solved in another domain (and then possibly the solution is transformed back).
-
-DL motivation: we'll learn the kernels. 
 
 \sep
 
@@ -96,56 +87,11 @@ So, the commutative diagram for this is:
 \end{tikzcd}
 \]
 
-\sep
-
-\Thm[Convolution is Translation- (or Shift-) Invariant]
-
-\Proof
-\( \tau_{(s,t)} ((f\conv g)(u,v)) = (\tau_{(s,t)}(f)\conv g)(u,v) = (f\conv\tau_{(s,t)}(g))(u,v) \)
-
-\begin{align*}
-    \tau_{(s,t)} ((f\conv g)(u,v)) &= \tau_{(s,t)}\left(\left(
-    \sum_{i=-p}^{p} \sum_{j=-q}^q f(u-i,v-j)g(i,j) \right)(u,v)\right) \\
-    &= \sum_{i=-p}^{p} \sum_{j=-q}^q f(u+s-i,v+t-j)g(i,j) \\
-    &= \sum_{i=-p}^{p} \sum_{j=-q}^q \tau_{(s,t)}(f(u-i,v-j))g(i,j) \\
-    &= (\tau_{(s,t)}(f)\conv g)(u,v)
-\end{align*}
-\qed
-
-\ssep
-
-So, to summarize a \emph{convolution} is a \emph{linear shift-invariant integral transform}.
+Convolutions are translation and shift invariant.
 
 \sep
 
 \Thm[Convolution Theorem] Any linear, translation-invariant transformation \(T\) can be written as a \emph{convolution} with a suitable \(h\).
-
-\ssep
-
-\Proof
-
-Let \(\to\) represent the input-output relationship of a linear system.
-
-By definition \(\delta(t)\to h(t)\)
-
-Using linearity we have \(a\delta(t)\to ah(t)\)
-
-Let \(a = x(t')\) then \(x(t')\delta(t)\to x(t')h(t)\)
-
-By shift invariance we have \(\delta(t - t')\to h(t - t')\)
-
-Combining linearity and shift invariance \(x(t')\delta(t - t')\to x(t')h(t - t')\)
-
-Again by linearity, we can sum many terms of this kind.
-
-\( \int_{-\infty}^\infty x(t')\delta(t - t')\,dt' \to \int_{-\infty}^\infty x(t')h(t - t')\,dt' \)
-
-But by definition of \(\delta(t)\) we have that the LHS is \(x(t)\), so \( x(t) \to \int_{-\infty}^\infty x(t')h(t - t')\,dt' \)
-
-By a change of variable on the RHS to \(\tilde{t} = t - t'\) we also have
-
-\( x(t) \to \int_{-\infty}^\infty x(t - t')h(t')\,dt' = y(t) \)
-\qed
 
 \subsection{Discrete Time Convolutions}
 
@@ -157,7 +103,7 @@ For \(f,h\colon\Z\to\R\), we can define the discrete convolution via
 
 \Com Note that the use of rectangular brackets suggests that we're using ``arrays'' (discrete-time samples).
 
-\Com Typically we use a \(h\) with finite support (windows size).
+\Com Typically we use a \(h\) with finite support (window size).
 
 \sep
 
@@ -185,26 +131,16 @@ aka ``sliding inner product'', non-commutative, kernel ``flipped over'' (\(u + t
 
 Represent the input signal, the kernel and the output as \emph{vectors}. Copy the kernel as columns into the matrix ofsetting it by one more very time (gives a band matrix (special case of Toeplitz matrix)). Then the convolution is just a matrix-vector product.
 
-\subsection{Why to use Convolutions in DL}
-
-Transforms in NNs are usually: linear transform + nonlinearity. (given in convolution).
-
-Many signals obey translation invariance, so we'd like to have translation invariant feature mpas. If the relationship of translation invariance is given in the input-output relation then this is perfect.
-
 \subsection{Border Handling}
 
 There are different options to do this
 \begin{itemize}
   \item \Def[Padding of \(p\)] Means we extend the image (or each dimension) by \(p\) on both sides (so +2\(p\)) and just fill in a constant there (e.g., zero).
-  \item \Def[Same Padding] our definition: padding with zeros = \emph{same padding} (``same'' constant, i.e., 0, and we'll get a tensor of the ``same'' dimensions)
-  \item \Def[Valid Padding] only retain values from windows that are fully-contained within the support of the signal \(f\) (see 2D example below) = \emph{valid padding}
+  \item \Def[Same Padding] Padding with zeros = \emph{same padding} (``same'' constant, i.e., 0, and we'll get a tensor of the ``same'' dimensions)
+  \item \Def[Valid Padding] Only retain values from windows that are fully-contained within the support of the signal \(f\) (see 2D example below) = \emph{valid padding}
 \end{itemize}
 
 \subsection{Backpropagation for Convolutions}
-
-Exploits structural sparseness.
-
-\sep
 
 \Def[Receptive Field \(\cI_i^l\) of \(x_i^l\)] 
 
@@ -270,28 +206,16 @@ A typical setup of a convolutional layer is as follows:
 
 \subsection{Pooling}
 
-The most frequently used pooling function is: \emph{max pooling}. But one can imagine using other pooling functions, such as: min, avg, and softmax.
+There are min, max, avg, and softmax pooling. Max pooling is the most frequently used one.
 
 \sep
 
 \Def[Max-Pooling] 
 
-Max pooling works, as follows, if we define a window size of \(r = 3\) (in 1D or 2D), then
-
 \begin{itemize}
   \item 1D: \(x_i^{\max} = \max \dset{x_{i + k}}{0\leq k < r}\)
   \item 2D: \(x_{ij}^{\max} = \max \dset{x_{i + k,j + l}}{0\leq k,l < r}\)
 \end{itemize}
-
-So, in general we just take the maximum over a small ``patch''/''neighbourhood'' of some units.
-
-\sep
-
-\Thm[Max-Pooling: Invariance]
-
-Let \(\cT\) be the set of invertible transformations (e.g., integral transforms, integal operators). Then \(\cT\) forms a group w.r.t. function composition: \(\alg{\cT,\circ,{}^{-1},\id }\).
-
-\todo{Understand what is meant on this slide!!!!}
 
 \subsection{Sub-Sampling (aka ``Strides'')}
 
@@ -300,19 +224,6 @@ Often, it is desirable to reduce the size of the feature maps. That's why sub-sa
 \sep
 
 \Def[Sub-Sampling] Hereby the temporal/spatial resolution is reduced.
-
-\Com Often, the sub-sampling is done via a max-pooling according to some interval step size (a.k.a. stride)
-
-\sep
-
-\begin{itemize}
-  \con Loss of information
-  \pro \todo{Depending on the transform we may get translation invariance???}
-  \pro Dimensionality reduction
-  \pro Increase of efficiency
-\end{itemize}
-
-\todo{Work out the backpropagation details for max-pooling}
 
 \subsection{Channels}
 

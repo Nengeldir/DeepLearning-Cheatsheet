@@ -60,17 +60,6 @@ However, we do not know \(\ell\), we aren't given \(p(\vx,y)\) (only samples).
 
 \sep
 
-\Def[Loss Function]
-
-\( \ell\colon\cY\times\cY\to\R_{\geq 0}\)
-\quad
-\((\underbrace{\vy^*}_{\text{true}},\underbrace{\vy}_{\text{pred.}})\mapsto \ell(\vy^*,\vy) \)
-
-s.t.\(\forall\vy\in\cY\colon \ell(\vy,\vy) = 0\quad\text{and}\quad\forall\vy^*,\vy\in\cY,\vy\neq\vy^*\colon \ell(\vy^*,\vy)>0.
-\).
-
-\sep
-
 \Def[Training Risk / Empirical Risk]
 
 \(\cS_N: =\dset{(\vx_i,y_i)\riid p}{i = 1,\ldots,N}.\)
@@ -87,17 +76,9 @@ So the \emph{training risk} is the \emph{expected risk} under the empirical dist
 
 \(\hat{F}(\cS_N) = \argmin_{F\in\cF}\cR(F;S_N)\)
 
-\subsubsection{Why Regularization is Needed}
-
+\subsubsection{Regularization}
 
 Wish: \(\cR(\hat{F};\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F^*)\) (no overfitting)
-
-So as \(n\) grows we'd want to do as good as if we knew \(p(\vx,\vy)\).
-
-Law of large numbers guarantees: \(\cR(F;\cS_n)\stackrel{n\to\infty}{\to}\cR^*(F)\) but this doesn't help us to move from some \(F\to F^*.\) 
-
-In order to ultimately get from \(\hat{F}\) to \(F^*\), which minimizes \(\cR^*(F^*)\), we need to \emph{restrict} \(\cF\) such that \(\cR(\hat{F};\cS_n) \stackrel{n\to\infty}{\to}\cR^*(F^*)\). This will prevent overfitting. However it's not so easy to
-determine how to constrain \(\cF\) such that \(\hat{F}\to F^*\).
 
 \sep
 
@@ -107,6 +88,6 @@ determine how to constrain \(\cF\) such that \(\hat{F}\to F^*\).
 
 \subsubsection{Regularization Approaches}
 
-Weight decay, data augmentation, noise robustness (to weights, inputs, labels (compensates for errors in labeling of data)), semi-supervised learning, dropout, early stopping (prevent overfitting through long training), multi-task learning (to learn general representation or use more data), parameter sharing (CNNs), ensembles (reduces variance, same bias, costly)
+Weight decay, data augmentation, noise robustness (to weights, inputs, labels (compensates for errors in labeling of data)), semi-supervised learning, dropout, early stopping (stop training when validation error increases), multi-task learning (to learn general representation or use more data), parameter sharing (CNNs), ensembles (reduces variance, same bias, costly)
 
 Some regularization methods can be proven to be equivalent. However: only in the limit. Thus, it's good to use combinations of them in finite horizons.
