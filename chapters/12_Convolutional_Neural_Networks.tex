@@ -43,6 +43,19 @@
 
 \sep
 
+\Def[Fourier Transform] The fourier transform of a function \(f\) is defined as
+
+\[(\mathcal{F} f)(u) := \int_{-\infty}^{\infty} f(t) e^{-2\pi i u t} \, dt\]
+and its inverse as
+\[(\mathcal{F}^{-1} f)(u) := \int_{-\infty}^{\infty} f(t) e^{2\pi i u t} \, dt\]
+
+\Com Convolutional operators can be efficiently computed with point wise multiplication using the Fourier transform.
+
+\[\mathcal{F}(f * h) = \mathcal{F} f \cdot \mathcal{F} h\]
+and then transformed back using the inverse Fourier transform.
+
+\[\mathcal{F}^{-1}(\mathcal{F}(f * h)) = \mathcal{F}^{-1}(\mathcal{F} f \cdot \mathcal{F} h) = f * h\]
+
 \subsection{Discrete Time Convolutions}
 
 \Def[Discrete Convolution]
@@ -67,7 +80,6 @@ For \(f,h\colon \R^d\to\R\) we have
 
 \sep
 
-% ToDo start checking again from  here
 \Def[Discrete Cross-Correlation]
 
 Let \(f,h\colon\Z\to\R\), then
@@ -104,16 +116,11 @@ after a few layers. Hence, the convolutions have to be small.
 
 \sep
 
-Obviously, we have \(\forall j\neq \cI_i^l\colon\frac{\partial x_i^l}{\partial x_j^{l - 1}} = 0,\) simply because
-
-\begin{itemize}
-  \item a node \(x_j^{l - 1}\) may not be connected to \(x_i^l\),
-  \item or a node \(x_j^{l - 1}\) may be connected to \(x_i^l\) through an edge with zero weight, so \(W_{ij} = 0\) - hence, tweaking \(x_j^{l - 1}\) has no effect on \(x_i^{l}\).
-\end{itemize}
+We have \(\forall j\neq \cI_i^l\colon\frac{\partial x_i^l}{\partial x_j^{l - 1}} = 0,\)
 
 \sep
 
-So due to the \emph{weight-sharing}, the kernel weight \(h_j^l\) is re-used for every unit in the target layer at layer \(l\), so when computing the derivative \(\frac{\partial\cR}{\partial h_j^l}\) we just build an additive combination of all the derivatives (note that some of them might be zero).
+Due to \emph{weight-sharing}, the kernel weight \(h_j^l\) is re-used for every unit in the target layer at layer \(l\), so when computing the derivative \(\frac{\partial\cR}{\partial h_j^l}\) we just build an additive combination of all the derivatives (note that some of them might be zero).
 
 \[\frac{\partial \cR}{\partial h_j^l} = \sum_{i = 1}^{m_l}\frac{\partial \cR}{\partial x_i^l}\frac{\partial x_i^l}{\partial h_j^l}\]
 
@@ -140,20 +147,6 @@ This example omits activation functions and biases, but that could be easily inc
 
 \Def[Rotation180] \(\forall i\colon\text{rot180}(\vx)_i = \vx_{(-i)}.\)
 
-\subsection{Efficient Comp. of Convolutional Activities}
-
-A naive way to compute the convolution of a signal of length \(n\) and a kernel of length \(m\) gives an effort of \(\BigO(m\cdot n)\). A faster way is to transform both with the FFT and then just do element-wise multiplication (effort: \(\BigO(n\log n)\)). However, this is rarely done in CNNs as the filters usually are small (\(m\ll n\), \(m\approx \log(n)\)).
-
-\subsection{Typical Convolutional Layer Stages}
-
-A typical setup of a convolutional layer is as follows:
-
-\begin{enumerate}
-  \item Convolution stage: affine transform
-  \item Detector stage: nonlinearity (e.g., ReLU)
-  \item Pooling stage: locally combine activities in some way (max, avg, \ldots)\\
-  Locality of the item that activated the neurons isn't too important, further we profit from dimensionality reduction. Alternative: do convolution with stride. Another thing that turns out to be so is that most of the kernels that are learned resemble a low-pass filter. Hence, when we sub-sample the images most of the information is still contained.
-\end{enumerate}
 
 \subsection{Pooling}
 
@@ -170,11 +163,7 @@ There are min, max, avg, and softmax pooling. Max pooling is the most frequently
 
 \subsection{Sub-Sampling (aka ``Strides'')}
 
-Often, it is desirable to reduce the size of the feature maps. That's why sub-sampling was introduced.
-
-\sep
-
-\Def[Sub-Sampling] Hereby the temporal/spatial resolution is reduced.
+Often, it is desirable to reduce the size of the feature maps. This can be achieved by skipping some of the input values in the convolution. The stride is the number of steps the kernel takes in each direction.
 
 \subsection{Channels}
 
@@ -190,6 +179,7 @@ Often, it is desirable to reduce the size of the feature maps. That's why sub-sa
 
 Usually we convolve over all of the channels together, such that each convolution has the information of all channels at its disposition and the order of the channels hence doesn't matter.
 
+%Check that
 \subsection{CNNs in Computer Vision}
 
 So the typical use of convolution that we have in vision is: a sequence of convolutions
@@ -200,60 +190,72 @@ So the typical use of convolution that we have in vision is: a sequence of convo
 \end{enumerate}
 
 The deeper we go in the network, we transform the spatial information into a semantic representation. Usually, most of the parameters lie in the fully connected layers
+\subsubsection{Classic CNN Architectures}
 
-\subsection{Famous CNN Architectures}
-
-\subsubsection{LeNet, 1989}
-
-MNIST, 2 Convolutional Layers + 2 Fully-connected layers
-
-\subsubsection{LeNet5}
-
-MNIST, 3 Convolutional Layers (with max-pool subsampling) + 1 Fully connected layer
-
-\subsubsection{AlexNet}
-
-ImageNet: similar to LeNet5, just deeper and using GPU (performance breakthrough)
-
-\subsubsection{Inception Module}
-
-Now, a problem that arose with this ever deeper and deeper channels was that the filters at every layer were getting longer and longer and lots of their coefficients were becoming zero (so no information flowing through). So, Arora et al. came up with the idea of an inception module.
-
-What this inception module does is just taking all the channels for one element in the space, and reduces their dimensionality. Such that we don't get too deep channels, and also compress the information (learning the low-dimensional manifold).
-
-This is what gave rise to the inception module:
-
-\sep
-
-\Def[Dimension Reduction] \(m\) channels of a 1x1x\(k\) convolution \(m\leq k\):
-
-\[\vx^+{ij} = \sigma(\MW\vx_{ij}),\quad\MW\in\MR^{m\times k}. \]
-
-So it uses a 1x1 filter over the \(k\) input channels (which is actually not a convolution), aka ``network within a network''.
-
-
-\subsubsection{Google Inception Network}
-
-\begin{center}
-  \includegraphics[width=0.5\linewidth]{img/inception-module-mixing}
-\end{center}
-
-The Google Inception Network uses many layers of this inception module along with some other tricks
-
+\Def[LeNet-5 (1998)] The pioneering CNN for handwritten digit recognition (MNIST).
 \begin{itemize}
-  \item dimensionality reduction through the inception modules
-  \item convolutions at various sizes, as different filter sizes turned out to be useful
-  \item a max-pooling of the previous layer, and a dimensionality reduction of the result
-  \item 1x1 convs for dimension reduction before convolving with largerkernels
-  \item then all these informations are passed to the next layer
-  \item gradient shortcuts: connect softmax layer at intermediate stages to have the gradient flow until the beginnings of the network
-  \item decomposition of convolution kernels for computational performance
-  \item all-in-all the dimensionality reductions improved the efficiency
+    \item \textbf{Structure}: 2 Convolutional layers (with Average Pooling) followed by 3 Fully Connected layers.
+    \item \textbf{Key Features}: Introduced the concepts of local receptive fields, shared weights, and spatial subsampling. Used Sigmoid/Tanh activations (pre-ReLU).
 \end{itemize}
 
-\subsection{Networks Similar to CNNs}
+\Def[AlexNet (2012)] The breakthrough model that popularized Deep Learning on ImageNet.
+\begin{itemize}
+    \item \textbf{Structure}: Deeper than LeNet (5 Conv layers, 3 FC layers). Used large filters initially ($11 \times 11$).
+    \item \textbf{Innovations}: First large-scale use of \textbf{ReLU} (to solve vanishing gradients), \textbf{Dropout} (for regularization), and \textbf{Data Augmentation}. Trained on GPUs.
+\end{itemize}
 
-\Def[Locally Connected Network] A locally connected network has the same connections that a CNN would have, however, the parameters are not shared. So the output nodes do not connect to all nodes, just to a set of input nodes that are considered ``near'' (locally connected).
+\Def[VGG Network (2014)]
+Focused on the effect of network depth using a uniform architecture.
+\begin{itemize}
+    \item \textbf{Philosophy}: Replace large filters (e.g., $5 \times 5$, $7 \times 7$) with stacks of small \textbf{$3 \times 3$ filters}.
+    \item \textbf{Reasoning}: Two stacked $3 \times 3$ layers have the same receptive field as a $5 \times 5$ layer but with fewer parameters and more non-linearities (ReLU between layers).
+\end{itemize}
+
+
+\Def[Inception Network (GoogLeNet, 2014)]
+Focused on computational efficiency and network "width".
+\begin{itemize}
+    \item \textbf{Inception Module}: Instead of choosing a filter size, it performs $1 \times 1$, $3 \times 3$, and $5 \times 5$ convolutions (and pooling) \textit{in parallel} and concatenates the outputs.
+    \item \textbf{$1 \times 1$ Convolutions}: Used as "Bottleneck layers" to reduce dimensionality (depth) before expensive operations, significantly reducing computational cost.
+\end{itemize}
+
+
+\Def[U-Net (2015)]
+Designed for Biomedical Image \textbf{Segmentation} (pixel-wise classification).
+\begin{itemize}
+    \item \textbf{Structure}: Symmetrical Encoder-Decoder architecture (U-shape).
+    \item \textbf{Encoder}: Contracting path (Convs + Max Pooling) to capture context.
+    \item \textbf{Decoder}: Expansive path (Up-Convs) to enable precise localization.
+    \item \textbf{Skip Connections}: Concatenates high-resolution features from the encoder directly to the decoder to recover spatial details lost during downsampling.
+\end{itemize}
+
+\subsubsection{Convolutions in Sequences, NLP \& Audio}
+
+\Def[1D Convolutions (Temporal ConvNets)] Unlike 2D CNNs for images, sequence modeling uses 1D filters that slide over the time axis.
+\begin{itemize}
+    \item \textbf{Input}: Tensor of shape $(Batch, Length, Channels)$. In NLP, "Channels" are the dimensions of the Word Embeddings.
+    \item \textbf{Function}: Captures local temporal dependencies (like $n$-grams in text) effectively.
+    \item \textbf{Advantage}: Highly parallelizable (unlike RNNs which are sequential) and computationally efficient.
+\end{itemize}
+
+
+\Def[Embeddings \& NLP] CNNs are often applied on top of pre-trained word embeddings (e.g., Word2Vec, GloVe).
+\begin{itemize}
+    \item A sentence is represented as a matrix (Length $\times$ Embedding Dim).
+    \item Filters of different widths (e.g., covering 2, 3, or 4 words) act as feature detectors for phrases or specific linguistic patterns (e.g., "very good", "not bad") regardless of their position in the sentence.
+\end{itemize}
+
+\Def[Dilated Convolutions] To handle long sequences without losing resolution (pooling), \textit{dilation} introduces gaps between kernel elements.
+\begin{itemize}
+    \item \textbf{Receptive Field}: Grows exponentially with the dilation factor $d$ ($1, 2, 4, 8 \dots$), allowing the network to capture long-range dependencies with few layers.
+\end{itemize}
+
+\Def[WaveNet (2016)] A deep generative model for raw audio waveforms.
+\begin{itemize}
+    \item \textbf{Causal Convolutions}: Strict ordering ensures the prediction at time $t$ only depends on samples $x_{<t}$ (cannot see the future).
+    \item \textbf{Dilated Causal Convolutions}: Stacks layers with increasing dilation factors. This allows the output neuron to have a receptive field of thousands of timesteps (milliseconds of audio) to generate realistic high-fidelity sound structure.
+    \item \textbf{Skip Connections}: Uses residual and parameterized skip connections to speed up convergence and allow training of very deep networks.
+\end{itemize}
 
 \subsection{Comparison of \#Parameters (CNNs, FC, LC)}
 
@@ -276,16 +278,3 @@ output dimensions: \((m - p + 1)\times (n - q + 1)\times K\)
 
 \#parameters of locally-conn. NN with same connections as CNN:\\
 \(pqc((m - p + 1)(n - q + 1) + 1)K\)
-
-\sep
-
-\Ex Assume we have an \(m\times n\) image (with one channel).
-
-And we convolve it with a filter \((2p + 1)\times (2q + 1)\)
-
-Then the convolved image has dimensions (assuming stride 1)
-
-\begin{itemize}
-  \item valid padding (only where it's defined): \((m - 2p)\times (n - 2q)\)
-  \item same padding (extend image with constant): \(m\times n\) where the extended image has size \((m + 2p)\times (n + 2q)\).
-\end{itemize}
