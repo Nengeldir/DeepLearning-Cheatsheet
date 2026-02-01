@@ -1,0 +1,26 @@
+\section{Ethics}            % use \sep, \(\), \Thm, 
+
+% Robustness
+    % Classification setting, def.: (un-)targeted adverserial examples, loss-based attacks (opt.-view)
+    \Def[Adverserial examples (Classification-Perspective)]
+    Input $x$, label $y$, budget $\epsilon$, norm $\|\cdot\|_p$ (usually $p \in \{2, \infty\}$) for each attack type:
+    \begin{itemize}
+        \item untargeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) \neq y\)
+        \item targeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) = t\), \(t \neq y\)
+        \item loss-based: \(\max_{\|\delta\|_p \leq \epsilon} \mathcal{L}(f(x + \delta), y)\)
+    \end{itemize}
+    % binary: label-flipping, min. L_2 perturb., L_infty threat model (maybe add L_2 vs L_infty: vulnerabilty is about dist to dec.-bd.)
+    % multiclass: system of inequalities, closest-competing class, 
+
+    % Neural Networks: FGSM-attack, GPD-attack
+
+    % adverserially robust training
+
+    % Robustness under distibution shift, Robustness in statistics, distributional uncertainty
+    % adverserial transport, deterministic perturbs, Wassertein-infty & std adverserial perturbs
+
+
+
+% Interpretability
+
+% Fairness
