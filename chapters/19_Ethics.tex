@@ -1,26 +1,54 @@
 \section{Ethics}            % use \sep, \(\), \Thm, 
 
 % Robustness
+\subsection{Robustness}
     % Classification setting, def.: (un-)targeted adverserial examples, loss-based attacks (opt.-view)
-    \Def[Adverserial examples (Classification-Perspective)]
+    \Def[Adverserial examples (Classification-Perspective)] \\
     Input $x$, label $y$, budget $\epsilon$, norm $\|\cdot\|_p$ (usually $p \in \{2, \infty\}$) for each attack type:
     \begin{itemize}
         \item untargeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) \neq y\)
         \item targeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) = t\), \(t \neq y\)
         \item loss-based: \(\max_{\|\delta\|_p \leq \epsilon} \mathcal{L}(f(x + \delta), y)\)
     \end{itemize}
+    \sep 
     % binary: label-flipping, min. L_2 perturb., L_infty threat model (maybe add L_2 vs L_infty: vulnerabilty is about dist to dec.-bd.)
+    \textbf{Binary Classification:} $f(x) = w^\top x + b$, adverserial perturbation pushes x across decision boundary if $y (w^\top (x + \delta) + b) \leq 0$.\\
+    \Thm[Min $L_2$ adverserial perturbation:] Robustness increases with margin $|w^\top x + b|$ 
+    and decreases with $\|w\|_2$ \[\delta^\star = -\frac{w^\top x + b}{\|w\|_2^2} w, \quad \|\delta^\star\|_2 = \frac{|w^\top x + b|}{\|w\|_2}\]
+    \Thm[$L_\infty$ threat model:] If $\|w\|_2 \leq \epsilon$, then $w^\top \Delta$ is minimized by choosing \(\Delta = -\epsilon \ \text{sign}(yw)\). 
     % multiclass: system of inequalities, closest-competing class, 
-
+    \\
+    \sep
+    \textbf{Multiclass:} $f_k(x) = w_k^\top x + b_k$, A Perturbation $\Delta$ is (untargeted) adverserial if it violates at least one inequality: 
+    \[\exists j \neq y: \quad (w_y - w_j)^\top (x + \delta) + (b_y - b_j) \leq 0\]
+    \Def[Margin to class $j\neq y$] $m_j(x) := (w_y - w_j)^\top x + (b_y - b_j)$\\
+    \textbf{Nearest Competing Class:} $j^\star(x) := \underset{j \neq y}{\text{argmin}} \frac{m_j(x)}{\|w_y - w_j\|_2}$ \\
+    \sep
     % Neural Networks: FGSM-attack, GPD-attack
-
+    \textbf{Neural Networks: Local Linearization} \\
+    \Def[1st Order Approx.:] \(f(x + \delta) \approx f(x) + J(x)\delta\) \\
+    $J(X) \in \mathbb{R}^{K \times d}$ is the Jacobian with rows $\nabla_x f_k(x)^\top$.\\
+    \textbf{Fast-grad.-sign-method (FGSM) Attack:} max. Loss. \[\delta = \epsilon \ \text{sign}(\nabla_x \mathcal{L}(f(x), y)), x^{\text{adv}}= x + \delta_{\text{FGSM}}\] \\
+    \textbf{Projected Grad. Descent (PGD) Attack:} iterative refinement of FGSM with projection back onto threat set.
+    \[
+    \delta_{t+1} = \operatorname{Proj}_{\|\delta\|_p \le \varepsilon}\!\big(\delta_t + \alpha g_t\big),\qquad
+    g_t \in \partial_\delta \mathcal{L}\big(f(x+\delta_t),\,y\big).
+    \] \\
+    For $p=\infty$, a common choice is $g_t = \text{sign}(\nabla_\delta \mathcal{L}(f(x+\delta_t), y))$. \\
     % adverserially robust training
-
+    \textbf{Adversarially robust training:} Instead of $X$ we evaluate at worst-case loss within neighborhood. \\
+    \[
+    \min_f \; \mathbb{E}\!\left[ \max_{\delta \in \mathcal{S}} \ell\big(Y,\, f(X+\delta)\big) \right], \quad \mathcal{S} = \{\delta: \|\delta\|_p \leq \epsilon\}
+    \]
+    % \\
+    \sep
     % Robustness under distibution shift, Robustness in statistics, distributional uncertainty
     % adverserial transport, deterministic perturbs, Wassertein-infty & std adverserial perturbs
 
 
 
 % Interpretability
+\subsection{Interpretability}
 
 % Fairness
+\subsection{Fairness}
