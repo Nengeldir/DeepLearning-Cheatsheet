@@ -29,7 +29,7 @@ Special case: \(\Exp{XY}^2\leq\Exp{X^2}\Exp{Y^2}\).
 
 \[\forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)\]
 
-\Com A function is strictly convex if the line segment between any two points on the graph of the function lies strictly above the graph.
+\Com A function is strictly convex if the line segment between any two points on the graph of the function lies strictly above the graph. This guarantees that there is a unique global minimum.
 
 \Thm[Properties of Convex Functions]
 \begin{itemize}
@@ -40,6 +40,29 @@ Special case: \(\Exp{XY}^2\leq\Exp{X^2}\Exp{Y^2}\).
   \item If \(f,g\) are convex then \(\max(f,g)\) is convex
   \item If \(f\) is convex and \(g\) is convex and non-decreasing then \(g\circ f\) is convex
 \end{itemize}
+
+\sep
+\Def[Strongly Convex Function] A function $f$ is $\mu$-strongly convex if it curves up at least as much as a quadratic function with curvature $\mu > 0$. For all $x, y$:
+$$ f(y) \geq f(x) + \nabla f(x)^T(y-x) + \frac{\mu}{2} ||y-x||^2 $$
+\textbf{Relation to Optimization}:
+\begin{itemize}
+    \item \textbf{Guarantee}: Ensures a unique global minimum exists.
+    \item \textbf{Convergence}: Gradient Descent on strongly convex (and Lipschitz smooth) functions guarantees a \textbf{linear convergence rate} ($O(c^k)$ for some $c < 1$).
+    \item \textbf{Condition Number}: The convergence speed depends on the condition number $\kappa = L/\mu$. If $\kappa$ is large (poor conditioning), convergence slows down.
+\end{itemize}
+
+\sep
+
+\Def[Condition Number] The condition number $\kappa(A)$ measures the sensitivity of a function's output to small perturbations in the input. For a symmetric positive semi-definite matrix (like the Hessian $H$ of a loss function), it is the ratio of the largest to the smallest eigenvalue:
+$$ \kappa(H) = \frac{|\lambda_{\max}|}{|\lambda_{\min}|} \geq 1 $$
+
+\noindent \textbf{Implications for Optimization}:
+\begin{itemize}
+    \item \textbf{Well-conditioned ($\kappa \approx 1$)}: The contours of the loss function are nearly spherical. Gradient Descent converges quickly and directly toward the minimum.
+    \item \textbf{Ill-conditioned ($\kappa \gg 1$)}: The contours form narrow, elongated ellipses (steep valleys). Gradient Descent tends to oscillate ("zigzag") across the narrow valley rather than moving down the slope, leading to very slow convergence.
+\end{itemize}
+
+\Com Momentum and Adaptive Learning Rate methods (like Adam) are specifically designed to mitigate the issues caused by high condition numbers.
 
 \sep
 
@@ -57,8 +80,27 @@ Special case: \(f(\Exp{X})\leq \Exp{f(X)}\).
 
 \sep
 
+\Def[\(L\)-Lipschitz Continous Function] Given two \emph{metric spaces} \((X, d_X)\) and \((Y, d_Y)\), a function \(f\colon X\to Y\) is called \emph{Lipschitz continuous}, if there exists a real constant \(L\in\R^+_0\) (\emph{Lipschitz constant}), such that
+
+\[ \forall\vx_1,\vx_2\in\R^n\colon\quad\norm{f(\vx_1) -  f(\vx_2)}\leq L\cdot\norm{\vx_1 - \vx_2}. \]
+
+\Com If the objective function is $L$-smooth a step size of $\eta = 1/L$ guarantees convergence.
+\sep
+
 \Def[Lagrangian Formulation] of \(\arg\max_{x,y}f(x,y)\) s.t. \(g(x,y) =  c\): \(\mathcal{L}(x, y, \gamma) =  f(x,y) -  \gamma ( g(x,y) - c)\)
 
 \sep
 
-\(\vx^{t + 1} = \vx^t - Hess(f)(\vx^{t})^{-1}\nabla_{\vx}f(\vx^t)\).
+\Def[PL Condition] A differentiable function $f(x)$ with global minimum $f^*$ satisfies the $\mu$-Polyak-Lojasiewicz (PL) condition if there exists a constant $\mu > 0$ such that for all $x$:
+$$ \frac{1}{2} ||\nabla f(x)||^2 \geq \mu (f(x) - f^*) $$
+
+\noindent \textbf{Significance}:
+\begin{itemize}
+    \item \textbf{Gradient Dominance}: It implies that the gradient magnitude dominates the suboptimality. If the gradient is small, the function value must be close to the optimal $f^*$.
+    \item \textbf{Convergence without Convexity}: The PL condition is weaker than strong convexity (it does not require convexity at all). However, it is sufficient to guarantee a \textbf{linear convergence rate} for Gradient Descent.
+    \item \textbf{In Deep Learning}: Over-parameterized neural networks often satisfy the PL condition in the neighborhood of a minimum, explaining fast convergence despite non-convexity.
+\end{itemize}
+
+\noindent \textbf{Convergence Rate}:
+Gradient Descent with step size $\alpha = 1/L$ (where $L$ is the Lipschitz constant) converges as:
+$$ f(x_k) - f^* \leq \left(1 - \frac{\mu}{L}\right)^k (f(x_0) - f^*) $$

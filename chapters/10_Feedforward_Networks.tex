@@ -142,11 +142,19 @@ where the subscript \(m\) refers to the matrices of the SVD pruned to \(m\) colu
 \Def{Weight Decay ($L_2$ Regularization)}: Adds a penalty to the loss function proportional to the square of the weights' magnitude to constrain complexity.
 $$\ell(\theta) = \ell_{emp}(\theta) + \frac{\lambda}{2} \|\theta\|^2$$
 
+\sep
+
 \Def{Data Augmentation}: Artificially expands the training set by creating modified versions of existing data (e.g., flipping, rotating) to teach invariance.
+
+\sep
 
 \Def{Noise Robustness}: Injects random noise into inputs, weights, or gradients to make the model insensitive to small perturbations.
 
+\sep
+
 \Def{Semi-supervised Learning}: Uses a small set of labeled data alongside unlabeled data. Unlabeled data helps learn the distribution $P(x)$ to regularize $P(y|x)$.
+
+\sep
 
 \Def{Dropout}: Prevents co-adaptation by randomly deactivating neurons.
 \begin{itemize}
@@ -156,12 +164,71 @@ $$\ell(\theta) = \ell_{emp}(\theta) + \frac{\lambda}{2} \|\theta\|^2$$
     $$ W_{test} = p \cdot W_{train} $$
 \end{itemize}
 
-\Def{Early Stopping}: Monitors validation error and stops training when performance degrades, effectively selecting parameters before overfitting occurs.
+\sep
+
+\Def{Early Stopping}: Monitors validation error and stops training when performance degrades, effectively selecting parameters before overfitting occurs. Rigorous analysis shows that early stopping approximates a form of $L_2$ regularization.
+
+\sep
 
 \Def{Multi-task Learning}: Trains on multiple tasks simultaneously using shared representations, introducing inductive bias that aids generalization.
 
+\sep
+
 \Def{Parameter Sharing}: Constraints the model by forcing sets of parameters to be identical (e.g., filter weights in CNNs).
+
+\sep
 
 \Def{Ensembles}: Combines predictions of multiple independent models to average out individual errors.
 $$y_{final} = \frac{1}{k} \sum_{i=1}^{k} M_i(x)$$
 
+\sep
+
+\Def{Batch Normalization (BN)}
+A technique to stabilize training by normalizing the inputs to a layer for each mini-batch. It addresses \textit{Internal Covariate Shift} (the changing distribution of layer inputs during training).
+\begin{enumerate}
+    \item \textbf{Normalization}: Calculate batch mean $\mu_B$ and variance $\sigma^2_B$ to normalize input $x$:
+    $$ \hat{x} = \frac{x - \mu_B}{\sqrt{\sigma^2_B + \epsilon}} $$
+    \item \textbf{Scale and Shift}: The network learns parameters $\gamma$ and $\beta$ to restore representation power (allows the network to undo the normalization if needed):
+    $$ y = \gamma \hat{x} + \beta $$
+\end{enumerate}
+
+\textit{Benefits}: Allows higher learning rates, reduces sensitivity to initialization, and acts as a weak regularizer.
+
+\subsubsection{Initialization Techniques}
+
+Proper initialization is crucial to prevent vanishing or exploding gradients at the start of training.
+
+\sep
+
+\Def[LeCun Initialization]
+\begin{itemize}
+    \item \textbf{Goal}: Keep the variance of the input and output unchanged for efficient backprop in linear networks.
+    \item \textbf{Use Case}: SELU activation, or standard Sigmoid (older standard).
+    \item \textbf{Variance}: $\text{Var}(W) = \frac{1}{n_{in}}$
+\end{itemize}
+
+\sep
+
+\Def[Glorot Initialization (Xavier)]
+\begin{itemize}
+    \item \textbf{Goal}: Maintains the variance of activations during forward pass and gradients during backward pass. Assumes linear or Tanh/Sigmoid activations.
+    \item \textbf{Use Case}: Tanh, Sigmoid, Softmax.
+    \item \textbf{Variance}: $\text{Var}(W) = \frac{2}{n_{in} + n_{out}}$
+\end{itemize}
+
+\sep
+
+\Def[He Initialization (Kaiming)]
+\begin{itemize}
+    \item \textbf{Goal}: accounts for the fact that ReLU zeroes out half of the inputs (reducing variance by half). It doubles the variance compared to LeCun to compensate.
+    \item \textbf{Use Case}: ReLU, Leaky ReLU.
+    \item \textbf{Variance}: $\text{Var}(W) = \frac{2}{n_{in}}$
+\end{itemize}
+
+\sep
+
+\Def[Orthogonal Initialization]
+\begin{itemize}
+    \item \textbf{Goal}: Initialize weight matrices as orthogonal matrices ($W^T W = I$). This ensures that the matrix eigenvalues have absolute value 1.
+    \item \textbf{Use Case}: Recurrent Neural Networks (RNNs) and very deep networks. It prevents gradients from vanishing or exploding even after many matrix multiplications (time steps).
+\end{itemize}
