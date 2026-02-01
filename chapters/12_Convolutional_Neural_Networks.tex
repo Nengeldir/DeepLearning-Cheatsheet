@@ -2,36 +2,23 @@
 
 \subsection{Convolutional Layers}
 
-\Def[Transform (aka Operator)] A transform \(T\) is just a mapping from one function space \(\cF\) (or a cross product of it) to another function space \(\cF'\). So \(T\colon\cF\to\cF'\).
+\Def[Transform] A transform \(T\) is a mapping from one function space \(\cF\) to another function space \(\cF'\). So \(T\colon\cF\to\cF'\).
 
 \sep
 
-\Def[Linear Transform (/Operator)] A transform \(T\) is linear, if for all functions \(f,g\) and scalars \(\alpha,\beta\), \(T(\alpha f + \beta g) = \alpha (T f) + \beta (T g)\).
+\Def[Linear Transform] A transform \(T\) is linear, if for all functions \(f,g\) and scalars \(\alpha,\beta\), \(T(\alpha f + \beta g) = \alpha (T f) + \beta (T g)\).
 
 \sep
 
-\Def[Integral Transform (/Operator)] An \emph{integral transform} is any transform \(T\) of the following form
+\Def[Integral Transform] An \emph{integral transform} is any transform \(T\) of the following form
 
 \[(T f)(u) = \int_{t_1}^{t_2} K(t,u) f(t) \, dt.\]
 
-Some kernels have an associated \emph{inverse kernel} \(K^{-1}(u,t)\), which (roughly speaking) yields an inverse transform:
-
-\[ f(t) = \int_{u_1}^{u_2} K^{-1}(u,t) (Tf)(u) \, du. \]
+\Com The fourier transform is an example of an integral transform.
 
 \sep
 
 \Thm Any integral transform is a linear transform.
-
-\Cor The expectation operator is a linear operator.
-
-\sep
-
-\Def[Symmetric Kernel]
-A \emph{symmetric kernel} \(K\) is one that is unchanged when the two variables are \emph{permuted}. So, \(K\) is symmetric, if \(K(t,u) = K(u,t).\)
-
-\sep
-
-Mathematical motivation: some problems are easier to solve if transformed and solved in another domain (and then possibly the solution is transformed back).
 
 \sep
 
@@ -43,55 +30,18 @@ Mathematical motivation: some problems are easier to solve if transformed and so
 
 \sep
 
-\Thm[Every Conv. can be Written as an Integral Transf.]
-
-Now, a convolution of \(f\) with some function \(h\) can be seen as an \emph{integral operator} with a kernel
-
-\[K(u,t) =  h(u - t).\]
-
-Note that we can say the anologous thing for the convolution of \(h\) with \(f\).
-The definition of the convolution shows us directly that it's \emph{commutative}!
-
-\ssep
-
-\Lem The convolution \(T(\argdot) = (\argdot \conv g)\) is a linear transform (with \(K(u,t) = g(u - t)\)).
-
-\sep
-
-\Thm[Convolution Properties]
-
-\begin{itemize}
-  \item Associativity \((f*g)*h = f*(g*h)\)
-  \item Commutativity \(f*g = g*f\)
-  \item Bilinearity \((\alpha f + \beta g)\conv(\gamma y + \delta z) = \alpha\gamma(f\conv y) + \alpha\delta(f\conv z) + \cdots\)\\
-  (follows from commutativity and linearity)
-\end{itemize}
-
-\sep
-
-\Def[Translation- (or Shift-) Invariant] A transform \(T\) is translation (or shift) invariant, if for any \(f\) and scalar \(\tau\), 
-
-\[ f_{\tau}(t): =f(t - \tau)\qquad(\text{Def. shift operator }s_{\tau}) \]
-
-\[ (T f_{\tau})(t) = (T f)(t - \tau). \qquad\text{(commuting of operators holds)}\]
-
-So, an operator \(T\) is shift-invariant iff it commutes with the shift operator \(s_\Delta\).
-
-\[\forall f\colon (T(s_{\Delta} f)) =  (s_{\Delta}(T f)).\]
-
-So, the commutative diagram for this is:
-\[
-\begin{tikzcd}
-    f \arrow{r}{s_{\Delta}} \arrow[swap]{d}{T} & s_{\Delta} f =  f_{\Delta} \arrow{d}{T} \\
-    T f \arrow{r}{s_{\Delta}} & s_{\Delta}(T f) =  T( f_{\Delta})
-\end{tikzcd}
-\]
-
-Convolutions are translation and shift invariant.
-
-\sep
-
 \Thm[Convolution Theorem] Any linear, translation-invariant transformation \(T\) can be written as a \emph{convolution} with a suitable \(h\).
+
+\sep
+
+\Thm[Convolutions are commutative and associative]
+
+\sep
+\Thm[Convolutions are shift-invariant], we define \(f_{\Delta}(t) := f(t + \Delta)\). Then 
+
+\[(f_{\Delta} * h)(u) = (f * h)_{\Delta}(u)\]
+
+\sep
 
 \subsection{Discrete Time Convolutions}
 
@@ -117,6 +67,7 @@ For \(f,h\colon \R^d\to\R\) we have
 
 \sep
 
+% ToDo start checking again from  here
 \Def[Discrete Cross-Correlation]
 
 Let \(f,h\colon\Z\to\R\), then

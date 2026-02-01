@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1769951817.54043 "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" "document.pdf" "document" 1769951821.13024 0
+["pdflatex"] 1769952964.53723 "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" "document.pdf" "document" 1769952968.16353 0
   "C:/Users/LuCo/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1769689411 82864 33af9636ee278c30beabba717010dc8f ""
   "C:/Users/LuCo/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1769285262 13147729 d18bdd7efddd0abe97f04fec3eb697b1 ""
   "C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/tfm/adobe/symbol/psyr.tfm" 1136768654 1408 5937f58aa508ea2cea4901c07d10f5fe ""
@@ -299,7 +299,7 @@
   "c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex" 1769868492 1947 76e9bd592b66807dab17eaa03c2b0247 ""
   "chapters/10_Feedforward_Networks.tex" 1769948154 10907 6618854620c6624699618f6978c60cfe ""
   "chapters/11_Backpropagation.tex" 1769951713 8320 ba67a9f810c4b97542c9e5cd11b03ad8 ""
-  "chapters/12_Convolutional_Neural_Networks.tex" 1769814563 14897 68c32fe15851d001234a150b1f0057fa ""
+  "chapters/12_Convolutional_Neural_Networks.tex" 1769952964 12964 02e5f17fb10482f3581d4f980728bc53 ""
   "chapters/13_Optimization.tex" 1769951817 2107 bea2354ace59add9a09a845ed6142494 ""
   "chapters/14_Natural_Language_Processing.tex" 1769773973 29741 65e7afa2fe553970cc709cd7a00b080e ""
   "chapters/15_Memory_Attention.tex" 1769821106 13857 87a6889c8c240c78323fe63a341a1ac5 ""
@@ -316,8 +316,8 @@
   "chapters/8_Regression.tex" 1769874839 845 4b69b9c5d205fcc7e72d95fca85a7ec1 ""
   "chapters/9_Approximation_Theory.tex" 1769886720 5059 6e9f63fcb03c31d9e6b3a13a4ed8ad5c ""
   "cheatsheet.sty" 1769874218 44947 c2b7e62871c37f71361b1a0b52ca991d ""
-  "document.aux" 1769951820 11743 af40b7fddcbb3440e2c69d4c7c373c6c "pdflatex"
-  "document.out" 1769951820 14818 89b7557f0c3e9c3c17309c8add84a512 "pdflatex"
+  "document.aux" 1769952967 11743 af40b7fddcbb3440e2c69d4c7c373c6c "pdflatex"
+  "document.out" 1769952967 14818 89b7557f0c3e9c3c17309c8add84a512 "pdflatex"
   "document.tex" 1769868492 1947 76e9bd592b66807dab17eaa03c2b0247 ""
   "img/DRNN.png" 1769689117 80082 fe6862059f392aa4037585fd307811bc ""
   "img/Forward&BackwardMode.png" 1769889228 59462 bba6d0a9d41ee380b847f7d9ea0198fe ""
