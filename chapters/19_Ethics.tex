@@ -1,4 +1,5 @@
 \section{Ethics}            % use \sep, \(\), \Thm, 
+\providecommand{\indep}{\mathrel{\perp\mkern-10mu\perp}}
 
 % Robustness
 \subsection{Robustness}
@@ -84,6 +85,55 @@
 
 % Interpretability
 \subsection{Interpretability}
+Interpretability aims to understand the behaviour of a fixed function $f$ or how the learned function $f_S$ 
+depends on a subset of variables $S \subseteq \left\{1, ..., p\right\}$
+
+% local vs global Interpretability
+
+% sensitivity
+
+% Missing info and global info
+
+% predictive utility, LOFO, SHAP, SAGE, Causality, SEM, Interventions, counterfactuals
 
 % Fairness
 \subsection{Fairness}
+fair treatment of different groups or segments of the population in machine learning.
+
+% protected attribute, binary classification
+\Def[Protected Attribute:] characteristic of an individual for which unequal treatment
+is considered legally, ethically, or socially unacceptable in decision-making systems. \\
+e.g. sex or gender, race or ethnicity\\
+
+
+% demographic parity
+A Classsifier satisfies \Def[Demographic Parity] if \(\hat{Y} \indep A\), where $\hat{Y}$ is the preditced label and $A$ is the protected attribute. Equivalently: \\
+\[
+\mathbb{P}(\hat{Y} = 1 | A = a) = \mathbb{P}(\hat{Y} = 1 | A = a') \quad \forall a,a' \in \mathcal{A}
+\]
+
+% equalized odds 
+A Classifier satisfies \Def[Equalized Odds] if \(\hat{Y} \indep A | Y\), where $Y$ is the true label. Equivalently: \\
+\[
+\mathbb{P}(\hat{Y} = 1 | A = a, Y = y) = \mathbb{P}(\hat{Y} = 1 | A = a', Y = y) \quad \forall a,a' \in \mathcal{A}, y \in \{0,1\}
+\]
+% equality of opportunity
+$\hat{Y}$ satisfies \Def[Equality of Opportunity] if \(\hat{Y} \indep A | Y = 1\). Equivalently: \\
+\[
+\mathbb{P}(\hat{Y} = 1 | A = a, Y = 1) = \mathbb{P}(\hat{Y} = 1 | A = a', Y = 1) \quad \forall a,a' \in \mathcal{A}
+\]
+
+% Attribute-invariant latent representation-learning
+\Thm[Fairness via Attribute-Inv. Latent Rep. Learning] \\ 
+We consider the case of equalized odds.
+Learn latent representation $Z = f(X)$ s.t. it's predictive of $Y$ while preventing recovery of the protected attribute $A$. \\
+\[
+X \xrightarrow{f} Z \xrightarrow{h} \hat{Y}, \qquad (Z,\,Y) \xrightarrow{g} \hat{A}
+\]
+This leads to the minimax problem, where $\ell_{\text{task}}$ and $\ell_{\text{adv}}$ are classification losses
+\[
+\min_{f,h}\;\max_{g}\;
+\mathbb{E}\!\big[\ell_{\text{task}}(h(Z),Y)\big]
+- \lambda\,\mathbb{E}\!\big[\ell_{\text{adv}}(g(Z,Y),A)\big]
+% \qquad\text{with}\qquad Z = f(X).
+\]
