@@ -1,0 +1,92 @@
+\section{Geometric Deep Learning}
+
+\subsection{Sets \& Point Clouds (Deep Sets)}
+Standard NNs assume fixed input order. Sets require \textbf{Permutation Invariance}.
+
+\Def{Permutations}:
+Represented by a **Permutation Matrix** $P$ (one 1 per row/col) or **Cauchy Two-Line Notation** $\pi$:
+\begin{itemize}
+    \item \textbf{Cauchy Notation}: $\pi = \begin{pmatrix} 1 & 2 & \dots & M \\ \pi(1) & \pi(2) & \dots & \pi(M) \end{pmatrix}$
+    \item \textbf{Matrix Properties}: $P^{-1} = P^T$ and $PP^T = I$.
+    \item \textbf{Row Permutation}: $PX$ permutes rows (samples).
+    \item \textbf{Column Permutation}: $XP^T$ permutes columns (features).
+\end{itemize}
+
+\Def{Invariance vs. Equivariance}:
+Let $\pi$ be a permutation of indices $\{1, \dots, M\}$.
+\begin{itemize}
+    \item \textbf{Invariant}: Output remains unchanged (e.g., classification).
+    $$f(x_1, \dots, x_M) = f(x_{\pi(1)}, \dots, x_{\pi(M)})$$
+    \item \textbf{Equivariant}: Output permutes exactly as input does (e.g., segmentation).
+    $$f(PX) = P f(X) \quad (\text{where } P \text{ is a permutation matrix})$$
+\end{itemize}
+
+\sep
+
+\Def{Deep Sets Theorem}:
+Any invariant function $f$ can be decomposed into an element-wise encoder $\phi$ and an invariant aggregator $\rho$ (e.g., sum, max).
+$$f(X) = \rho\left( \sum_{m=1}^M \phi(x_m) \right)$$
+
+\sep
+
+\Def{PointNet}:
+Architecture for 3D point clouds. Uses a \textbf{T-Net} to predict affine transformations (canonicalization) for rotation invariance.
+$$ \text{Input} \xrightarrow{\text{MLP}} \text{Features} \xrightarrow{\text{Max Pool}} \text{Global Feature} \xrightarrow{\text{MLP}} \text{Output} $$
+
+\sep
+
+\subsection{Graph Convolutional Networks (GCN)}
+Operates on Graph $G=(V, \mathcal{E})$ with feature matrix $X \in \mathbb{R}^{M \times F}$.
+
+\Def{Graph Definitions}:
+\begin{itemize}
+    \item \textbf{Adjacency Matrix ($A$)}: Symmetric $M \times M$ matrix. $A_{nm} = 1$ if $\{n,m\} \in \mathcal{E}$, else $0$. Zeros on diagonal.
+    \item \textbf{Degree Matrix ($D$)}: Diagonal matrix $D = \text{diag}(d_1, \dots, d_M)$ where $d_m = \sum_n A_{nm}$ (number of neighbors).
+\end{itemize}
+
+\Def{Coupling Matrix ($\bar{A}$)}:
+Standard symmetric normalized formulation. We define the self-loop adjacency $\tilde{A} = A + I$ and corresponding degree matrix $\tilde{D}_{mm} = \sum_n \tilde{A}_{nm} = d_m + 1$.
+$$\bar{A} = \tilde{D}^{-\frac{1}{2}} \tilde{A} \tilde{D}^{-\frac{1}{2}} = \tilde{D}^{-\frac{1}{2}} (A + I) \tilde{D}^{-\frac{1}{2}}$$
+
+\sep
+
+\Def{Layer Update}:
+Combines neighborhood aggregation ($\bar{A}X$) and feature transformation ($W$).
+$$X' = \sigma(\bar{A} X W)$$
+
+\sep
+
+\Com{Limitations}:
+\begin{itemize}
+    \item \textbf{Oversmoothing}: In deep GCNs, repeated mixing causes all node embeddings to converge to the same value.
+    \item \textbf{Oversquashing}: Exponentially growing information from distant nodes fails to fit into fixed-size vectors.
+\end{itemize}
+
+\subsection{Spectral Graph Theory}
+Generalizes convolutions using the Graph Laplacian $L$ (discrete curvature).
+
+\Def{Laplacian}:
+Defined using the Degree matrix $D$ and Adjacency $A$.
+$$L = D - A \quad \text{or Normalized: } \tilde{L} = I - D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$$
+
+\sep
+
+\Def{Spectral Convolution}:
+Uses the Convolution Theorem via the Graph Fourier Transform (Eigenvectors $U$ of $L$).
+$$x \star y = U ((U^T x) \odot (U^T y))$$
+
+\sep
+
+\Def{ChebNet}:
+Approximates spectral filters using Chebyshev polynomials $T_k$ to avoid expensive Eigendecomposition ($O(N^3)$). It is strictly $K$-localized.
+$$g_\theta(L) \approx \sum_{k=0}^K \theta_k T_k(\tilde{L})$$
+
+\subsection{Attention GNNs (GAT)}
+Learns dynamic edge weights $\alpha_{ij}$ instead of static adjacency.
+
+\Def{Attention Mechanism}:
+\begin{enumerate}
+    \item \textbf{Score}: $e_{ij} = \text{LeakyReLU}(\vec{a}^T [W x_i || W x_j])$
+    \item \textbf{Normalize}: $\alpha_{ij} = \text{softmax}_j(e_{ij}) = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}_i} \exp(e_{ik})}$
+    \item \textbf{Aggregate}: $x_i' = \sigma\left(\sum_{j \in \mathcal{N}_i} \alpha_{ij} W x_j\right)$
+\end{enumerate}

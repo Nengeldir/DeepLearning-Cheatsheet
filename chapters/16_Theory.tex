@@ -1,0 +1,63 @@
+\section{Theory}
+\subsection{Neural Tangent Kernel (NTK)}
+
+\Def{Linearized DNN}: To analyze non-linear DNNs, we can linearize them around initialization $\theta_0$ using a first-order Taylor expansion:
+$$h(\beta)(x)=f(x;\theta_0)+\beta\cdot\nabla_\theta f(x;\theta_0)$$
+
+Here, $\nabla_\theta f(x;\theta_0)$ acts as a fixed, random feature map determined by initialization. The optimization of $\beta$ becomes a convex problem.
+
+\Def{NTK Definition}: The kernel corresponding to these gradient feature maps is the Neural Tangent Kernel:
+$$k(x,\xi)=\langle\nabla_\theta f(x),\nabla_\theta f(\xi)\rangle$$
+
+It encodes the similarity between samples $x$ and $\xi$ based on how much their predictions change when parameters are updated.
+
+\Def{Infinite Width Limit (NTK Regime)}: As network width $m\to\infty$ (under specific "NTK parameter scaling"): 
+\begin{itemize} 
+    \item Deterministic Limit: The initial NTK converges to a deterministic kernel $k_\infty$ that depends only on the initialization law, not the specific random weights. 
+    \item NTK Constancy: The kernel remains constant during training ($\frac{d}{dt}k=0$). This means the feature map does not evolve ("Lazy Training"). 
+    \item Linear Dynamics: The training dynamics become identical to Kernel Ridge Regression with kernel $k_\infty$. The evolution of outputs follows:
+    $$\dot{f}=K(\theta)(y-f)$$
+\end{itemize}
+
+\sep
+
+\subsection{Bayesian DNNs}
+
+\Def{Bayesian Paradigm}: Instead of finding a point estimate $\theta^*$, we compute a posterior distribution $p(\theta|S)$ to capture uncertainty.
+$$p(\theta|S)\propto p(S|\theta)p(\theta)$$
+
+Predictions are made by marginalizing over the posterior: $p(y|x)=\int p(y|x,\theta)p(\theta|S)d\theta$.
+
+\Def{Langevin Dynamics}: Since exact inference is intractable, we use sampling. Langevin dynamics injects noise into Gradient Descent to explore the posterior distribution (sampling from $p(\theta|S)$) rather than collapsing to a minimum.
+$$v_{t+1}=(1-\eta\gamma)v_t-\eta\nabla\tilde{E}(\theta)+2\gamma\eta\epsilon,\epsilon\sim N(0,I)$$
+
+This mimics a physical system with friction and thermal noise.
+
+\sep
+
+\subsection{Gaussian Processes (GPs)}
+
+\Def{Infinite Width Equivalence (Neal's Theorem)}: A single-hidden-layer neural network with infinite width ($m\to\infty$) and i.i.d. priors on weights converges to a Gaussian Process (GP).
+
+\Com{Mechanism}: By the Central Limit Theorem, the pre-activations (sums of many independent random variables) become Gaussian.
+
+\Com{Result}: The network output $f(x)$ is a draw from a GP with mean $\mu(x)=0$ and a specific kernel $k(x,x')$.
+
+\Def{Deep GPs}: This equivalence extends to deep networks. The kernel is defined recursively:
+$$K_l(x,x')=E[\phi(f_{l-1}(x))\phi(f_{l-1}(x'))]$$
+
+where the expectation is taken over the GP of the previous layer $f_{l-1}$.
+
+\sep
+
+\subsection{Statistical Learning Theory}
+
+\Def{Generalization Error}: The gap between performance on training data (empirical risk) and unseen data (expected risk).
+$$\text{Gen}(f)=R[f]-R_{emp}[f]$$
+
+Classical theory (VC-dimension) predicts overfitting for huge models, but DNNs exhibit Double Descent: test error decreases, rises (at interpolation threshold), and then decreases again as width grows.
+
+\Def{PAC-Bayesian Bounds}: Provides generalization bounds for stochastic classifiers (posterior Q) based on their distance from a prior P (KL-divergence).
+$$EQ[R(f)]\leq R_{emp}(Q)+2sKL(Q||P)+\ln(2s/\delta)$$
+
+\Com{This links generalization to the "flatness" of minima: flat minima allow for a posterior Q with high variance (large entropy) that still fits the data, minimizing the KL term.}
