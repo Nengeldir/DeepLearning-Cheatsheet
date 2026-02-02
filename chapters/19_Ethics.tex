@@ -89,12 +89,89 @@ Interpretability aims to understand the behaviour of a fixed function $f$ or how
 depends on a subset of variables $S \subseteq \left\{1, ..., p\right\}$
 
 % local vs global Interpretability
-
-% sensitivity
-
-% Missing info and global info
-
-% predictive utility, LOFO, SHAP, SAGE, Causality, SEM, Interventions, counterfactuals
+\textbf{Examples of Local questions:}
+\begin{itemize}
+    \item \textbf{ceteris paribus}: how does the prediction $f(x)$ change when varying a feature $x_j$ while keeping all other features fixed? \\
+            \(x'_j \longmapsto f\big(x'_j,\,x_{-j}\big), \quad x = \left(x_j, x_{-j}\right)\)
+    \item \textbf{Missing Information}: how does the prediction $f(x)$ change when a feature $x_j$ is not observed? \\
+            Use \Thm[Marginalization] when the variable $x_j$ is unobserved, replace the prediction $f(X)$ with
+            \[
+            \mathbb{E}\big[f(X)\mid X_{-j}=x_{-j}\big]
+            \]
+            The contribution of $x_j$ can be assessed via: \(f(X) - \mathbb{E}\big[f(X)\mid X_{-j}\big]\)\\
+    \item \textbf{Intervention}: how would the target value change if one could intervene and change the value of a feature $x_j$?
+            \Def[Sensitivity] is measured by the partial derivative: \(\frac{\partial f(x)}{\partial x_j}\)\\
+\end{itemize}
+\sep
+\textbf{Examples of Global questions:}
+\begin{itemize}
+    \item \textbf{Information}: how much info does $x_j$ carry about $y$? \\
+            \Def[Mutual Information:]
+            \[
+            I(X_j;Y) \;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y)}{p(X_j)\,p(Y)}\right]
+            \]\\
+            \Def[Conditional Mutual Information:] measures info about $Y$ uniquely contributed by $X_j$, given $X_{-j}$\\
+            \[
+            I\big(X_j;Y\mid X_{-j}\big)
+            \;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y\mid X_{-j})}{p(X_j\mid X_{-j})\,p(Y\mid X_{-j})}\right]
+            \]
+    \item \Def[Predictive Utility / Leave-one-feature-out (LOFO):] how much risk reduction is obtained by using $x_j$ (in comb. with other features)?
+            \[
+            \mathcal{R}\big(f_{-j}\big) - \mathcal{R}\big(f\big), \quad \mathcal{R}(f_{-j}) = \mathbb{E}\big[\ell(Y, f_{-j}(X_{-j}))\big], \mathcal{R}(f) = \dots
+            \]\\
+            So for $f$ and $f_{-j}$ trained from sufficiently large function classes, the predictive utility is
+            an approximation of the conditional mutual information.\\
+            \Def[LOFO via marginalization:] with only one $f$ trained\\
+            \[
+            \mathcal{R}(f_{-j}) = \mathbb{E}\!\left[\ell\big(Y,\,f(X_{-j},\,\tilde{X}_j)\big)\right], \quad \tilde{X_j} \sim P(X_j|X_{-j})
+            \]\\
+            \Def[LOFO via Permutation importance:] Let $\sigma$ be a random permutation of $\left\{1, \dots , n\right\}$
+            \[
+            \frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x_{-j}^{(i)},\,x_j^{(\sigma(i))})\big)
+            \;-\;
+            \frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x^{(i)})\big)
+            \]
+            There are methods that try to better approximate the idealized marginalization by replacing permutation with conditional resampling.
+            \(\mathbb{P}\big(X_j \mid X_{-j} = x_{-j}^{(i)}\big)\)\\
+            \textbf{Context-dependent Contributions:}\\
+            \Def[Quantity of Interest \(\mathcal{Q}(S)\)] computed using a subset of variables $X_S \subseteq X$.\\
+            \Def[Marginal Contribution of $X_j$ in context of $S$] \(\Delta_j(S) \;=\; \mathcal{Q}\big(S\cup\{j\}\big) - \mathcal{Q}(S), \quad S \subseteq \left\{1, \dots , p\right\} \setminus \left\{i\right\}\)\\
+            SHAP and SAGE define the importance of $X_j$ by averaging these marginal
+            contributions over all subsets $S$, using Shapley weights:\\
+            \[
+            \phi_j \;=\; \sum_{S \subseteq \{1,\dots,p\}\setminus\{j\}}
+            \frac{|S|!\,(p-|S|-1)!}{p!}\,\big(\mathcal{Q}(S\cup\{j\})-\mathcal{Q}(S)\big)
+            \]\\
+            \Def[SHAP (SHapley Additive exPlanations)] For a fixed instance $x$, $\mathcal{Q}(S)$ is a prediction-level Quantity, attributes predictions:
+            \[
+            \mathcal{Q}_{\mathrm{SHAP}}(S) \;=\; \mathbb{E}\!\big[f(X)\mid X_S = x_S\big]
+            \]\\
+            \Def[SAGE (Shapley Additive Global importance)] \\ 
+            $\mathcal{Q}(S)$ is a performance-level Quantity, attributes risk reduction:
+            \[
+            \mathcal{Q}_{\mathrm{SAGE}}(S) \;=\; -\mathcal{R}(f_S), \qquad
+            \mathcal{R}(f_S) \;=\; \mathbb{E}\!\left[\ell\big(Y,\,f_S(X_S)\big)\right]
+            \]\\
+            SHAP and SAGE provide \textbf{additive explanations} (each variable is
+            assigned a contribution, and the sum of these contributions recovers the total effect), 
+            because Shapley Values $\left\{\phi_j\right\}_{j=1}^{p}$ satisfy the \Thm[Efficiency (Additivity) Property:]
+            \[
+            \sum_{j=1}^p \phi_j \;=\; \mathcal{Q}(\{1,\dots,p\}) - \mathcal{Q}(\varnothing)
+            \]
+    \item \textbf{Causal effect}: what is the causal effect of $x_j$ on $y$?
+            \Def[Causal ordering] induces a factorization of the joint distibution with $\text{Pa}(X_j)$ denoting the parents(direct causes) of $X_j$:
+            \[
+            P(X_1,\dots,X_p) \;=\; \prod_{j=1}^p P\big(X_j \mid \text{Pa}(X_j)\big)
+            \]  \\
+            The joint distribution corresponds to a sequential sampling procedure. This ordering reflects causal, not merely statistical, dependencies.\\
+            \Def[Structural equation models (SEM)] $U_j$ is an exogenous noise variable: 
+            \[
+            X_j \;=\; f_j\big(\text{Pa}(X_j),\,U_j\big)
+            \]\\
+            \textbf{Intervention in the generative view} replaces the sampling step $X_j \leftarrow x_j$.\\
+            \textbf{Intervention in the SEM view} replaces the structural equation $X_j \;=\; f_j\big(\text{Pa}(X_j),\,U_j\big)$ by $X_j = x_j$.\\
+            \textbf{Counterfactuals} correspond to comparing $Y(X)$ and $Y(\text{do}(X_j = x_j'))$ within the same underlying causal model.
+\end{itemize}
 
 % Fairness
 \subsection{Fairness}
