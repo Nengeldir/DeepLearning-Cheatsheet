@@ -6,8 +6,8 @@
     \Def[Adverserial examples (Classification-Perspective)] \\
     Input $x$, label $y$, budget $\epsilon$, norm $\|\cdot\|_p$ (usually $p \in \{2, \infty\}$) for each attack type:
     \begin{itemize}
-        \item untargeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) \neq y\)
-        \item targeted: \(||\Delta||_p \leq \epsilon\) and \(\hat{y}(x + \Delta) = t\), \(t \neq y\)
+        \item untargeted: \(||\delta||_p \leq \epsilon\) and \(\hat{y}(x + \delta) \neq y\)
+        \item targeted: \(||\delta||_p \leq \epsilon\) and \(\hat{y}(x + \delta) = t\), \(t \neq y\)
         \item loss-based: \(\max_{\|\delta\|_p \leq \epsilon} \mathcal{L}(f(x + \delta), y)\)
     \end{itemize}
     \sep 
@@ -15,12 +15,14 @@
     \textbf{Binary Classification:} $f(x) = w^\top x + b$, adverserial perturbation pushes x across decision boundary if $y (w^\top (x + \delta) + b) \leq 0$.\\
     \Thm[Min $L_2$ adverserial perturbation:] Robustness increases with margin $|w^\top x + b|$ 
     and decreases with $\|w\|_2$ \[\delta^\star = -\frac{w^\top x + b}{\|w\|_2^2} w, \quad \|\delta^\star\|_2 = \frac{|w^\top x + b|}{\|w\|_2}\]
-    \Thm[$L_\infty$ threat model:] If $\|w\|_2 \leq \epsilon$, then $w^\top \Delta$ is minimized by choosing \(\Delta = -\epsilon \ \text{sign}(yw)\). 
+    \\
+    \Thm[$L_\infty$ threat model:] If $\|w\|_2 \leq \epsilon$, then $w^\top \delta$ is minimized by choosing \(\delta = -\epsilon \ \text{sign}(yw)\). 
     % multiclass: system of inequalities, closest-competing class, 
     \\
     \sep
-    \textbf{Multiclass:} $f_k(x) = w_k^\top x + b_k$, A Perturbation $\Delta$ is (untargeted) adverserial if it violates at least one inequality: 
+    \textbf{Multiclass:} $f_k(x) = w_k^\top x + b_k$, A Perturbation $\delta$ is (untargeted) adverserial if it violates at least one inequality: 
     \[\exists j \neq y: \quad (w_y - w_j)^\top (x + \delta) + (b_y - b_j) \leq 0\]
+    \\
     \Def[Margin to class $j\neq y$] $m_j(x) := (w_y - w_j)^\top x + (b_y - b_j)$\\
     \textbf{Nearest Competing Class:} $j^\star(x) := \underset{j \neq y}{\text{argmin}} \frac{m_j(x)}{\|w_y - w_j\|_2}$ \\
     \sep
@@ -44,8 +46,41 @@
     \sep
     % Robustness under distibution shift, Robustness in statistics, distributional uncertainty
     % adverserial transport, deterministic perturbs, Wassertein-infty & std adverserial perturbs
-
-
+    \Thm[Distribution ($P,Q$) Shift:] Data P $\rightarrow$ Deployment Q. \\ 
+    Seek \(\sup_{Q\in \mathcal{U}(P)} \mathbb{E}_Q\left[l(f(Z))\right]\) \\
+    Robust statistics studies the stability of statistical procedures under small deviations from an
+    assumed model.\\
+    \Def[Huber’s contamination model:] for arbitrary contaminating dist. $Q$.
+    \[
+    P_{\epsilon} = (1-\epsilon)P + \epsilon Q
+    \]
+    \\
+    \Thm[Distributionally Robust Optimization (DRO):]
+    \[
+    \sup_{Q \in \mathcal{U}(P)} \mathbb{E}_Q\big[\ell(f(Z))\big], \quad \mathcal{U}(P) = \text{neighborhood of } P
+    \]
+    \\
+    \Def[Wasserstein Balls (around $P$):] 
+    \[
+    \mathcal{U}_\varepsilon(P)=\{\,Q:\;W_p(P,Q)\le\varepsilon\,\}
+    \]
+    with \Def[Wasserstein-$p$ Distance:] 
+    \[
+    W_p(P,Q)=\left(\inf_{\pi\in\Pi(P,Q)}\int d(z,z')^p\,\mathrm{d}\pi(z,z')\right)^{1/p}
+    \]
+    \sep
+    For empircal \(P_n = \frac 1 n \sum_{i=1}^{n} \delta_{z_i}\), inner $\sup$ is often deterministic.
+    \Thm[Adverserial Transport:]
+    \[
+    \sup_{z_1',\dots,z_n'} \left\{ \frac{1}{n}\sum_{i=1}^n g(z_i') \;\middle|\; 
+    \frac{1}{n}\sum_{i=1}^n d(z_i',z_i)^p \le \varepsilon^p \right\}
+    \]
+    \\
+    \Thm[$W_\infty$ Unification:] Worst case risk over a $W_\infty$ ball is equivalent to std. adverserial risk with radius $\rho$.\\
+    \[
+    \sup_{Q:\;W_\infty(P_n,Q)\le\rho}\mathbb{E}_Q[g]
+    = \frac{1}{n}\sum_{i=1}^n \sup_{\|x-x_i\|_2\le\rho} \ell\big(f(x),y_i\big)
+    \]
 
 % Interpretability
 \subsection{Interpretability}
