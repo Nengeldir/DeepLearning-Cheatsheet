@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  1 FEB 2026 22:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  2 FEB 2026 21:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1250,12 +1250,11 @@ Package caption Info: End \AtBeginDocument code.
 Package pgfplots notification 'compat/show suggested version=true': you might benefit from \pgfplotsset{compat=1.18} (current compat level: 1.10).
 
 Package hyperref Info: Link coloring OFF on input line 11.
-(document.out) (document.out)
 \@outlinefile=\write5
 \openout5 = `document.out'.
 
 \c@lstlisting=\count387
- (chapters/1_Probability.tex
+(chapters/1_Probability.tex
 LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
  (C:\Users\LuCo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1297,7 +1296,7 @@ Overfull \hbox (2.89207pt too wide) in paragraph at lines 70--71
  []
 
 ) (chapters/5_Information_Theory.tex) (chapters/6_NN_functions_and_derivatives.tex) (chapters/7_Connectionism.tex) (chapters/8_Regression.tex) (chapters/9_Approximation_Theory.tex) (chapters/10_Feedforward_Networks.tex) (chapters/11_Backpropagation.tex
-<img/Forward&BackwardMode.png, id=326, 531.1845pt x 355.5684pt>
+<img/Forward&BackwardMode.png, id=6, 531.1845pt x 355.5684pt>
 File: img/Forward&BackwardMode.png Graphic file (type png)
 <use img/Forward&BackwardMode.png>
 Package pdftex.def Info: img/Forward&BackwardMode.png  used on input line 31.
@@ -1312,7 +1311,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 91--93
 [][][][][][][] \OT1/cmr/m/n/7 (+20) For
  []
 
-<img/backprop-graphs.jpg, id=327, 3695.8075pt x 2470.22874pt>
+<img/backprop-graphs.jpg, id=7, 3695.8075pt x 2470.22874pt>
 File: img/backprop-graphs.jpg Graphic file (type jpg)
 <use img/backprop-graphs.jpg>
 Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 149.
@@ -1322,7 +1321,7 @@ Overfull \hbox (31.31236pt too wide) detected at line 79
 []
  []
 
-<img/convolutions-with-channels.png, id=328, 758.835pt x 674.52pt>
+<img/convolutions-with-channels.png, id=8, 758.835pt x 674.52pt>
 File: img/convolutions-with-channels.png Graphic file (type png)
 <use img/convolutions-with-channels.png>
 Package pdftex.def Info: img/convolutions-with-channels.png  used on input line 177.
@@ -1340,218 +1339,54 @@ Underfull \hbox (badness 10000) in paragraph at lines 234--236
 [][][][][][] \OT1/cmr/m/n/7 (+20) Un-like 2D
  []
 
+) (chapters/13_Recurrent_Neural_Networks.tex
+<img/deepRNN.png, id=77, 803.0pt x 735.74875pt>
+File: img/deepRNN.png Graphic file (type png)
+<use img/deepRNN.png>
+Package pdftex.def Info: img/deepRNN.png  used on input line 42.
+(pdftex.def)             Requested size: 230.83818pt x 211.49805pt.
+<img/lstm.png, id=78, 987.69pt x 500.87125pt>
+File: img/lstm.png Graphic file (type png)
+<use img/lstm.png>
+Package pdftex.def Info: img/lstm.png  used on input line 55.
+(pdftex.def)             Requested size: 230.83818pt x 117.05513pt.
+<img/GRU.png, id=79, 804.00375pt x 628.3475pt>
+File: img/GRU.png Graphic file (type png)
+<use img/GRU.png>
+Package pdftex.def Info: img/GRU.png  used on input line 64.
+(pdftex.def)             Requested size: 230.83818pt x 180.404pt.
 ) (chapters/13_Optimization.tex
 Overfull \hbox (1.00772pt too wide) detected at line 6
 \OMS/cmsy/m/n/7 r[]R\OT1/cmr/m/n/7 (\OML/cmm/m/it/7 D\OT1/cmr/m/n/7 ) = [] [] = [] []
  []
 
-<img/challenges-curvature-and-gradients.png, id=358, 1839.87375pt x 854.19125pt>
+<img/challenges-curvature-and-gradients.png, id=80, 1839.87375pt x 854.19125pt>
 File: img/challenges-curvature-and-gradients.png Graphic file (type png)
 <use img/challenges-curvature-and-gradients.png>
 Package pdftex.def Info: img/challenges-curvature-and-gradients.png  used on input line 25.
 (pdftex.def)             Requested size: 230.83818pt x 107.16466pt.
-) (chapters/14_Natural_Language_Processing.tex
-Overfull \hbox (0.84335pt too wide) detected at line 50
-[]
- []
+)
 
+! LaTeX Error: File `inputs/15_Geometric Deep Learning.tex' not found.
 
-Overfull \hbox (23.3514pt too wide) detected at line 163
-[]
- []
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
 
+Enter file name: 
+c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex:62: Emergency stop.
+<read *> 
+         
+l.62 \input{inputs/15_Geometric Deep Learning}
+                                              ^^M
+*** (cannot \read from terminal in nonstop modes)
 
-Overfull \hbox (87.69559pt too wide) detected at line 190
-[]
- []
-
-<img/cnn-text-overview.png, id=359, 1928.20375pt x 1653.17625pt>
-File: img/cnn-text-overview.png Graphic file (type png)
-<use img/cnn-text-overview.png>
-Package pdftex.def Info: img/cnn-text-overview.png  used on input line 221.
-(pdftex.def)             Requested size: 230.83818pt x 197.89331pt.
-
-Overfull \hbox (27.3571pt too wide) detected at line 353
-[]
- []
-
-
-Overfull \hbox (63.27538pt too wide) detected at line 377
-[]
- []
-
-<img/bi-directional-rnn.png, id=360, 1026.83624pt x 790.955pt>
-File: img/bi-directional-rnn.png Graphic file (type png)
-<use img/bi-directional-rnn.png>
-Package pdftex.def Info: img/bi-directional-rnn.png  used on input line 408.
-(pdftex.def)             Requested size: 46.16693pt x 35.55522pt.
-<img/DRNN.png, id=361, 331.2375pt x 902.37125pt>
-File: img/DRNN.png Graphic file (type png)
-<use img/DRNN.png>
-Package pdftex.def Info: img/DRNN.png  used on input line 434.
-(pdftex.def)             Requested size: 22.08347pt x 60.15701pt.
-<img/teacher-forcing.png, id=362, 1055.945pt x 909.3975pt>
-File: img/teacher-forcing.png Graphic file (type png)
-<use img/teacher-forcing.png>
-Package pdftex.def Info: img/teacher-forcing.png  used on input line 459.
-(pdftex.def)             Requested size: 69.25215pt x 59.6402pt.
-) (chapters/15_Memory_Attention.tex
-<img/memory-units.png, id=363, 1432.35126pt x 777.90625pt>
-File: img/memory-units.png Graphic file (type png)
-<use img/memory-units.png>
-Package pdftex.def Info: img/memory-units.png  used on input line 20.
-(pdftex.def)             Requested size: 138.5043pt x 75.2194pt.
-<img/lstm.png, id=364, 1476.51625pt x 746.79pt>
-File: img/lstm.png Graphic file (type png)
-<use img/lstm.png>
-Package pdftex.def Info: img/lstm.png  used on input line 32.
-(pdftex.def)             Requested size: 230.83818pt x 116.74261pt.
-<img/lstm-combined-v3.png, id=365, 300.28185pt x 196.21304pt>
-File: img/lstm-combined-v3.png Graphic file (type png)
-<use img/lstm-combined-v3.png>
-Package pdftex.def Info: img/lstm-combined-v3.png  used on input line 42.
-(pdftex.def)             Requested size: 230.83818pt x 150.84198pt.
-<img/lstm-peephole-connections.png, id=366, 659.8251pt x 203.8014pt>
-File: img/lstm-peephole-connections.png Graphic file (type png)
-<use img/lstm-peephole-connections.png>
-Package pdftex.def Info: img/lstm-peephole-connections.png  used on input line 82.
-(pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-coupled-forget-and-input-gates.png, id=367, 659.8251pt x 203.8014pt>
-File: img/lstm-coupled-forget-and-input-gates.png Graphic file (type png)
-<use img/lstm-coupled-forget-and-input-gates.png>
-Package pdftex.def Info: img/lstm-coupled-forget-and-input-gates.png  used on input line 90.
-(pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/lstm-grus.png, id=368, 659.8251pt x 203.8014pt>
-File: img/lstm-grus.png Graphic file (type png)
-<use img/lstm-grus.png>
-Package pdftex.def Info: img/lstm-grus.png  used on input line 98.
-(pdftex.def)             Requested size: 230.83818pt x 71.30045pt.
-<img/ntms-1.png, id=369, 2078.76625pt x 742.775pt>
-File: img/ntms-1.png Graphic file (type png)
-<use img/ntms-1.png>
-Package pdftex.def Info: img/ntms-1.png  used on input line 110.
-(pdftex.def)             Requested size: 161.58601pt x 57.73447pt.
-<img/ntms-2.png, id=370, 890.32625pt x 774.895pt>
-File: img/ntms-2.png Graphic file (type png)
-<use img/ntms-2.png>
-Package pdftex.def Info: img/ntms-2.png  used on input line 126.
-(pdftex.def)             Requested size: 115.41908pt x 100.44427pt.
-<img/seq-to-seq-encoder-decoder.png, id=371, 1872.9975pt x 391.4625pt>
-File: img/seq-to-seq-encoder-decoder.png Graphic file (type png)
-<use img/seq-to-seq-encoder-decoder.png>
-Package pdftex.def Info: img/seq-to-seq-encoder-decoder.png  used on input line 161.
-(pdftex.def)             Requested size: 230.83818pt x 48.24576pt.
- Excluding 'comment' comment.) (chapters/16_Unsupervised_Learning.tex
-
-Package fancyhdr Warning: \footskip is too small (4.0pt): 
-(fancyhdr)                Make it at least 9.49998pt, for example:
-(fancyhdr)                \setlength{\footskip}{9.49998pt}.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.9 ...p_{\text{emp.}}]{\log (p_{\theta}(\vx))}.\]
-                                                   [2 <./img/convolutions-with-channels.png> <./img/challenges-curvature-and-gradients.png> <./img/cnn-text-overview.png> <./img/bi-directional-rnn.png> <./img/DRNN.png> <./img/teacher-forcing.png> <./img/memory-units.png> <./img/lstm.png> <./img/lstm-combined-v3.png> <./img/lstm-peephole-connections.png> <./img/lstm-coupled-forget-and-input-gates.png> <./img/lstm-grus.png> <./img/ntms-1.png> <./img/ntms-2.png> <./img/seq-to-seq-encoder-decoder.png>]
-
-LaTeX Warning: Command \i invalid in math mode on input line 72.
-
-
-Overfull \hbox (9.83162pt too wide) detected at line 99
-[]
- []
-
-) (chapters/17_Chain_Rule_Jacobians.tex
-Overfull \hbox (24.63187pt too wide) detected at line 14
-[]
- []
-
-
-Package resizegather Warning: Equation line 1 is too large by 41.63078pt
-(resizegather)                in environment `gather*' on input line 24.
-
-) (chapters/18_Generative_Models.tex
-<img/taxonomy-of-generative-models.png, id=417, 2411.0075pt x 1112.155pt>
-File: img/taxonomy-of-generative-models.png Graphic file (type png)
-<use img/taxonomy-of-generative-models.png>
-Package pdftex.def Info: img/taxonomy-of-generative-models.png  used on input line 12.
-(pdftex.def)             Requested size: 161.58601pt x 74.53265pt.
-
-Overfull \hbox (53.10207pt too wide) detected at line 87
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 92--95
-
- []
-
-<img/VAE-forward-prop.png, id=418, 2471.2325pt x 1206.5075pt>
-File: img/VAE-forward-prop.png Graphic file (type png)
-<use img/VAE-forward-prop.png>
-Package pdftex.def Info: img/VAE-forward-prop.png  used on input line 117.
-(pdftex.def)             Requested size: 230.83818pt x 112.68637pt.
-<img/VAE-generation.png, id=419, 1325.95375pt x 753.81625pt>
-File: img/VAE-generation.png Graphic file (type png)
-<use img/VAE-generation.png>
-Package pdftex.def Info: img/VAE-generation.png  used on input line 129.
-(pdftex.def)             Requested size: 115.41908pt x 65.60909pt.
-
-Underfull \hbox (badness 7326) in paragraph at lines 140--141
-[][][][][][][] \OT1/cmr/m/n/7 (+20) must be a dif-fer-en-tiable func-tion
- []
-
-
-Overfull \hbox (43.868pt too wide) detected at line 171
-[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 175--176
-[]$\OMS/cmsy/m/n/7 R[] \OT1/cmr/m/n/7 (+20) = \OMS/cmsy/m/n/7 ^^@[][] [] ^^@
- []
-
-Excluding 'comment' comment.
-Underfull \hbox (badness 10000) in paragraph at lines 277--279
-[][] [] [] \OT1/cmr/m/n/7 (+20) +
- []
-
-<img/GAN-training.png, id=420, 591.20876pt x 299.1175pt>
-File: img/GAN-training.png Graphic file (type png)
-<use img/GAN-training.png>
-Package pdftex.def Info: img/GAN-training.png  used on input line 288.
-(pdftex.def)             Requested size: 230.83818pt x 116.7877pt.
-Excluding 'comment' comment.)
-
-Package fancyhdr Warning: \footskip is too small (4.0pt): 
-(fancyhdr)                Make it at least 9.49998pt, for example:
-(fancyhdr)                \setlength{\footskip}{9.49998pt}.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.68 \end{multicols*}
-                      [3 <./img/taxonomy-of-generative-models.png> <./img/VAE-forward-prop.png> <./img/VAE-generation.png> <./img/GAN-training.png>] (document.aux)
- ***********
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2025-03-26>
- ***********
-Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: E50C88C544D3F3D240B8AF05F5A6FEE7;13700.
- ) 
+ 
 Here is how much of TeX's memory you used:
- 45387 strings out of 469959
- 1005002 string characters out of 5470318
+ 44951 strings out of 469959
+ 994674 string characters out of 5470318
  2068576 words of memory out of 5000000
- 71004 multiletter control sequences out of 15000+600000
- 643322 words of font info for 187 fonts, out of 8000000 for 9000
+ 70710 multiletter control sequences out of 15000+600000
+ 640615 words of font info for 160 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 104i,25n,131p,1455b,1167s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on document.pdf (3 pages, 6941576 bytes).
-PDF statistics:
- 548 PDF objects out of 1000 (max. 8388607)
- 118 named destinations out of 1000 (max. 500000)
- 31478 words of extra memory for PDF output out of 35830 (max. 10000000)
-
+ 104i,16n,131p,1088b,1070s stack positions out of 10000i,1000n,20000p,200000b,200000s
+c:/Users/LuCo/OneDrive/Home/Studium/2025 Wintersemester/Deep Learning/Cheatsheet/document.tex:62:  ==> Fatal error occurred, no output PDF file produced!

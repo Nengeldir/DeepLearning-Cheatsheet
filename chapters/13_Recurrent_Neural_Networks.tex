@@ -1,0 +1,102 @@
+\section{Recurrent Neural Networks (RNNs)}
+
+\subsection{Simple Recurrent Networks}
+\Def[Concept]: Unlike CNNs (fixed filter widths), RNNs model temporal/sequence data of variable length. They maintain a hidden state $z_t$ acting as a "memory" of the history.
+
+\sep
+
+\textbf{Formulation}:
+Given input sequence $x_1, \dots, x_T$:
+$$ z_t = \phi(U z_{t-1} + V x_t) $$
+$$ \hat{y}_t = \psi(W z_t) $$
+where $U, V, W$ are shared weight matrices and $\phi, \psi$ are non-linearities.
+
+\sep
+
+\textbf{Unrolling}:
+An RNN is equivalent to a deep feedforward network with $T$ layers and \textit{shared weights}.
+
+\sep
+
+\textbf{Backpropagation Through Time (BPTT)}:
+Gradients are propagated backward through the unrolled graph. Since weights are shared, the total gradient is the sum of gradients at each time step:
+$$ \frac{\partial L}{\partial w} = \sum_{t=1}^T \frac{\partial L}{\partial \hat{y}_t} \frac{\partial \hat{y}_t}{\partial z_t} \frac{\partial z_t}{\partial w} $$
+
+\sep
+
+\textbf{Gradient Problems}:
+The gradient involves repeated multiplication of the recurrent weight matrix $U$ (specifically its Jacobian).
+\begin{itemize}
+    \item \textbf{Exploding Gradient}: If largest singular value $\sigma_{max}(U) > 1$.
+    \item \textbf{Vanishing Gradient}: If $\sigma_{max}(U) < 1$. This makes learning long-term dependencies difficult.
+\end{itemize}
+
+\subsubsection{Structural Variants}
+\Def[Bidirectional RNNs]: Process sequence in both directions to capture past and future context.
+$$ \hat{y}_t = \psi(W z_t^{\rightarrow} + \tilde{W} z_t^{\leftarrow}) $$
+
+\sep
+
+\Def[Deep RNNs]: Stacking multiple RNN layers to increase representational power. The output of layer $l$ becomes the input to layer $l+1$.
+
+\includegraphics[width=\linewidth]{img/deepRNN.png}
+
+\sep
+
+\subsubsection{Gated Memory}
+Gates use multiplicative interactions (sigmoid $\sigma$) to control information flow, stabilizing gradients and allowing long-term memory.
+
+\Def[Long Short-Term Memory (LSTM)]:
+Maintains a separate cell state $C_t$ controlled by three gates.
+$$ C^t = \underbrace{\sigma(F\tilde{x}^t) \odot C^{t-1}}_{\text{Forget}} + \underbrace{\sigma(I\tilde{x}^t) \odot \tanh(\tilde{C}\tilde{x}^t)}_{\text{Input/Update}} $$
+$$ z^t = \sigma(O\tilde{x}^t) \odot \tanh(C^t) $$
+where $\tilde{x}^t = [x_t, z_{t-1}]$.
+
+\includegraphics[width=\linewidth]{img/lstm.png}
+
+\sep
+
+\Def[Gated Recurrent Unit (GRU)]:
+Simplifies LSTM by merging Cell/Hidden states and Forget/Input gates.
+$$ z^t = (1- \Gamma_u) \odot z^{t-1} + \Gamma_u \odot \tilde{z}^t $$
+where $\Gamma_u = \sigma(G[x_t, z_{t-1}])$ is the update gate.
+
+\includegraphics[width=\linewidth]{img/GRU.png}
+
+\subsubsection{Linear Recurrent Units (LRU)}
+\textbf{Motivation}: Bridges the gap between RNNs (inference efficiency) and Transformers (training parallelizability).
+
+\sep
+
+\textbf{Dynamics}:
+Uses a linear recurrence relation (diagonalizable):
+$$ z^{t+1} = A z^t + B x^t $$
+
+\sep
+
+\textbf{Diagonalization}:
+If $A = P \Lambda P^{-1}$, we can operate in the diagonal basis $\xi^t = P^{-1} z^t$:
+$$ \xi^{t+1} = \Lambda \xi^t + \tilde{B} x^t $$
+
+\sep
+
+\textbf{Stability}: Eigenvalues of $A$ (diagonal elements of $\Lambda$) must be initialized inside the complex unit circle ($|\lambda| \le 1$) to prevent explosion.
+
+\subsubsection{Sequence Learning}
+\textbf{Generative Modeling}:
+Decomposes joint probability of a sequence:
+$$ P(x_1, \dots, x_T) = \prod_{t=1}^T P(x_t | x_{1}, \dots, x_{t-1}) $$
+
+\sep
+
+\textbf{Teacher Forcing}:
+During training, feed the \textit{ground truth} $y_{t-1}^*$ as input to step $t$ rather than the model's own prediction $\hat{y}_{t-1}$. This speeds up convergence but causes "exposure bias" (train-test discrepancy).
+
+\sep
+
+\textbf{Seq2Seq (Encoder-Decoder)}:
+\begin{itemize}
+    \item \textbf{Encoder}: Compresses input sequence into a fixed context vector $z_T$.
+    \item \textbf{Decoder}: Generates output sequence from $z_T$.
+    \item \textbf{Attention}: Allows Decoder to "look back" at specific Encoder states $z_{\tau}$ via learned weights, solving the bottleneck of a fixed-size context vector.
+\end{itemize}
