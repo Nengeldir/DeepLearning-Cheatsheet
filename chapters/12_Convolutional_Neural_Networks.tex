@@ -192,6 +192,7 @@ So the typical use of convolution that we have in vision is: a sequence of convo
 \end{enumerate}
 
 The deeper we go in the network, we transform the spatial information into a semantic representation. Usually, most of the parameters lie in the fully connected layers
+
 \subsubsection{Classic CNN Architectures}
 
 \Def[LeNet-5 (1998)] The pioneering CNN for handwritten digit recognition (MNIST).
@@ -200,11 +201,15 @@ The deeper we go in the network, we transform the spatial information into a sem
     \item \textbf{Key Features}: Introduced the concepts of local receptive fields, shared weights, and spatial subsampling. Used Sigmoid/Tanh activations (pre-ReLU).
 \end{itemize}
 
+\sep
+
 \Def[AlexNet (2012)] The breakthrough model that popularized Deep Learning on ImageNet.
 \begin{itemize}
     \item \textbf{Structure}: Deeper than LeNet (5 Conv layers, 3 FC layers). Used large filters initially ($11 \times 11$).
     \item \textbf{Innovations}: First large-scale use of \textbf{ReLU} (to solve vanishing gradients), \textbf{Dropout} (for regularization), and \textbf{Data Augmentation}. Trained on GPUs.
 \end{itemize}
+
+\sep
 
 \Def[VGG Network (2014)]
 Focused on the effect of network depth using a uniform architecture.
@@ -213,14 +218,16 @@ Focused on the effect of network depth using a uniform architecture.
     \item \textbf{Reasoning}: Two stacked $3 \times 3$ layers have the same receptive field as a $5 \times 5$ layer but with fewer parameters and more non-linearities (ReLU between layers).
 \end{itemize}
 
+\sep
 
-\Def[Inception Network (GoogLeNet, 2014)]
-Focused on computational efficiency and network "width".
+\Def[Inception Network]
+Focused on computational efficiency and network "width". It was developed by Google in 2014.
 \begin{itemize}
     \item \textbf{Inception Module}: Instead of choosing a filter size, it performs $1 \times 1$, $3 \times 3$, and $5 \times 5$ convolutions (and pooling) \textit{in parallel} and concatenates the outputs.
     \item \textbf{$1 \times 1$ Convolutions}: Used as "Bottleneck layers" to reduce dimensionality (depth) before expensive operations, significantly reducing computational cost.
 \end{itemize}
 
+\sep
 
 \Def[U-Net (2015)]
 Designed for Biomedical Image \textbf{Segmentation} (pixel-wise classification).
@@ -233,13 +240,14 @@ Designed for Biomedical Image \textbf{Segmentation} (pixel-wise classification).
 
 \subsubsection{Convolutions in Sequences, NLP \& Audio}
 
-\Def[1D Convolutions (Temporal ConvNets)] Unlike 2D CNNs for images, sequence modeling uses 1D filters that slide over the time axis.
+\Def[1D Convolutions] Unlike 2D CNNs for images, sequence modeling (Temporal ConvNets) uses 1D filters that slide over the time axis.
 \begin{itemize}
     \item \textbf{Input}: Tensor of shape $(Batch, Length, Channels)$. In NLP, "Channels" are the dimensions of the Word Embeddings.
     \item \textbf{Function}: Captures local temporal dependencies (like $n$-grams in text) effectively.
     \item \textbf{Advantage}: Highly parallelizable (unlike RNNs which are sequential) and computationally efficient.
 \end{itemize}
 
+\sep
 
 \Def[Embeddings \& NLP] CNNs are often applied on top of pre-trained word embeddings (e.g., Word2Vec, GloVe).
 \begin{itemize}

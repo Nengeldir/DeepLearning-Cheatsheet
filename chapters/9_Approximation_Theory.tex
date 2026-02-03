@@ -22,7 +22,9 @@ where \(b = \scprod{\vw,\vp}\). \(\vw = \)normal vector, \(\vp\) points onto a p
 
 \subsection{Universal Approximation}
 
-\Thm[Universal Approximation Theorem] MLPs with one hidden layer and a non-polynomial activation function can approximate any continuous function on a compact subset of \(\R^d\) to arbitrary accuracy \(\epsilon > 0\). Let \(\varphi\) be a non-constant, bounded, and continuous activation function (e.g., Sigmoid, ReLU). There exist weights \(v, w, b\) and an integer \(N\) (number of neurons) such that the network output \(F(x)\) satisfies the condition:
+\Thm[Universal Approximation Theorem] 
+
+MLPs with one hidden layer and a non-polynomial activation function can approximate any continuous function on a compact subset of \(\R^d\) to arbitrary accuracy \(\epsilon > 0\). Let \(\varphi\) be a non-constant, bounded, and continuous activation function (e.g., Sigmoid, ReLU). There exist weights \(v, w, b\) and an integer \(N\) (number of neurons) such that the network output \(F(x)\) satisfies the condition:
 
 \[|f(x) - F(x)| < \epsilon, \quad \forall x \in K\]
 
@@ -40,6 +42,7 @@ $$ |f(x) - P(x)| < \epsilon $$
 \sep
 
 \Thm[Dimension Lifting (Leshno's Theorem)]
+
 By the universal approximation theorem, we know that we can approximate $C(\R)$ with a single hidden layer of ReLUs. The lifting theorem then allows us to lift the dimension of the function space to a higher dimension, i.e. $\text{span}(\{\phi(ax+b): a,b \in \mathbb{R}\})$ universally approximates $C(\mathbb{R}^n)$.
 
 \sep

@@ -27,7 +27,10 @@ It describes the expected information content \(I(\rvX)\) of \(\rvX\).
 
 For probability distributions \(p\) and \(q\) defined on the same probability space, the KL-divergence between \(p\) and \(q\) is defined as
 
-\( KL(p,q) =  -\sum_{\vx\in\cX}p(\vx)\log\left(\frac{q(\vx)}{p(\vx)}\right) =  \sum_{\vx\in\cX}p(\vx)\log\left(\frac{p(\vx)}{q(\vx)}\right) \geq 0. \)
+\begin{align*}
+  KL(p,q) &=  -\sum_{\vx\in\cX}p(\vx)\log\left(\frac{q(\vx)}{p(\vx)}\right) \\
+  &=  \sum_{\vx\in\cX}p(\vx)\log\left(\frac{p(\vx)}{q(\vx)}\right) \geq 0.
+\end{align*}
 
 \( KL(p,q) =  -\Exp[\vx\sim p]{\log\left(\frac{q(\vx)}{p(\vx)}\right)} =  \Exp[\vx\sim p]{\log\left(\frac{p(\vx)}{q(\vx)}\right)} \geq 0. \)
 

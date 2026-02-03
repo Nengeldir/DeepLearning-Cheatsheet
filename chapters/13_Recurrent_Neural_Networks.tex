@@ -1,6 +1,7 @@
-\section{Recurrent Neural Networks (RNNs)}
+\section{Recurrent Neural Networks}
 
 \subsection{Simple Recurrent Networks}
+
 \Def[Concept]: Unlike CNNs (fixed filter widths), RNNs model temporal/sequence data of variable length. They maintain a hidden state $z_t$ acting as a "memory" of the history.
 
 \sep
@@ -46,8 +47,7 @@ $$ \hat{y}_t = \psi(W z_t^{\rightarrow} + \tilde{W} z_t^{\leftarrow}) $$
 \subsubsection{Gated Memory}
 Gates use multiplicative interactions (sigmoid $\sigma$) to control information flow, stabilizing gradients and allowing long-term memory.
 
-\Def[Long Short-Term Memory (LSTM)]:
-Maintains a separate cell state $C_t$ controlled by three gates.
+\Def[LSTMs]: Long Short Term Memory models maintain a separate cell state $C_t$ controlled by three gates.
 $$ C^t = \underbrace{\sigma(F\tilde{x}^t) \odot C^{t-1}}_{\text{Forget}} + \underbrace{\sigma(I\tilde{x}^t) \odot \tanh(\tilde{C}\tilde{x}^t)}_{\text{Input/Update}} $$
 $$ z^t = \sigma(O\tilde{x}^t) \odot \tanh(C^t) $$
 where $\tilde{x}^t = [x_t, z_{t-1}]$.
@@ -56,8 +56,7 @@ where $\tilde{x}^t = [x_t, z_{t-1}]$.
 
 \sep
 
-\Def[Gated Recurrent Unit (GRU)]:
-Simplifies LSTM by merging Cell/Hidden states and Forget/Input gates.
+\Def[GRU]: Gated Recurrent Unit models simplify LSTMs by merging Cell/Hidden states and Forget/Input gates.
 $$ z^t = (1- \Gamma_u) \odot z^{t-1} + \Gamma_u \odot \tilde{z}^t $$
 where $\Gamma_u = \sigma(G[x_t, z_{t-1}])$ is the update gate.
 

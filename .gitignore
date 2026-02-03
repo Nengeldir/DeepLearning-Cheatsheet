@@ -1,0 +1,23 @@
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.lot
+*.lof
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.dvi
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.run.xml
+*.bcf
+*.tdo
+indent.log
+
+# Editors
+.vscode/

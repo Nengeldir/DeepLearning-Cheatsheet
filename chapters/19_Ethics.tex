@@ -128,12 +128,20 @@ The contribution of $x_j$ can be assessed via: \(f(X) - \mathbb{E}\big[f(X)\mid 
 \textbf{Examples of Global questions:}
 \textbf{Information}: how much info does $x_j$ carry about $y$? \\
 \Def[Mutual Information:]
-\[I(X_j;Y) \;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y)}{p(X_j)\,p(Y)}\right]\]\\
-\Def[Conditional Mutual Information:] measures info about $Y$ uniquely contributed by $X_j$, given $X_{-j}$
+
+\[I(X_j;Y) \;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y)}{p(X_j)\,p(Y)}\right]\]
+
+\Def[Conditional Mutual Information:] 
+
+Measures info about $Y$ uniquely contributed by $X_j$, given $X_{-j}$
+
 \[I\big(X_j;Y\mid X_{-j}\big)\;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y\mid X_{-j})}{p(X_j\mid X_{-j})\,p(Y\mid X_{-j})}\right]\]
 
 \sep
-\Def[Predictive Utility] (Leave one feature out (LOFO)): how much risk reduction is obtained by using $x_j$ (in comb. with other features)?
+
+\Def[Predictive Utility] 
+
+(Leave one feature out (LOFO)): how much risk reduction is obtained by using $x_j$ (in comb. with other features)?
 
 \begin{align*}
     \mathcal{R}\big(f_{-j}\big) - \mathcal{R}\big(f\big), \\
@@ -176,7 +184,9 @@ SHAP and SAGE define the importance of $X_j$ by averaging these marginal contrib
 
 \[\mathcal{Q}_{\mathrm{SHAP}}(S) \;=\; \mathbb{E}\!\big[f(X)\mid X_S = x_S\big]\]
 
-\Def[Shapley Additive Global importance] also known as (SAGE), $\mathcal{Q}(S)$ is a performance-level quantity, attributes risk reduction:
+\Def[Shapley Additive Global importance] 
+
+It is also known as (SAGE), $\mathcal{Q}(S)$ is a performance-level quantity, attributes risk reduction:
 
 \[\mathcal{Q}_{\mathrm{SAGE}}(S) \;=\; -\mathcal{R}(f_S), \qquad
 \mathcal{R}(f_S) \;=\; \mathbb{E}\!\left[\ell\big(Y,\,f_S(X_S)\big)\right]\]
