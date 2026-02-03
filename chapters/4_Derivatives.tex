@@ -1,15 +1,16 @@
 \section{Derivatives}
 \subsection{Numerator and Denominator Convention}
 \paragraph{Jacobian Layout Convention}
-% TODO: Fix this! It's numerator layout 
-We use the \emph{denominator-layout}.
+
+We use the \emph{numerator-layout} \\
+
 For a vector-valued function \(f:\mathbb{R}^n \to \mathbb{R}^m\) we define
-\[ \left(\frac{\partial \vf}{\partial \vx}\right)_{ij} : = \frac{\partial f_j}{\partial x_i}, \qquad \frac{\partial \vf}{\partial \vx} \in \mathbb{R}^{n \times m}.\]
-Hence, gradients of scalar-valued functions are column vectors, and the chain rule takes the form
+\[ \left(\frac{\partial \vf}{\partial \vx}\right)_{ij} : = \frac{\partial f_i}{\partial x_j}, \qquad \frac{\partial \vf}{\partial \vx} \in \mathbb{R}^{n \times m}.\]
+Hence, gradients of scalar-valued functions are row vectors, and the chain rule takes the form
 \[\frac{\partial}{\partial \vx}\bigl[\vf(\vg(\vx))\bigr] =  \frac{\partial \vf}{\partial \vg}\,
 \frac{\partial \vg}{\partial \vx}.\]
 
-\textbf{Remark.} Sometimes the \emph{numerator-layout} is used, where the Jacobian is defined as \(\left(\MJ_f\right)_{ij} = \partial f_i/\partial x_j \in \mathbb{R}^{m\times n}\).
+\textbf{Remark.} Sometimes the \emph{denominator-layout} is used, where the Jacobian is defined as \(\left(\MJ_f\right)_{ij} = \partial f_j/\partial x_i \in \mathbb{R}^{n\times m}\).
 The two conventions are related by transposition.
 
 \subsection{Scalar-by-Vector}

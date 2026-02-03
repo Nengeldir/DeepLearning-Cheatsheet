@@ -606,12 +606,6 @@ INPUT .\img\Forward&BackwardMode.png
 INPUT .\img\Forward&BackwardMode.png
 INPUT C:\Users\LuCo\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmsl10.tfm
 INPUT C:\Users\LuCo\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
-INPUT .\img\backprop-graphs.jpg
-INPUT .\img\backprop-graphs.jpg
-INPUT .\img\backprop-graphs.jpg
-INPUT .\img\backprop-graphs.jpg
-INPUT .\img\backprop-graphs.jpg
-INPUT .\img\backprop-graphs.jpg
 INPUT .\chapters\12_Convolutional_Neural_Networks.tex
 INPUT .\chapters\12_Convolutional_Neural_Networks.tex
 INPUT .\chapters\12_Convolutional_Neural_Networks.tex
@@ -660,6 +654,9 @@ INPUT .\img\challenges-curvature-and-gradients.png
 INPUT .\img\challenges-curvature-and-gradients.png
 INPUT .\img\challenges-curvature-and-gradients.png
 INPUT .\img\challenges-curvature-and-gradients.png
+INPUT .\chapters\20_Attention_Transformer.tex
+INPUT .\chapters\20_Attention_Transformer.tex
+INPUT chapters\20_Attention_Transformer.tex
 INPUT .\chapters\15_Geometric_Deep_Learning.tex
 INPUT .\chapters\15_Geometric_Deep_Learning.tex
 INPUT .\chapters\15_Geometric_Deep_Learning.tex
@@ -683,6 +680,11 @@ INPUT .\chapters\18_Generative_Models.tex
 INPUT .\chapters\18_Generative_Models.tex
 INPUT .\chapters\18_Generative_Models.tex
 INPUT chapters\18_Generative_Models.tex
+INPUT .\chapters\19_Ethics.tex
+INPUT .\chapters\19_Ethics.tex
+INPUT .\chapters\19_Ethics.tex
+INPUT .\chapters\19_Ethics.tex
+INPUT chapters\19_Ethics.tex
 INPUT document.aux
 INPUT .\document.out
 INPUT .\document.out

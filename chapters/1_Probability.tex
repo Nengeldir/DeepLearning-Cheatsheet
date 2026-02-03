@@ -6,6 +6,8 @@ Product rule \(P(X, Y) =  P(Y|X) P(X)\)
 
 Independence \(P(X, Y) =  P(X)P(Y)\)
 
+Conditional Independence \(P(X, Y|Z) =  P(X|Z)P(Y|Z)\)
+
 Bayes' Rule \(P(Y|X) =  \frac{P(X|Y)P(Y)}{P(X)} = 
 \frac{P(X|Y)P(Y)}{\sum\limits^k_{i = 1}P(X|Y_i)P(Y_i)}\)
 
@@ -44,7 +46,7 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \sep
 
-\Thm The moment generating function (MGF) \(\psi_{X}(t) = \Exp{e^{tX}}\) characterizes the distr. of a rv
+\Thm[Moment Generating Function] The moment generating function (MGF) \(\psi_{X}(t) = \Exp{e^{tX}}\) characterizes the distr. of a rv
 
 \[Be(p) \quad pe^t + (1 - p)\]
 \[\cN(\mu,\sigma)\quad \exp\left(\mu t +  \frac{1}{2}\sigma^2 t^2\right)\]
@@ -62,6 +64,8 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 \Thm Let \(X\), \(Y\) be indep., then the p.d.f. of \(Z = X + Y\) is the conv. of the p.d.f. of \(X\) and \(Y\): \( f_Z(z) =  \int_{\R} f_X(t)f_Y(z - t) \,dt =  \int_{\R} f_X(z - t)f_Y(t) \,dt \)
 
 \sep
+
+\Def[Normal Distribution]
 
 \( \cN(\vx;\vmu,\MSigma) =  \frac{1}{\sqrt{(2\pi)^d\det(\MSigma)}} \exp\left(-\frac{1}{2}(\vx - \vmu)^\T\MSigma^{-1} (\vx - \vmu)\right) \)
 

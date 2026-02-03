@@ -1,12 +1,11 @@
-\section{Backpropagation and Optimization}
-
-\subsection{Automatic Differentiation}
+\section{Backpropagation \& Optimization}
+\subsection{Automatic Differentiation (AD)}
 
 In neural networks we can efficiently compute the gradient of the loss w.r.t. the parameters \(\nabla_\theta\cR\) by exploiting the computational structure of the network.
 
 \sep
 
-\textbf{Forward Mode AD (Forward Propagation of Tangents)}
+\Def[Forward Mode AD] (Forward Propagation of Tangents)
 Computes the derivative simultaneously with the function evaluation.
 \begin{itemize}
     \item \textbf{Mechanism}: Propagates perturbations $\dot{x}$ forward through the graph. For every node $v_i$, it computes the value $v_i$ and the derivative $\dot{v}_i = \frac{\partial v_i}{\partial x}$.
@@ -18,7 +17,7 @@ Computes the derivative simultaneously with the function evaluation.
 
 \sep
 
-\textbf{Reverse Mode AD (Backpropagation)}
+\Def[Reverse Mode AD] (Backpropagation)
 Computes derivatives after a full function evaluation by traversing the graph in reverse.
 \begin{itemize}
     \item \textbf{Mechanism}: First runs a \textit{Forward Pass} to compute and store intermediate values (Primals). Then runs a \textit{Backward Pass} to propagate adjoints $\bar{v}_i = \frac{\partial L}{\partial v_i}$.
@@ -34,36 +33,25 @@ Computes derivatives after a full function evaluation by traversing the graph in
 
 \Def[Jacobi Matrix of a Map] 
 The Jacobian \(\MJ_F\) of a map \(F\colon\R^n\to\R^m\) is defined as (Numerator Layout)
+\vspace{-3em}
 \begin{align*}
     \MJ_F
     :=
-    \begin{pmatrix}
+    &\begin{pmatrix}
         \horzbar(\nabla F_1)^\T\horzbar \\
         \horzbar(\nabla F_2)^\T\horzbar \\
         \vdots \\
-        \horzbar(\nabla F_m)^\T\horzbar \\
+        \horzbar(\nabla F_m)^\T\horzbar
     \end{pmatrix}
-    =
-    \begin{pmatrix}
+    = \\
+    &\begin{pmatrix}
         \frac{\partial F_1}{\partial x_1} & \frac{\partial F_1}{\partial x_2} & \cdots & \frac{\partial F_1}{\partial x_n} \\
         \frac{\partial F_2}{\partial x_1} & \frac{\partial F_2}{\partial x_2} & \cdots & \frac{\partial F_2}{\partial x_n} \\
         \vdots & \vdots & \ddots & \vdots \\
-        \frac{\partial F_m}{\partial x_1} & \frac{\partial F_m}{\partial x_2} & \cdots & \frac{\partial F_m}{\partial x_n} \\
+        \frac{\partial F_m}{\partial x_1} & \frac{\partial F_m}{\partial x_2} & \cdots & \frac{\partial F_m}{\partial x_n}
     \end{pmatrix} \in\R^{m\times n}
 \end{align*}
-
-\sep
-
-\Thm[Jacobi Matrix Chain Rule]
-
-\(G\colon\R^n\to\R^q\quad H\colon\R^q\to\R^m\)
-
-\(F: = H\circ G\)
-
-Chain-rule for a single component-function \(F_i\colon\R^n\to\R\) of \(F\):
-
-\[\left.\frac{\partial F_i}{\partial x_j}\right|_{\vx = \vx_0} =  \left.\frac{\partial (H\circ G)_i}{\partial x_j}\right|_{\vx = \vx_0} = \sum_{k = 1}^q \left.\frac{\partial H_i}{\partial z_k}\right|_{\vz = G(\vx_0)} \cdot \left.\frac{\partial G_k}{\partial x_j}\right|_{\vx = \vx_0}\]
-
+\vspace{-3em}
 \subsection{Gradient Descent}
 
 \Def[Gradient Descent (GD)]
@@ -88,8 +76,7 @@ Instead of using the final parameter vector \(\theta_T\), this method uses the a
 
 \sep
 
-\Def[Learning Rate (Robbins-Monro Conditions)]
-For Stochastic Gradient Descent (SGD) to guarantee convergence to a local minimum (in non-convex cases) or global minimum (in convex cases), the step size schedule \(\alpha_t\) must satisfy two conditions:
+\Def[Learning Rate (Robbins-Monro Conditions)] For Stochastic Gradient Descent (SGD) to guarantee convergence to a local minimum (in non-convex cases) or global minimum (in convex cases), the step size schedule \(\alpha_t\) must satisfy two conditions:
 
 1.\textbf{Explore Forever}: The steps must sum to infinity to ensure the algorithm can reach the optimum from any starting point, no matter how far.
     $$ \sum_{t=1}^{\infty} \alpha_t = \infty $$
@@ -136,16 +123,3 @@ m_t &= \beta_1 m_{t-1} + (1-\beta_1) \nabla J(\theta_t) \\
 v_t &= \beta_2 v_{t-1} + (1-\beta_2) (\nabla J(\theta_t))^2 \\
 \theta_{t+1} &= \theta_t - \frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t
 \end{align*}
-
-\subsection{Backpropagation Graphs}
-
-The approach a backpropagation graph for a loss \(L\) from a FF network graph is as follows:
-\begin{enumerate}
-  \item (RED) Starting at the loss \(L\) backward: for each node \(n\) and for each of its outputs \(o\) which has a path to the loss, add the node \(\frac{\partial o}{\partial n}\) (at the height of node \(n\)). Connect the output \(o\) and that node \(n\) to that newly created node.
-  \item (BROWN) Starting at the loss backward: for each node \(n\) create a node \(\frac{\partial L}{\partial n}\) (if it doesn't exist already) and connect each previously created partial node (\(\frac{\partial o}{\partial n}\)) to it, and the previously crated (in this step) \(\frac{\partial L}{\partial o}\)'s too.
-\end{enumerate}
-
-\begin{center}
-  \includegraphics[width=0.7\linewidth]{img/backprop-graphs}
-\end{center}
-

@@ -19,9 +19,13 @@ Activation functions are non-linear functions that are applied element-wise to t
 
 \[\sigma(\vx)_i = \frac{1}{1 + e^{-x_i}} \in(0,1) \qquad \frac{\partial \sigma(\vx)}{\partial \vx} = \sigma(\vx)\odot(1-\sigma(\vx)) \]
 
-\[\sigma^{-1}(y) = \ln\left(\frac{y}{1 - y}\right) \quad \nabla_{\vx}\sigma(\vx) = \MJ_{\sigma}(\vx) = \diag(\sigma(\vx)\odot(1 - \sigma(\vx)))\]
+\[\sigma^{-1}(y) = \ln\left(\frac{y}{1 - y}\right)\]
 
-\[\sigma'(x) = \frac{1}{4}\tanh'(\frac{1}{2}x) =  \frac{1}{4}(1 - \tanh^2(\frac{1}{2}x)) \qquad \sigma(-x) = 1 - \sigma(x)\]
+\[\nabla_{\vx}\sigma(\vx) = \MJ_{\sigma}(\vx) = \diag(\sigma(\vx)\odot(1 - \sigma(\vx)))\]
+
+\[\sigma'(x) = \frac{1}{4}\tanh'(\frac{1}{2}x) =  \frac{1}{4}(1 - \tanh^2(\frac{1}{2}x))\]
+
+\[\sigma(-x) = 1 - \sigma(x)\]
 
 \sep
 
