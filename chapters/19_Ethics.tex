@@ -12,7 +12,7 @@
 \end{itemize}
 \sep 
 % binary: label-flipping, min. L_2 perturb., L_infty threat model (maybe add L_2 vs L_infty: vulnerabilty is about dist to dec.-bd.)
-\textbf{Binary Classification:} $f(x) = w^\top x + b$, adverserial perturbation pushes x across decision boundary if $y (w^\top (x + \delta) + b) \leq 0$.\\
+\textbf{Binary Classification:} $f(x) = w^\top x + b$, adverserial perturbation pushes x across decision boundary if $y (w^\top (x + \delta) + b) \leq 0$.
 
 \sep
 
@@ -25,7 +25,7 @@
 \sep
 
 \Thm[Min $L_2$ adverserial perturbation:] Robustness increases with margin $|w^\top x + b|$ 
-and decreases with $\|w\|_2$ \[\delta^\star = -\frac{w^\top x + b}{\|w\|_2^2} w, \quad \|\delta^\star\|_2 = \frac{|w^\top x + b|}{\|w\|_2}\]\\
+and decreases with $\|w\|_2$ \[\delta^\star = -\frac{w^\top x + b}{\|w\|_2^2} w, \quad \|\delta^\star\|_2 = \frac{|w^\top x + b|}{\|w\|_2}\]
 
 \Thm[$L_\infty$ threat model:] If $\|w\|_2 \leq \epsilon$, then $w^\top \delta$ is minimized by choosing \(\delta = -\epsilon \ \text{sign}(yw)\). 
 % multiclass: system of inequalities, closest-competing class, 
@@ -48,17 +48,17 @@ and decreases with $\|w\|_2$ \[\delta^\star = -\frac{w^\top x + b}{\|w\|_2^2} w,
 $J(X) \in \mathbb{R}^{K \times d}$ is the Jacobian with rows $\nabla_x f_k(x)^\top$.\\
 \textbf{Fast-grad.-sign-method (FGSM) Attack:} max. Loss. \[\delta = \epsilon \ \text{sign}(\nabla_x \mathcal{L}(f(x), y)), x^{\text{adv}}= x + \delta_{\text{FGSM}}\] \\
 \textbf{Projected Grad. Descent (PGD) Attack:} iterative refinement of FGSM with projection back onto threat set.
-\[
-\delta_{t+1} = \operatorname{Proj}_{\|\delta\|_p \le \varepsilon}\!\big(\delta_t + \alpha g_t\big),\qquad
-g_t \in \partial_\delta \mathcal{L}\big(f(x+\delta_t),\,y\big).
-\] \\
-For $p=\infty$, a common choice is $g_t = \text{sign}(\nabla_\delta \mathcal{L}(f(x+\delta_t), y))$. \\
+
+\[\delta_{t+1} = \operatorname{Proj}_{\|\delta\|_p \le \varepsilon}\!\big(\delta_t + \alpha g_t\big),\qquad
+g_t \in \partial_\delta \mathcal{L}\big(f(x+\delta_t),\,y\big).\]
+
+For $p=\infty$, a common choice is $g_t = \text{sign}(\nabla_\delta \mathcal{L}(f(x+\delta_t), y))$.
+
 % adverserially robust training
-\textbf{Adversarially robust training:} Instead of $X$ we evaluate at worst-case loss within neighborhood. \\
-\[
-\min_f \; \mathbb{E}\!\left[ \max_{\delta \in \mathcal{S}} \ell\big(Y,\, f(X+\delta)\big) \right], \quad \mathcal{S} = \{\delta: \|\delta\|_p \leq \epsilon\}
-\]
-% \\
+\textbf{Adversarially robust training:} Instead of $X$ we evaluate at worst-case loss within neighborhood. 
+
+\[\min_f \; \mathbb{E}\!\left[ \max_{\delta \in \mathcal{S}} \ell\big(Y,\, f(X+\delta)\big) \right], \quad \mathcal{S} = \{\delta: \|\delta\|_p \leq \epsilon\}\]
+
 \sep
 % Robustness under distibution shift, Robustness in statistics, distributional uncertainty
 % adverserial transport, deterministic perturbs, Wassertein-infty & std adverserial perturbs
@@ -67,57 +67,64 @@ Seek \(\sup_{Q\in \mathcal{U}(P)} \mathbb{E}_Q\left[l(f(Z))\right]\) \\
 Robust statistics studies the stability of statistical procedures under small deviations from an
 assumed model.\\
 \Def[Huber's contamination model:] for arbitrary contaminating dist. $Q$.
-\[
-P_{\epsilon} = (1-\epsilon)P + \epsilon Q
-\]
-\\
-\Thm[Distributionally Robust Optimization (DRO):]
-\[
-\sup_{Q \in \mathcal{U}(P)} \mathbb{E}_Q\big[\ell(f(Z))\big], \quad \mathcal{U}(P) = \text{neighborhood of } P
-\]
-\\
+
+\[P_{\epsilon} = (1-\epsilon)P + \epsilon Q\]
+
+\Thm[Distributionally Robust Optim.] also known as (DRO) seeks to find a model $f$ that is robust to small deviations from an assumed model $P$.
+
+\[\sup_{Q \in \mathcal{U}(P)} \mathbb{E}_Q\big[\ell(f(Z))\big], \quad \mathcal{U}(P) = \text{neighborhood of } P\]
+
 \Def[Wasserstein Balls (around $P$):] 
-\[
-\mathcal{U}_\varepsilon(P)=\{\,Q:\;W_p(P,Q)\le\varepsilon\,\}
-\]
-with \Def[Wasserstein-$p$ Distance:] 
-\[
-W_p(P,Q)=\left(\inf_{\pi\in\Pi(P,Q)}\int d(z,z')^p\,\mathrm{d}\pi(z,z')\right)^{1/p}
-\]
+
+\[\mathcal{U}_\varepsilon(P)=\{\,Q:\;W_p(P,Q)\le\varepsilon\,\}\]
+
+with the Wasserstein p-distance 
+
+\Def[Wasserstein-$p$ Distance:] 
+\[W_p(P,Q)=\left(\inf_{\pi\in\Pi(P,Q)}\int d(z,z')^p\,\mathrm{d}\pi(z,z')\right)^{1/p}\]
+
 \sep
 For empircal \(P_n = \frac 1 n \sum_{i=1}^{n} \delta_{z_i}\), inner $\sup$ is often deterministic.
 \Thm[Adverserial Transport:]
-\[
-\sup_{z_1',\dots,z_n'} \left\{ \frac{1}{n}\sum_{i=1}^n g(z_i') \;\middle|\; 
-\frac{1}{n}\sum_{i=1}^n d(z_i',z_i)^p \le \varepsilon^p \right\}
-\]
-\\
-\Thm[$W_\infty$ Unification:] Worst case risk over a $W_\infty$ ball is equivalent to std. adverserial risk with radius $\rho$.\\
-\[
-\sup_{Q:\;W_\infty(P_n,Q)\le\rho}\mathbb{E}_Q[g]
-= \frac{1}{n}\sum_{i=1}^n \sup_{\|x-x_i\|_2\le\rho} \ell\big(f(x),y_i\big)
-\]
+\[\sup_{z_1',\dots,z_n'} \left\{ \frac{1}{n}\sum_{i=1}^n g(z_i') \;\middle|\; 
+\frac{1}{n}\sum_{i=1}^n d(z_i',z_i)^p \le \varepsilon^p \right\}\]
+
+\Thm[$W_\infty$ Unification:] Worst case risk over a $W_\infty$ ball is equivalent to std. adverserial risk with radius $\rho$.
+
+\[\sup_{Q:\;W_\infty(P_n,Q)\le\rho}\mathbb{E}_Q[g] = \frac{1}{n}\sum_{i=1}^n \sup_{\|x-x_i\|_2\le\rho} \ell\big(f(x),y_i\big)\]
+
+\sep
 
 % Interpretability
 \subsection{Interpretability}
 Interpretability aims to understand the behaviour of a fixed function $f$ or how the learned function $f_S$ 
 depends on a subset of variables $S \subseteq \left\{1, ..., p\right\}$
 
+\sep
+
 % local vs global Interpretability
 \textbf{Examples of Local questions:}
 \begin{itemize}
-    \item \textbf{ceteris paribus}: how does the prediction $f(x)$ change when varying a feature $x_j$ while keeping all other features fixed? \\
-            \(x'_j \longmapsto f\big(x'_j,\,x_{-j}\big), \quad x = \left(x_j, x_{-j}\right)\)
-    \item \textbf{Missing Information}: how does the prediction $f(x)$ change when a feature $x_j$ is not observed? \\
-            Use \Thm[Marginalization] when the variable $x_j$ is unobserved, replace the prediction $f(X)$ with
-            \[
-            \mathbb{E}\big[f(X)\mid X_{-j}=x_{-j}\big]
-            \]
-            The contribution of $x_j$ can be assessed via: \(f(X) - \mathbb{E}\big[f(X)\mid X_{-j}\big]\)\\
-    \item \textbf{Intervention}: how would the target value change if one could intervene and change the value of a feature $x_j$?
-            \Def[Sensitivity] is measured by the partial derivative: \(\frac{\partial f(x)}{\partial x_j}\)\\
+    \item \textbf{ceteris paribus}: How does the prediction $f(x)$ change when varying a feature $x_j$ while keeping all other features fixed? 
+    
+    \[x'_j \longmapsto f\big(x'_j,\,x_{-j}\big), \quad x = \left(x_j, x_{-j}\right)\]
+
+    \item \textbf{Missing Information}: How does the prediction $f(x)$ change when a feature $x_j$ is not observed? Use the marginalization theorem.
+    \item \textbf{Intervention}: How would the target value change if one could intervene and change the value of a feature $x_j$? Use the notion of sensitivity.
 \end{itemize}
+
+\Thm[Marginalization] when the variable $x_j$ is unobserved, replace the prediction $f(X)$ with
+
+\[\mathbb{E}\big[f(X)\mid X_{-j}=x_{-j}\big]\]
+
+The contribution of $x_j$ can be assessed via: \(f(X) - \mathbb{E}\big[f(X)\mid X_{-j}\big]\)
+
 \sep
+
+\Def[Sensitivity:] is measured by the partial derivative: \(\frac{\partial f(x)}{\partial x_j}\)
+
+\sep
+
 \textbf{Examples of Global questions:}
 \textbf{Information}: how much info does $x_j$ carry about $y$? \\
 \Def[Mutual Information:]
@@ -126,49 +133,62 @@ depends on a subset of variables $S \subseteq \left\{1, ..., p\right\}$
 \[I\big(X_j;Y\mid X_{-j}\big)\;=\; \mathbb{E}\!\left[\log\frac{p(X_j,\,Y\mid X_{-j})}{p(X_j\mid X_{-j})\,p(Y\mid X_{-j})}\right]\]
 
 \sep
-\Def[Predictive Utility] (Leave-one-feature-out (LOFO)): how much risk reduction is obtained by using $x_j$ (in comb. with other features)?
-\[
-\mathcal{R}\big(f_{-j}\big) - \mathcal{R}\big(f\big), \quad \mathcal{R}(f_{-j}) = \mathbb{E}\big[\ell(Y, f_{-j}(X_{-j}))\big], \mathcal{R}(f) = \dots
-\]\\
+\Def[Predictive Utility] (Leave one feature out (LOFO)): how much risk reduction is obtained by using $x_j$ (in comb. with other features)?
+
+\begin{align*}
+    \mathcal{R}\big(f_{-j}\big) - \mathcal{R}\big(f\big), \\
+    \mathcal{R}(f_{-j}) = \mathbb{E}\big[\ell(Y, f_{-j}(X_{-j}))\big], \mathcal{R}(f)
+\end{align*}
+
 So for $f$ and $f_{-j}$ trained from sufficiently large function classes, the predictive utility is
 an approximation of the conditional mutual information.
 
-\Def[LOFO via marginalization:] with only one $f$ trained\\
+\Def[LOFO via marginalization:] with only one $f$ trained 
+
 \[\mathcal{R}(f_{-j}) = \mathbb{E}\!\left[\ell\big(Y,\,f(X_{-j},\,\tilde{X}_j)\big)\right], \quad \tilde{X_j} \sim P(X_j|X_{-j})\]
+
 \Def[LOFO via Permutation importance:] Let $\sigma$ be a random permutation of $\left\{1, \dots , n\right\}$
-\[
-\frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x_{-j}^{(i)},\,x_j^{(\sigma(i))})\big)
-\;-\;
-\frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x^{(i)})\big)
-        \]
-        There are methods that try to better approximate the idealized marginalization by replacing permutation with conditional resampling.
-        \(\mathbb{P}\big(X_j \mid X_{-j} = x_{-j}^{(i)}\big)\)\\
-        \textbf{Context-dependent Contributions:}\\
-        \Def[Quantity of Interest \(\mathcal{Q}(S)\)] computed using a subset of variables $X_S \subseteq X$.\\
-        \Def[Marginal Contribution of $X_j$ in context of $S$] \(\Delta_j(S) \;=\; \mathcal{Q}\big(S\cup\{j\}\big) - \mathcal{Q}(S), \quad S \subseteq \left\{1, \dots , p\right\} \setminus \left\{i\right\}\)\\
-        SHAP and SAGE define the importance of $X_j$ by averaging these marginal
-        contributions over all subsets $S$, using Shapley weights:\\
-        \[
-        \phi_j \;=\; \sum_{S \subseteq \{1,\dots,p\}\setminus\{j\}}
-        \frac{|S|!\,(p-|S|-1)!}{p!}\,\big(\mathcal{Q}(S\cup\{j\})-\mathcal{Q}(S)\big)
-        \]\\
-        \Def[SHAP (SHapley Additive exPlanations)] For a fixed instance $x$, $\mathcal{Q}(S)$ is a prediction-level Quantity, attributes predictions:
-        \[
-        \mathcal{Q}_{\mathrm{SHAP}}(S) \;=\; \mathbb{E}\!\big[f(X)\mid X_S = x_S\big]
-        \]\\
-        \Def[SAGE (Shapley Additive Global importance)] \\ 
-        $\mathcal{Q}(S)$ is a performance-level Quantity, attributes risk reduction:
-        \[
-        \mathcal{Q}_{\mathrm{SAGE}}(S) \;=\; -\mathcal{R}(f_S), \qquad
-        \mathcal{R}(f_S) \;=\; \mathbb{E}\!\left[\ell\big(Y,\,f_S(X_S)\big)\right]
-        \]\\
-        SHAP and SAGE provide \textbf{additive explanations} (each variable is
-        assigned a contribution, and the sum of these contributions recovers the total effect), 
-        because Shapley Values $\left\{\phi_j\right\}_{j=1}^{p}$ satisfy the \Thm[Efficiency (Additivity) Property:]
-        \[
-        \sum_{j=1}^p \phi_j \;=\; \mathcal{Q}(\{1,\dots,p\}) - \mathcal{Q}(\varnothing)
-        \]
+
+
+\[\frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x_{-j}^{(i)},\,x_j^{(\sigma(i))})\big) -
+\frac{1}{n}\sum_{i=1}^n \ell\big(y^{(i)},\,f(x^{(i)})\big)\]
+
+There are methods that try to better approximate the idealized marginalization by replacing permutation with conditional resampling.
+
+\[\mathbb{P}\big(X_j \mid X_{-j} = x_{-j}^{(i)}\big)\]
+
+\textbf{Context-dependent Contributions:}
+
+\Def[Quantity of Interest \(\mathcal{Q}(S)\)] computed using a subset of variables $X_S \subseteq X$.
+
+\Def[Marginal Contribution of $X_j$ in context of $S$]
+
+\[\Delta_j(S) \;=\; \mathcal{Q}\big(S\cup\{j\}\big) - \mathcal{Q}(S), \quad S \subseteq \left\{1, \dots , p\right\} \setminus \left\{i\right\}\]
+
+SHAP and SAGE define the importance of $X_j$ by averaging these marginal contributions over all subsets $S$, using Shapley weights:
+
+\begin{align*}
+        \phi_j = \sum_{S \subseteq \{1,\dots,p\}\setminus\{j\}} \frac{|S|!\,(p-|S|-1)!}{p!}\\
+        \big(\mathcal{Q}(S\cup\{j\})-\mathcal{Q}(S)\big)
+\end{align*}
+
+\Def[SHAP (SHapley Additive exPlanations)] For a fixed instance $x$, $\mathcal{Q}(S)$ is a prediction-level quantity, attributes predictions:
+
+\[\mathcal{Q}_{\mathrm{SHAP}}(S) \;=\; \mathbb{E}\!\big[f(X)\mid X_S = x_S\big]\]
+
+\Def[Shapley Additive Global importance] also known as (SAGE), $\mathcal{Q}(S)$ is a performance-level quantity, attributes risk reduction:
+
+\[\mathcal{Q}_{\mathrm{SAGE}}(S) \;=\; -\mathcal{R}(f_S), \qquad
+\mathcal{R}(f_S) \;=\; \mathbb{E}\!\left[\ell\big(Y,\,f_S(X_S)\big)\right]\]
+
+SHAP and SAGE provide \textbf{additive explanations} (each variable is
+assigned a contribution, and the sum of these contributions recovers the total effect), 
+because Shapley Values $\left\{\phi_j\right\}_{j=1}^{p}$ satisfy the \Thm[Efficiency (Additivity) Property:]
+
+\[\sum_{j=1}^p \phi_j \;=\; \mathcal{Q}(\{1,\dots,p\}) - \mathcal{Q}(\varnothing)\]
+
 \sep
+
 \textbf{Causal effect}: what is the causal effect of $x_j$ on $y$?
 \Def[Causal ordering] induces a factorization of the joint distibution with $\text{Pa}(X_j)$ denoting the parents(direct causes) of $X_j$:
 \[
@@ -199,19 +219,24 @@ Fair treatment of different groups or segments of the population in machine lear
 
 % equalized odds 
 \Def[Equalized Odds] A Classifier satisfies Equalized Odds if \(\hat{Y} \indep A | Y\), where $Y$ is the true label. Equivalently:
-\[
-\mathbb{P}(\hat{Y} = 1 | A = a, Y = y) = \mathbb{P}(\hat{Y} = 1 | A = a', Y = y) \quad \forall a,a' \in \mathcal{A}, y \in \{0,1\}
-\]
+
+\begin{align*}
+    \mathbb{P}(\hat{Y} = 1 | A = a, Y = y) \\
+    = \mathbb{P}(\hat{Y} = 1 | A = a', Y = y) \; \forall a,a' \in \mathcal{A}, y \in \{0,1\}
+\end{align*}
+
 % equality of opportunity
-$\hat{Y}$ satisfies \Def[Equality of Opportunity] if \(\hat{Y} \indep A | Y = 1\). Equivalently:
-\[
-\mathbb{P}(\hat{Y} = 1 | A = a, Y = 1) = \mathbb{P}(\hat{Y} = 1 | A = a', Y = 1) \quad \forall a,a' \in \mathcal{A}
-\]
+\Def[Equality of Opportunity] If $\hat{Y}$ satisfies \(\hat{Y} \indep A | Y = 1\), then $\hat{Y}$ satisfies Equality of Opportunity. Equivalently:
+
+\begin{align*}
+    \mathbb{P}(\hat{Y} = 1 | A = a, Y = 1) \\
+    = \mathbb{P}(\hat{Y} = 1 | A = a', Y = 1) \quad \forall a,a' \in \mathcal{A}
+\end{align*}
 
 % Attribute-invariant latent representation-learning
-\Thm[Fairness via Attribute-Inv. Latent Rep. Learning]
-We consider the case of equalized odds.
-Learn latent representation $Z = f(X)$ s.t. it's predictive of $Y$ while preventing recovery of the protected attribute $A$. 
+\Thm[Fairness via Latent Rep. Learning]
+Also called Fairness via Attribute-Inv. Latent Rep. Learning (FALR). We consider the case of equalized odds. Learn latent representation $Z = f(X)$ s.t. it's predictive of $Y$ while preventing recovery of the protected attribute $A$. 
+
 \[X \xrightarrow{f} Z \xrightarrow{h} \hat{Y}, \qquad (Z,\,Y) \xrightarrow{g} \hat{A}\]
 
 This leads to the minimax problem, where $\ell_{\text{task}}$ and $\ell_{\text{adv}}$ are classification losses

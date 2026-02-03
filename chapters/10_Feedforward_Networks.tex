@@ -48,7 +48,10 @@ Linear networks are composed of linear maps (with activation function $\phi = \i
 
 \Def[Autoencoder] tries to learn the identity function.
 
-\[\cR(\theta) = \frac{1}{2n}\sum_{i = 1}^n\norm{\vx - F_\theta(\vx)}_2^2 = \Exp[\vx\sim p_{\text{emp}}]{\ell(\vx,(H\circ G)(\vx))}\]
+\begin{align*}
+    \cR(\theta) &= \frac{1}{2n}\sum_{i = 1}^n\norm{\vx - F_\theta(\vx)}_2^2 \\
+    &= \Exp[\vx\sim p_{\text{emp}}]{\ell(\vx,(H\circ G)(\vx))}
+\end{align*}
 
 Typically, a linear autoencoder can be broken into two parts \(G\) and \(H\) such that
 \(F = H\circ G\approx \vx\mapsto\vx\), where \(G \in \R^{m\times n}\) is the encoder and \(H \in \R^{n\times m}\) is the decoder.

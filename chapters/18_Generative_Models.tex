@@ -5,7 +5,12 @@ Latent variable models $p(x,z) = p(x|z)p(z)$ where the posterior $p(z|x)$ is int
 
 \Def[Evidence Lower Bound (ELBO)]:
 Since $\ln p(x)$ is intractable, we maximize a lower bound (Jensen's Inequality):
-$$ \ln p_\theta(x) \ge \mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_\phi(z|x)}[\ln p_\theta(x|z)]}_{\text{Reconstruction}} - \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_{\text{Regularization}} $$
+
+\begin{align*}
+\ln p_\theta(x) &\ge \mathcal{L}(\theta, \phi; x) = \\
+&\underbrace{\mathbb{E}_{q_\phi(z|x)}[\ln p_\theta(x|z)]}_{\text{Reconstruction}} - \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_{\text{Regularization}} 
+\end{align*}
+
 \begin{itemize}
     \item \textbf{Encoder ($q_\phi$)}: Maps input $x$ to latent parameters $\mu, \Sigma$.
     \item \textbf{Decoder ($p_\theta$)}: Reconstructs $x$ from sampled $z$.
@@ -42,11 +47,14 @@ The Jacobian is triangular, so $\det J = \prod \exp(s(x_{1:d}))$.
 
 \sep
 
-\subsection{Generative Adversarial Networks (GANs)}
+\subsection{Gen. Adversarial Networks (GANs)}
 A minimax game between a Generator $G$ (creates fakes) and Discriminator $D$ (classifies real vs. fake).
 
 \Def[Minimax Objective]:
-$$ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))] $$
+\begin{align*}
+    \min_G \max_D V(D, G) = \\
+    \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))]
+\end{align*}
 
 \textbf{Optimality}:
 \begin{itemize}

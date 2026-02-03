@@ -76,7 +76,7 @@ Instead of using the final parameter vector \(\theta_T\), this method uses the a
 
 \sep
 
-\Def[Learning Rate (Robbins-Monro Conditions)] For Stochastic Gradient Descent (SGD) to guarantee convergence to a local minimum (in non-convex cases) or global minimum (in convex cases), the step size schedule \(\alpha_t\) must satisfy two conditions:
+\Def[Learning Rate Condition] (Robbins-Monro Conditions), for Stochastic Gradient Descent (SGD) to guarantee convergence to a local minimum (in non-convex cases) or global minimum (in convex cases), the step size schedule \(\alpha_t\) must satisfy two conditions:
 
 1.\textbf{Explore Forever}: The steps must sum to infinity to ensure the algorithm can reach the optimum from any starting point, no matter how far.
     $$ \sum_{t=1}^{\infty} \alpha_t = \infty $$
@@ -95,8 +95,7 @@ where $\beta \in [0,1)$ is the momentum term (friction).
 
 \sep
 
-\Def[Nesterov Accelerated Gradient (NAG)]
-A "look-ahead" version of GD. It computes the gradient at the \textit{approximate future position} of the parameters rather than the current position.
+\Def[Nesterov Accelerated Gradient] A "look ahead" version of GD, also called NAG. It computes the gradient at the \textit{approximate future position} of the parameters rather than the current position.
 \begin{align*}
     \vartheta^{t+1} &= \theta^t + \beta(\theta^t - \theta^{t-1}) \\
     \theta^{t+1} &= \vartheta^{t+1} - \eta \nabla f(\vartheta^{t+1})

@@ -10,18 +10,23 @@
 \(\underset{\in\R^{(a + c)}}{\TT} = \underset{\in\R^{(a + b)}}{\TP}\times_b\underset{\in\R^{(b + c)}}{\TQ}\) \todo{Dimensions wrong on this line}
 
 \begin{align*}
-    \underset{r_1\times \cdots\times r_a\times s_1\times\cdots\times s_c}{\TT} = \underset{r_1\times \cdots\times r_a\times s_1\times\cdots\times s_b}{\TP} \times_{s_1,\ldots,s_b} \underset{s_1\times\cdots\times s_b\times t_1\times\cdots\times t_c}{\TQ}
+    \underset{r_1\times \cdots\times r_a\times s_1\times\cdots\times s_c}{\TT} = \\
+    \underset{r_1\times \cdots\times r_a\times s_1\times\cdots\times s_b}{\TP} \times_{s_1,\ldots,s_b} \underset{s_1\times\cdots\times s_b\times t_1\times\cdots\times t_c}{\TQ}
 \end{align*}
 
-where each entry of \(\TT\) is computed as follows: \(T_{i_1,\ldots,i_a,k_1,\ldots,k_c} := \sum_{j_1,\ldots,j_b} P_{i_1,\ldots,i_a,j_1,\ldots,j_b} Q_{j_1,\ldots,j_b,k_1,\ldots,k_c}\)
+where each entry of \(\TT\) is computed as follows: 
+\begin{align*}
+    T_{i_1,\ldots,i_a,k_1,\ldots,k_c} := \sum_{j_1,\ldots,j_b} P_{i_1,\ldots,i_a,j_1,\ldots,j_b} Q_{j_1,\ldots,j_b,k_1,\ldots,k_c}
+\end{align*}
 
 Note that this is just the sum of the multiplications of two numbers which are in corresponding locations in \(\TP\) and \(\TQ\). Essentially, it's the dot product across the dimensions \(s_1,\ldots,s_b\).
 
 Note how this tensor-tensor-multiplication is isomorphic to some matrix-matrix product:
 
-\begin{gather*}
-    T_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}}, \underbrace{k_1,\ldots,k_c}_{\text{``k''}}} := \sum_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}}} P_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}}, \underbrace{j_1,\ldots,j_b}_{\text{``j''}}} Q_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}}, \underbrace{k_1,\ldots,k_c}_{\text{``k''}}}
-\end{gather*}
+\begin{align*}
+    T_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}}, \underbrace{k_1,\ldots,k_c}_{\text{``k''}}} :=\\
+    \sum_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}}} P_{\underbrace{i_1,\ldots,i_a}_{\text{``i''}}, \underbrace{j_1,\ldots,j_b}_{\text{``j''}}} Q_{\underbrace{j_1,\ldots,j_b}_{\text{``j''}}, \underbrace{k_1,\ldots,k_c}_{\text{``k''}}}
+\end{align*}
 
 \sep
 

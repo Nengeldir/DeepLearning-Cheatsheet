@@ -34,10 +34,10 @@
 
 \sep
 
-\Thm[Convolutions are commutative and associative]
+\Thm[Convs are commutative and associative]
 
 \sep
-\Thm[Convolutions are shift-invariant], we define \(f_{\Delta}(t) := f(t + \Delta)\). Then 
+\Thm[Convs are shift-invariant], we define \(f_{\Delta}(t) := f(t + \Delta)\). Then 
 
 \[(f_{\Delta} * h)(u) = (f * h)_{\Delta}(u)\]
 
@@ -74,8 +74,9 @@ For \(f,h\colon\Z\to\R\), we can define the discrete convolution via
 
 For \(f,h\colon \R^d\to\R\) we have
 \begin{align*}
-    (f*h)[u_1,\ldots,u_d] &= \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(t_1,\ldots,t_d)h(u_1-t_1,\ldots,u_d-t_d) \\
-    &= \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(u_1-t_1,\ldots,u_d-t_d)h(t_1,\ldots,t_d)
+    (f*h)[u_1,\ldots,u_d] = \\
+    \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(t_1,\ldots,t_d)h(u_1-t_1,\ldots,u_d-t_d) = \\
+    \sum_{t_1=-\infty}^\infty \cdots \sum_{t_d=-\infty}^\infty f(u_1-t_1,\ldots,u_d-t_d)h(t_1,\ldots,t_d)
 \end{align*}
 
 \sep
@@ -84,8 +85,9 @@ For \(f,h\colon \R^d\to\R\) we have
 
 Let \(f,h\colon\Z\to\R\), then
 \begin{align*}
-    (h\star f)[u] &:= \sum_{t=-\infty}^\infty h[t]f[u+t] = \sum_{t=-\infty}^\infty h[-t]f[u-t] \\
-    &=(\overline{h}*f)[u] =(f*\overline{h})[u] \qquad \text{where }\overline{h}(t)=h(-t).
+    (h\star f)[u]:= \\
+    & \sum_{t=-\infty}^\infty h[t]f[u+t] = \sum_{t=-\infty}^\infty h[-t]f[u-t] \\
+    & (\overline{h}\star f)[u] =(f\star\overline{h})[u] \quad \text{where }\overline{h}(t)=h(-t).
 \end{align*}
 
 aka ``sliding inner product'', non-commutative, kernel ``flipped over'' (\(u + t\) instead of \(u - t\)). If kernel symmetric: cross-correlation = convolution.

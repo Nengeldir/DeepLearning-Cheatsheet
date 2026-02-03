@@ -2,7 +2,7 @@
 \subsection{Numerator and Denominator Convention}
 \paragraph{Jacobian Layout Convention}
 
-We use the \emph{numerator-layout} \\
+\Com We use the \emph{numerator-layout}
 
 For a vector-valued function \(f:\mathbb{R}^n \to \mathbb{R}^m\) we define
 \[ \left(\frac{\partial \vf}{\partial \vx}\right)_{ij} : = \frac{\partial f_i}{\partial x_j}, \qquad \frac{\partial \vf}{\partial \vx} \in \mathbb{R}^{n \times m}.\]
@@ -68,7 +68,10 @@ The two conventions are related by transposition.
 
     \(\frac{\partial}{\partial \vx}\left[\vf(\vg(\vx))\right] = \frac{\partial \vf}{\partial \vg}\frac{\partial \vg}{\partial \vx} = \MJ_f(\vg)\MJ_g(\vx)\) \hfill
 
-    \(\frac{\partial}{\partial \vx}\left[\vf(\vg(\vh(\vx)))\right] =  \frac{\partial \vf(\vg)}{\partial \vg}\frac{\partial \vg(\vh)}{\partial \vh}\frac{\partial \vh}{\partial \vx}\)
+    \begin{align*}
+        \frac{\partial}{\partial \vx}\left[\vf(\vg(\vh(\vx)))\right] \\
+        =\frac{\partial \vf(\vg)}{\partial \vg}\frac{\partial \vg(\vh)}{\partial \vh}\frac{\partial \vh}{\partial \vx}
+    \end{align*}
 \end{multicols*}
 
 \subsection{Scalar-by-Matrix}
@@ -77,8 +80,6 @@ The two conventions are related by transposition.
     \(\frac{\partial}{\partial \MX}\left[\va^\T\MX\vb\right] = \va\vb^\T\)
 
     \(\frac{\partial}{\partial \MX}\left[\va^\T\MX^\T\vb\right] = \vb\va^\T\)
-
-    \(\frac{\partial}{\partial \MX}\left[\va^\T\MX\va\right] = \frac{\partial}{\partial \MX}\left[\va^\T\MX^\T\va\right] = \va\va^\T\)
 
     \(\frac{\partial}{\partial \MX}\left[\va^\T\MX^\T\MX\vb\right] = \MX(\va\vb^\T + \vb\va^\T)\)
 

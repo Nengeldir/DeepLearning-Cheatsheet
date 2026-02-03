@@ -37,6 +37,8 @@ Activation functions are non-linear functions that are applied element-wise to t
 
 \Def[Softmax] \(\softmax(\vx)_i =f(x)_i \)
 
-\[f(x)_i = \frac{e^{x_i}}{\sum_{j=1}^K e^{x_j}} \quad \frac{\partial f(x)_i}{\partial x_j} = \begin{cases} -f(x)_i f(x)_j & i \neq j \\ f(x)_i - f(x)_i f(x)_j & i = j \end{cases}\]
+\begin{align*}
+f(x)_i = \frac{e^{x_i}}{\sum_{j=1}^K e^{x_j}} \; \frac{\partial f(x)_i}{\partial x_j} = \begin{cases} -f(x)_i f(x)_j & i \neq j \\ f(x)_i - f(x)_i f(x)_j & i = j \end{cases}
+\end{align*}
 
 \[\nabla_x f(x) = \MJ_{f}(x) = \diag(f(x)) - f(x)f(x)^T\]

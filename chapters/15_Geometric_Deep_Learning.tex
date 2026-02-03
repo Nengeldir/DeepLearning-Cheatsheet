@@ -31,7 +31,11 @@ $$f(X) = \rho\left( \sum_{m=1}^M \phi(x_m) \right)$$
 
 \Def{PointNet}:
 Architecture for 3D point clouds. Uses a \textbf{T-Net} to predict affine transformations (canonicalization) for rotation invariance.
-$$ \text{Input} \xrightarrow{\text{MLP}} \text{Features} \xrightarrow{\text{Max Pool}} \text{Global Feature} \xrightarrow{\text{MLP}} \text{Output} $$
+
+\begin{align*}
+    \text{Input} \xrightarrow{\text{MLP}} \text{Features} \xrightarrow{\text{Max Pool}} \text{Global Feature}\\
+    \xrightarrow{\text{MLP}} \text{Output}
+\end{align*}
 
 \sep
 
