@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  2 FEB 2026 23:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2026.1.24)  3 FEB 2026 00:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1362,7 +1362,7 @@ Overfull \hbox (0.9157pt too wide) detected at line 51
  []
 
 ) (chapters/11_Backpropagation.tex
-<img/Forward&BackwardMode.png, id=278, 531.1845pt x 355.5684pt>
+<img/Forward&BackwardMode.png, id=282, 531.1845pt x 355.5684pt>
 File: img/Forward&BackwardMode.png Graphic file (type png)
 <use img/Forward&BackwardMode.png>
 Package pdftex.def Info: img/Forward&BackwardMode.png  used on input line 31.
@@ -1396,7 +1396,7 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 
 
  <./img/Forward&BackwardMode.png>]
-<img/backprop-graphs.jpg, id=310, 3695.8075pt x 2470.22874pt>
+<img/backprop-graphs.jpg, id=314, 3695.8075pt x 2470.22874pt>
 File: img/backprop-graphs.jpg Graphic file (type jpg)
 <use img/backprop-graphs.jpg>
 Package pdftex.def Info: img/backprop-graphs.jpg  used on input line 149.
@@ -1421,7 +1421,7 @@ Overfull \hbox (4.47635pt too wide) detected at line 89
 []
  []
 
-<img/convolutions-with-channels.png, id=311, 758.835pt x 674.52pt>
+<img/convolutions-with-channels.png, id=315, 758.835pt x 674.52pt>
 File: img/convolutions-with-channels.png Graphic file (type png)
 <use img/convolutions-with-channels.png>
 Package pdftex.def Info: img/convolutions-with-channels.png  used on input line 177.
@@ -1441,7 +1441,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 3--3
 [][]| \OT1/cmr/bx/n/12 (+20) 13 Re-cur-rent Neu-ral Net-works
  []
 
-<img/deepRNN.png, id=313, 803.0pt x 735.74875pt>
+<img/deepRNN.png, id=317, 803.0pt x 735.74875pt>
 File: img/deepRNN.png Graphic file (type png)
 <use img/deepRNN.png>
 Package pdftex.def Info: img/deepRNN.png  used on input line 42.
@@ -1451,7 +1451,7 @@ Underfull \hbox (badness 6396) in paragraph at lines 49--51
 [][][][][][][]\OT1/cmr/m/n/9 (+20) : Main-
  []
 
-<img/lstm.png, id=314, 987.69pt x 500.87125pt>
+<img/lstm.png, id=318, 987.69pt x 500.87125pt>
 File: img/lstm.png Graphic file (type png)
 <use img/lstm.png>
 Package pdftex.def Info: img/lstm.png  used on input line 55.
@@ -1461,7 +1461,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 59--61
 [][][][][][][]\OT1/cmr/m/n/9 (+20) : Sim-pli-fies
  []
 
-<img/GRU.png, id=315, 804.00375pt x 628.3475pt>
+<img/GRU.png, id=319, 804.00375pt x 628.3475pt>
 File: img/GRU.png Graphic file (type png)
 <use img/GRU.png>
 Package pdftex.def Info: img/GRU.png  used on input line 64.
@@ -1471,7 +1471,7 @@ Overfull \hbox (31.40794pt too wide) detected at line 6
 \OMS/cmsy/m/n/9 r[]R\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 D\OT1/cmr/m/n/9 ) = [] [] = [] []
  []
 
-<img/challenges-curvature-and-gradients.png, id=316, 1839.87375pt x 854.19125pt>
+<img/challenges-curvature-and-gradients.png, id=320, 1839.87375pt x 854.19125pt>
 File: img/challenges-curvature-and-gradients.png Graphic file (type png)
 <use img/challenges-curvature-and-gradients.png>
 Package pdftex.def Info: img/challenges-curvature-and-gradients.png  used on input line 25.
@@ -1501,68 +1501,25 @@ Package resizegather Warning: Equation line 1 is too large by 68.3698pt
 (resizegather)                in environment `gather*' on input line 24.
 
 ) (chapters/18_Generative_Models.tex
-<img/taxonomy-of-generative-models.png, id=317, 2411.0075pt x 1112.155pt>
-File: img/taxonomy-of-generative-models.png Graphic file (type png)
-<use img/taxonomy-of-generative-models.png>
-Package pdftex.def Info: img/taxonomy-of-generative-models.png  used on input line 12.
-(pdftex.def)             Requested size: 161.58601pt x 74.53265pt.
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 3.
 
 
-Package fancyhdr Warning: \footskip is too small (4.0pt): 
-(fancyhdr)                Make it at least 12.0pt, for example:
-(fancyhdr)                \setlength{\footskip}{12.0pt}.
-
-
-pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.49 
-      [2 <./img/backprop-graphs.jpg> <./img/convolutions-with-channels.png> <./img/deepRNN.png> <./img/lstm.png> <./img/GRU.png> <./img/challenges-curvature-and-gradients.png> <./img/taxonomy-of-generative-models.png>]
-Overfull \hbox (92.94371pt too wide) detected at line 87
-[]
+Overfull \hbox (22.35669pt too wide) detected at line 8
+[] \OML/cmm/m/it/9 p[]\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 x\OT1/cmr/m/n/9 ) \OMS/cmsy/m/n/9 ^^U L\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 ^^R; ^^^\OT1/cmr/m/n/9 ; \OML/cmm/m/it/9 x\OT1/cmr/m/n/9 ) = [] \OMS/cmsy/m/n/9 ^^@ []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--95
-
- []
-
-<img/VAE-forward-prop.png, id=335, 2471.2325pt x 1206.5075pt>
-File: img/VAE-forward-prop.png Graphic file (type png)
-<use img/VAE-forward-prop.png>
-Package pdftex.def Info: img/VAE-forward-prop.png  used on input line 117.
-(pdftex.def)             Requested size: 230.83818pt x 112.68637pt.
-<img/VAE-generation.png, id=336, 1325.95375pt x 753.81625pt>
-File: img/VAE-generation.png Graphic file (type png)
-<use img/VAE-generation.png>
-Package pdftex.def Info: img/VAE-generation.png  used on input line 129.
-(pdftex.def)             Requested size: 115.41908pt x 65.60909pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 134--134
+Underfull \hbox (badness 10000) in paragraph at lines 40--40
 []\OT1/cmr/bx/n/9 (+20) Generative Ad-ver-sar-ial Net-works
  []
 
 
-Overfull \hbox (75.29872pt too wide) detected at line 171
-[]
+Overfull \hbox (26.69998pt too wide) detected at line 44
+[] [] \OML/cmm/m/it/9 V\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 D; G\OT1/cmr/m/n/9 ) = \U/msb/m/n/9 E[]\OT1/cmr/m/n/9 [[] \OML/cmm/m/it/9 D\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 x\OT1/cmr/m/n/9 )] + \U/msb/m/n/9 E[]\OT1/cmr/m/n/9 [[](1 \OMS/cmsy/m/n/9 ^^@ \OML/cmm/m/it/9 D\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 G\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 z\OT1/cmr/m/n/9 )))]
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 175--176
-[]$\OMS/cmsy/m/n/9 R[] \OT1/cmr/m/n/9 (+20) = \OMS/cmsy/m/n/9 ^^@[][] [] ^^@
- []
-
-Excluding 'comment' comment.
-Underfull \hbox (badness 10000) in paragraph at lines 277--279
-[][] [] [] \OT1/cmr/m/n/9 (+20) +
- []
-
-<img/GAN-training.png, id=337, 591.20876pt x 299.1175pt>
-File: img/GAN-training.png Graphic file (type png)
-<use img/GAN-training.png>
-Package pdftex.def Info: img/GAN-training.png  used on input line 288.
-(pdftex.def)             Requested size: 230.83818pt x 116.7877pt.
-Excluding 'comment' comment.)
 
 Package fancyhdr Warning: \footskip is too small (4.0pt): 
 (fancyhdr)                Make it at least 12.0pt, for example:
@@ -1572,27 +1529,38 @@ Package fancyhdr Warning: \footskip is too small (4.0pt):
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.67 \end{multicols*}
-                      [3 <./img/VAE-forward-prop.png> <./img/VAE-generation.png> <./img/GAN-training.png>] (document.aux)
+l.64 \Def{
+          Forward Process (Fixed)}: [2 <./img/backprop-graphs.jpg> <./img/convolutions-with-channels.png> <./img/deepRNN.png> <./img/lstm.png> <./img/GRU.png> <./img/challenges-curvature-and-gradients.png>])
+
+Package fancyhdr Warning: \footskip is too small (4.0pt): 
+(fancyhdr)                Make it at least 12.0pt, for example:
+(fancyhdr)                \setlength{\footskip}{12.0pt}.
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.66 \end{multicols*}
+                      [3] (document.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
  ***********
 Package rerunfilecheck Info: File `document.out' has not changed.
-(rerunfilecheck)             Checksum: 64B3185E578D5E3644A0FEAA6D2DAF4B;11679.
+(rerunfilecheck)             Checksum: 812A1BCAA1EBCE545FC97FB01F005086;11868.
  ) 
 Here is how much of TeX's memory you used:
- 45299 strings out of 469959
- 1001398 string characters out of 5470318
- 1986662 words of memory out of 5000000
- 70919 multiletter control sequences out of 15000+600000
- 651020 words of font info for 222 fonts, out of 8000000 for 9000
+ 45246 strings out of 469959
+ 999906 string characters out of 5470318
+ 1986659 words of memory out of 5000000
+ 70872 multiletter control sequences out of 15000+600000
+ 650851 words of font info for 220 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 104i,25n,131p,1088b,1087s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on document.pdf (3 pages, 5174080 bytes).
+ 104i,17n,131p,1088b,1086s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti9.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/LuCo/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
+Output written on document.pdf (3 pages, 2810422 bytes).
 PDF statistics:
- 474 PDF objects out of 1000 (max. 8388607)
- 82 named destinations out of 1000 (max. 500000)
- 47716 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 457 PDF objects out of 1000 (max. 8388607)
+ 80 named destinations out of 1000 (max. 500000)
+ 47704 words of extra memory for PDF output out of 51595 (max. 10000000)
 

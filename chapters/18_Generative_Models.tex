@@ -1,334 +1,76 @@
 \section{Generative Models}
 
-In unsupervised learning our goal is to learn some underlying hidden \emph{structure} of the data (clustering, dimensionality reduction, feature learning, density estimation). Now, generative modeling has the following goal:
+\subsubsection{Variational Autoencoders (VAEs)}
+Latent variable models $p(x,z) = p(x|z)p(z)$ where the posterior $p(z|x)$ is intractable. VAEs approximate it using a parametric encoder $q_\phi(z|x)$.
 
-\textbf{Goal:} given data \(D\), generate new samples from the same distribution \(p_{\text{data}}\). We want to learn \(p_{\text{model}}\) similar to \(p_{\text{data}}\).
-
-The nice thing is that the traning data is cheap, as we need no labels. However, it's a hard task.
-
-In some way or another, any generative model has to cope with density estimation (which is the hard task). This problem is tackled in different ways by the several flavours of generative models:
-
-\begin{center}
-  \includegraphics[width=0.7\linewidth]{img/taxonomy-of-generative-models}
-\end{center}
-
+\Def{Evidence Lower Bound (ELBO)}:
+Since $\ln p(x)$ is intractable, we maximize a lower bound (Jensen's Inequality):
+$$ \ln p_\theta(x) \ge \mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_\phi(z|x)}[\ln p_\theta(x|z)]}_{\text{Reconstruction}} - \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_{\text{Regularization}} $$
 \begin{itemize}
-    \item \textbf{explicit density estimation:} explicitly define and solve for \(p_{\text{model}}(\vx)\)
-    \begin{itemize}
-        \item \textbf{tractable} we can comute \(p_{\text{model}}(\vx)\)
-        \item \textbf{approximate} we approximate \(p_{\text{model}}(\vx)\) in some way
-    \end{itemize}
-    \item \textbf{implicit density estimation:} learn a model that can sample from \(p_{\text{model}}(\vx)\) without explicitly defining it.
+    \item \textbf{Encoder ($q_\phi$)}: Maps input $x$ to latent parameters $\mu, \Sigma$.
+    \item \textbf{Decoder ($p_\theta$)}: Reconstructs $x$ from sampled $z$.
 \end{itemize}
 
-\subsection{Variational Autoencoders (VAEs)}
 
-\textbf{Relation to Autoencoders}
-
-Recall, that with autoencoders, we had defined a concatenation of two differentiable (non-linear) mappings \(\vx\stackrel{E}{\mapsto}\vz\stackrel{D}{\mapsto}\vhx\) (an encoder \(E\) and a decoder \(D\)) and trained it with the following loss \(\norm{\vx - \vhx}_2^2\) (approximating identity function) in order to learn some compressed representation \(\vz\) of \(\vx\) which just contains the essence of \(\vx\) according to some meaningful feature-dimensions.
-
-Further, we could then use \(E\) to bootstrap a classification model, by first applying \(E\), and then a classification network \(C\) and fine-tuning them jointly on the cross-entropy loss.
-
-So the lower-dimensional features \(\vz\) capture the factors of variation in the data. And we can reconstruct an \(\vx\) from its compressed representation \(\vx\).
-
-Now the question is can we us a similar kind of setup to use new images?
+\Def{Reparameterization Trick}:
+To backpropagate through the stochastic node $z \sim \mathcal{N}(\mu, \Sigma)$, we move the noise outside:
+$$ z = \mu + \Sigma^{1/2} \odot \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, I) $$
+This makes $z$ a deterministic, differentiable function of $\phi$ and fixed noise $\epsilon$.
 
 \sep
 
-VAEs define an \emph{intractable} density function \(p_{\text{model}}(\vx)\) with a latent \(\vz\). Having this latent variable allows us to build a network similar to an autoencoder. A tractable lower bound for the intractable density function is then derived and optimized.
+\subsection{Normalizing Flows}
+Learns a bijective mapping $f: \mathcal{Z} \to \mathcal{X}$ from a simple distribution $p_z$ (e.g., Gaussian) to the complex data distribution $p_x$. Allows \textbf{exact likelihood} computation.
 
+\Def{Change of Variables}:
+$$ p_x(x) = p_z(z) \left| \det \frac{\partial f^{-1}(x)}{\partial x} \right| = p_z(f^{-1}(x)) |\det J_{f^{-1}}(x)| $$
+Or in log-domain (maximizing likelihood):
+$$ \ln p_x(x) = \ln p_z(z) - \ln \left| \det \frac{\partial f(z)}{\partial z} \right| $$
+
+\Def{Coupling Layers (RealNVP)}:
+To ensure the Jacobian determinant is computationally cheap, we split variables $x_{1:d}$ and $x_{d+1:D}$:
 \begin{align*}
-    p_{\text{model}}(\vx): = p_\theta(\vx) = \int_{\cZ} \underbrace{p_\theta(\vz)}_{\mathclap{\substack{\text{``latent representation''}\\
-    \text{sample from prior}\\
-    \text{(simple, e.g., MV - Gaussian)}}}} \overbrace{\cDist{p_\theta}{\vx}{\vz}}^{\mathclap{\substack{\text{``Decoder''}\\
-    \text{sample from conditional}\\
-    \text{(complex NN)}}}} \,d\vz 
-\end{align*}    
-
-With VAEs we assume that our data is generated from some underlying unobserved representation \(\vz\). We first sample \(\vz\) and then generate some \(\vx\) from the conditional distribution. Now, we just have to learn the parameters \(\theta\) that maximize the likelihood of the training data. Unfortunately, we cannot optimize the likelihood of our model for the data directly (as it's intractable). 
-
-\(\mcr{\int_{\cZ}} \mcg{p_\theta(\vz)}\mcg{\cDist{p_\theta}{\vx}{\vz}} \,d\vz\)
-\quad\tcr{intractable!}, \tcg{tractable}
-
-Note that different factorizations of the distributions would also intractable
-
-\(\cDist{p_\theta}{\vz}{\vx} = \frac{\tcg{\cDist{p_\theta}{\vx}{\vz} \Dist{p_\theta}{\vz}}}{\tcr{\Dist{p_\theta}{\vx}}}\)
-
-Now, the solution to this is that in addition to the decoder network modeling \(\cDist{p_\theta}{\vx}{\vz}\), we define an additional encoder network \(\cDist{q_\phi}{\vz}{\vx}\) that approximates \(\cDist{p_\theta}{\vz}{\vx}\).
-
-\(\cDist{p_\phi}{\vz}{\vx} \approx \cDist{p_\theta}{\vz}{\vx} = \frac{\tcg{\cDist{p_\theta}{\vx}{\vz} \Dist{p_\theta}{\vz}}}{\tcr{\Dist{p_\theta}{\vx}}}\)
-
-This will allow us to derive a lower bound on the data likelihood that is tractable, which we can optimize.
-
-\sep
-
-A common way to define these distributions is as follows: We assume the latent variable to follow a multivariate gaussian (assumed to be a reasonable prior for latent attributes).
-
-\textbf{Prior:} \(\vz\sim\cN(\vo,\MI)\).
-
-\textbf{Enc. Netw. \(E\):} models \(\cDist{q_\phi}{\vz}{\vx}\) with params \(\phi\) and maps \(\vx\stackrel{E}{\mapsto}(\vmu_{\vz|\vx},\MSigma_{\vz|\vx})\)
-
-\textbf{Dec. Netw. \(D\):} models \(\cDist{p_\theta}{\vx}{\vz}\) with params \(\theta\) and maps \(\vz\stackrel{D}{\mapsto}(\vmu_{\vx|\vz},\MSigma_{\vx|\vz})\)
-
-Note that we use both \emph{diagonal} covariance matrices for \(\MSigma_{\vz|\vx}\) and \(\MSigma_{\vx|\vz}\). So the output of both networks are just two vectors (one for mean, other for diagonal).
-
-\Com Encoder and decoder networks are also called ``recognition/inference'' and ``generation'' networks.
-
-\sep
-
-Now, equipped with our encoder and decoder networks, we can rewrite the data (log) likelihood as follows (note that we omit the product for all points - you'd just have to put a sum over all the instances in front of everything)
-
-\begin{align*}
-    \log(p_\theta(\vx)) &= \Exp[\vz\sim \cDist{q_\phi}{\vz}{\vx}]{\log(p_\theta(\vx))} \quad (\log(p_\theta(\vx))\text{ does not depend on \(\vz\)}) \\
-    &= \Exp[\vz]{\log\left(\frac{\cDist{p_\theta}{\vx}{\vz}\Dist{p_\theta}{\vz}}{\cDist{p_\theta}{\vz}{\vx}}\right)} \quad(\text{Bayes Rule}) \\
-    &= \Exp[\vz]{\log\left(\frac{\cDist{p_\theta}{\vx}{\vz}\Dist{p_\theta}{\vz}}{\cDist{p_\theta}{\vz}{\vx}}\frac{\cDist{q_\phi}{\vz}{\vx}}{\cDist{q_\phi}{\vz}{\vx}}\right)} \quad(\text{Muliply by 1}) \\
-    &= \Exp[\vz]{\log\left(\cDist{p_\theta}{\vx}{\vz}\right)} - \Exp[\vz]{\log\left( \frac{\cDist{q_\phi}{\vz}{\vx}}{\Dist{p_\theta}{\vz}} \right)} + \Exp[\vz]{\log\left(\frac{\cDist{q_\phi}{\vz}{\vx}}{\cDist{p_\theta}{\vz}{\vx}}\right)} \\
-    &= \underbrace{\mcg{\underbrace{\Exp[\vz]{\log\left(\cDist{p_\theta}{\vx}{\vz}\right)}}_{(1)} - \underbrace{KL(\cDist{q_\phi}{\vz}{\vx},\Dist{p_\theta}{\vz})}_{(2)}}}_{\cL(\vx,\theta,\phi)} + \mcr{\underbrace{KL(\cDist{q_\phi}{\vz}{\vx},\cDist{p_\theta}{\vz}{\vx})}_{(3)\geq 0}}
+    y_{1:d} &= x_{1:d} \\
+    y_{d+1:D} &= x_{d+1:D} \odot \exp(s(x_{1:d})) + t(x_{1:d})
 \end{align*}
-
-\begin{enumerate}[label=(\arabic*)]
-    \item Decoder network gives us \(\cDist{p_\theta}{\vx}{\vz}\) and we can compute estimates of this term through sampling. (Sampling differentiable through \emph{reparametrization trick!})\\
-    This term ensures that we reconstruct the data well.
-    \item This KL term (between Gaussians for encoder and \(\vz\) prior) has a nice closed-form solution.\\
-    \todo{Write down what it is!}\\
-    This term ensures that the approximate posterior distribution is close to prior.
-    \item \(\cDist{p_\theta}{\vz}{\vx}\) is intractable (as seen earlier). But we know that the KL-divergence is \(\geq 0\).
-\end{enumerate}
-
-Now what we have is a \emph{tractable lower bound \(\cL\)} (so-called \tcb{variational lower bound, or evidence lower bound ``ELBO''}) for the likelihood
-
-\(\cL(\vx,\theta,\phi)\leq \log(p_\theta(\vx))\)
-
-and we can take its gradient to optimize:
-
-\((\theta^*,\phi^*) = \argmax_{(\theta,\phi)}\sum_{i = 1}^n\cL(\vx^{(i)},\theta,\phi).\)
+The Jacobian is triangular, so $\det J = \prod \exp(s(x_{1:d}))$.
 
 \sep
-
-\textbf{Reparametrization Trick}
-
-\todo{Write it down here!!}
-
-\sep
-
-\textbf{Forward Pass and Backpropagation}
-
-\begin{center}
-  \includegraphics[width=1\linewidth]{img/VAE-forward-prop}
-\end{center}
-
-So, first we do the whole backpropagation. And then we just compute the updates to the parameters \(\theta\) and \(\phi\) via backpropagation.
-
-\todo{Show exactly what the losses are (1) and (2) (or do it as an exercise)}
-
-\sep
-
-\textbf{Generating Data} Here we just sample from the prior, and pass it through the decoder network to get the posterior distribution's parameters, then we sample from that one.
-
-\begin{center}
-  \includegraphics[width=0.5\linewidth]{img/VAE-generation}
-\end{center}
-
-\subsection{Deep Latent Gaussian Models}
 
 \subsection{Generative Adversarial Networks (GANs)}
+A minimax game between a Generator $G$ (creates fakes) and Discriminator $D$ (classifies real vs. fake).
 
-GANs do not try to model a density function but directly aim to build a function to generated data (implicit generative method). The whole optimization motivated by a game-theoretic approach in a 2-player game. GANs sample from a simple random noise distribution and try to learn a transformation (via a NN) to a data distribution.
+\Def{Minimax Objective}:
+$$ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))] $$
 
-\sep
-
-\Def[Discriminator \(D\)] must be a differentiable function parametrized by \(\theta_d\)
-
-\(\vx\stackrel{D}{\mapsto}\Prob{\vx \text{ comes  from true data distr.}}\in[0,1]\)
-
-\ssep
-
-\Def[Generator \(G\)] must be a differentiable function parametrized by \(\theta_g\)
-
-\(\vz\sim\cN(\vmu,\MSigma)\stackrel{G}{\mapsto}\vx\text{ (one falsified data sample)}\)
-
-(one may also use another prior)
-
-\(\vz\) is sampled from the prior distr. over latent vars (source of randomness)
-
-\sep
-
-\(D\) tries to make \(D(G(\vz))\) near 0 (for fake data)
-
-\(D\) tries to make \(D(\vx)\) near 1 (\(\vx\) sampled from true data)
-
-\(G\) tries to make \(D(G(\vz))\) near 1
-
-\Com In some sense \(G\) implicitly tries to make \(D(\vx)\) near 0 (since it uses the negative loss of \(D\)) see Minimax game VS Non-Saturating game.
-
-\sep
-
-\textbf{Minimax Game:} Both \(D\) and \(G\) try to minimize and maximize the same value function:
-
-\begin{align*}
-    V(G,D) &= \min_{G}\max_{D} \cR^{(D)} \\
-    &= \min_{\theta_g}\max_{\theta_d} \Exp[\vx\sim p_{\text{data}}]{\log(D_{\theta_d}(\vx))} + \Exp[\vz\sim p(\vz)]{\log(1-D_{\theta_d}(G_{\theta_g}(\vz)))}
-\end{align*}
-
-\todo{Write it in terms of cross-entropy!!}
-
-\(\cR^{(D)} = -\frac{1}{2}\Exp[\vx\sim p_{\text{data}}]{\log(D(\vx))} - \frac{1}{2}\underbrace{\Exp[\vz\sim \cN(\vmu,\MSigma)]{\log(1 - D(G(\vz)))}}_{=\Exp[\vx\sim p_{\text{generator}}]{\log(1 - D(\vx))}}\)
-
-\(\cR^{(G)} = -\cR^{(D)}\)
-
+\Def{Optimality}:
 \begin{itemize}
-  \item The loss \(\cR^{(D)}\) is simply the cross-entropy between \(D\)'s predictions and the correct labels in the binary classification task (real/fake)
-  \item The equilibrium of this game is saddle point of the discriminator loss
-  \item If we look for this equilibrium the whole procedure resembles minimizing the Jensen-Shannon divergence between the true data distribution and the generator distribution.
-  \item So \(G\) minimizes the log-probability of \(D\) being correct
+    \item \textbf{Optimal Discriminator}: For a fixed $G$, $D^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$.
+    \item \textbf{Global Minimum}: Achieved when $p_g = p_{data}$. The value is $-\log 4$ (related to Jensen-Shannon Divergence).
+\end{itemize}
+
+
+\Def{Training Issues}:
+\begin{itemize}
+    \item \textbf{Vanishing Gradients}: If $D$ is perfect, $\log(1-D(G(z)))$ saturates. Fix: Train $G$ to maximize $\log D(G(z))$ (Non-Saturating Loss).
+    \item \textbf{Mode Collapse}: $G$ maps all $z$ to a single plausible $x$ to cheat $D$.
 \end{itemize}
 
 \sep
 
-\todo{Show Equivalence to Jensen Shannon Divergence}
+\subsection{Denoising Diffusion Models (DDPM)}
+Learns to reverse a gradual noising process.
 
-\sep
+\Def{Forward Process (Fixed)}:
+Markov chain adding Gaussian noise according to schedule $\beta_t$:
+$$ q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I) $$
+\textbf{Closed form} sampling at step $t$ (using $\alpha_t = 1-\beta_t$ and $\bar{\alpha}_t = \prod \alpha_i$):
+$$ x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, \quad \epsilon \sim \mathcal{N}(0, I) $$
 
-\textbf{What is the solution \(D(\vx)\) in terms of \(p_{\text{data}}\) and \(p_{\text{generator}}\) at the equilibrium?}
+\Def{Reverse Process (Learned)}:
+Approximated by a neural network with parameters $\theta$:
+$$ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t)) $$
 
-In the equilibrium it must hold that the gradient of the discriminator is zero, because the discriminator otherwise would improve (thus change) itself.
-
-\(\frac{\partial \cR^{(D)}}{\partial D(\vx)} = -\frac{1}{2}\Exp[\vx\sim p_{\text{data}}]{\frac{1}{D(\vx)}} + \frac{1}{2}\Exp[\vx\sim p_{\text{generator}}]{\frac{1}{1 - D(\vx)}} \mbeq 0 \)
-
-\( \Longleftrightarrow \Exp[\vx\sim p_{\text{data}}]{\frac{1}{D(\vx)}} = \Exp[\vx\sim p_{\text{generator}}]{\frac{1}{1 - D(\vx)}} \)
-
-\(\Longleftrightarrow \int_{\cX} p_{\text{data}}(\vx)\frac{1}{D(\vx)}\,d\vx = \int_{\cX} p_{\text{generator}}(\vx)\frac{1}{1 - D(\vx)}\,d\vx \)
-
-Recall: we can get rid of the integral as it is just a function operator. Using the inverse of the operator, we can get rid of it and the solution constraints on the optimal \(D(\vx)\) still remain the same.
-
-\(\Longleftrightarrow p_{\text{data}}(\vx)\frac{1}{D(\vx)} = p_{\text{generator}}(\vx)\frac{1}{1 - D(\vx)}\)
-
-\begin{comment}
-\(
-\Longleftrightarrow
-p_{\text{data}}(\vx)\frac{1 - D(\vx)}{D(\vx)}
-= 
-p_{\text{generator}}(\vx)
-\)
-
-\(
-\Longleftrightarrow
-p_{\text{data}}(\vx)\frac{1}{D(\vx)} -  p_{\text{data}}(\vx)
-= 
-p_{\text{generator}}(\vx)
-\)
-
-\(
-\Longleftrightarrow
-p_{\text{data}}(\vx)\frac{1}{D(\vx)}
-= 
-p_{\text{data}}(\vx) +  p_{\text{generator}}(\vx) 
-\)
-
-\(
-\Longleftrightarrow
-\frac{1}{D(\vx)}
-= 
-\frac{p_{\text{data}}(\vx) + p_{\text{generator}}(\vx)}{p_{\text{data}}(\vx)}
-\)
-
-\(
-\Longleftrightarrow
-D(\vx)
-= 
-\frac{p_{\text{data}}(\vx)}{p_{\text{data}}(\vx) + 
-p_{\text{generator}}(\vx)} \)
-\end{comment}
-
-Then we get the following stationarity condition: The optimal \(D(\vx)\) for any \(p_{\text{data}}(\vx)\) and \(p_{\text{generator}}(\vx)\) is always
-
-\( D(\vx) = \frac{p_{\text{data}}(\vx)}{p_{\text{data}}(\vx) +  p_{\text{generator}}(\vx)} \)
-
-Note that by stationarity condition we mean that this must hold in the Nash equilibrium (where both players stop adapting themselves).
-
-Estimating this ratio using supervised learning is the key approximation mechanism used by GANs.
-
-\todo{Maybe relate this to other ratios where \(\alpha\neq 1\). Implicit Models}
-
-\todo{Why did we want to show this??}
-
-What assumptions are needed to obtain this solution?
-
-We need to assume that both densities are nonzero everywhere. If we don't make this assumption then there's this issue that the discriminator's input space might never be sampled during its training process. Then these points would have an undefined behaviour since they're never trained.
-
-\sep
-
-\textbf{Training Procedure:} Use SGD-like algorithm of choice (ADAM) on two minibatches simultaneously. At each iteration, we choose:
-\begin{itemize}
-    \item a minibatch of true data samples
-    \item a minibatch of noise vectors to produce minibatch generated samples
-\end{itemize}
-
-Then compute both losses and perform gradient updates.
-
-\(\theta_d^{t + 1}\gets\theta_d^t - \eta_t\nabla_{\theta_d}\cR^{(D)}(\theta_d)\)
-
-\(\theta_g^{t + 1}\gets\theta_g^t - \eta_t\nabla_{\theta_g}\cR^{(G)}(\theta_g)\)
-
-Optional: run \(k\geq 1\) update steps of \(D\) for every iteration (and only \(1\) update step for \(G\)).
-
-So we alternate between
-\begin{itemize}
-    \item \textbf{Gradient ascent} on \(D\)\\
-    \(\max_{\theta_d} \Exp[\vx\sim p_{\text{data}}]{\log(D_{\theta_d}(\vx))} + \Exp[\vz\sim p(\vz)]{\log(1 - D_{\theta_d}(G_{\theta_g}(\vz)))}\)
-    \item \textbf{Gradient descent} on \(G\)\\
-    \(\min_{\theta_g} \Exp[\vz\sim p(\vz)]{\log(1 - D_{\theta_d}(G_{\theta_g}(\vz)))}\)
-\end{itemize}
-
-\ssep
-
-Note that this training algorithm uses a heuristically motivated loss (that is a bit different) for the generator to have better gradients when the discriminator is good:
-
-\begin{center}
-    \includegraphics[width=1\linewidth]{img/GAN-training}
-\end{center}
-
-\sep
-
-\todo{From here on until end was not treated in lecture. See comments}
-
-\todo{Include Perceptron and it's learning algorithm}
-
-\begin{comment}
-What prevents the generator from just learning about one specific true image and
-then constantly outputting it? (as it would be indistinguishable)
-
-If we're able to correctly play the Minimax game then \(G\) is not able to
-consistently fool \(D\) by always generating the same sample. \(D\) would learn to
-recognize that sample and reject it as fake.
-
-\todo{Also write about mode collapse.}
-
-\sep
-
-Improvements of this model could use importance sampling in both latent and true
-data space to improve \(G\).
-
-\sep
-
-\textbf{Non-Saturating Game}
-
-Here we change \(G\)'s loss as follows
-
-\(
-\cR^{(G)}
-= 
--\frac{1}{2}\Exp[\vz\sim\cN(\vmu,\MSigma)]{D(G(\vz))}.
-\)
-
-Hence the equilibrium is no longer describable with a single loss. Now the
-generator just maximizes the log-probability of the discriminator being
-mistaken. Heuristically motivated: \(G\) can still learn even when
-\(D\) successfully rejects all generator samples.
-
-The problem with the Minimax game is that when \(D\) becomes to smart, the
-gradient for \(G\) goes away.
-
-\sep
-\end{comment}
-
+\Def{Simplified Objective}:
+Instead of predicting the image mean $\mu$, we predict the noise $\epsilon$ added at step $t$:
+$$ L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t) \|^2 \right] $$
