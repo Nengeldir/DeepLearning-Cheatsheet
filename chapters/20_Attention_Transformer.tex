@@ -1,8 +1,100 @@
 \section{Attention \& Transformers}
 
 % Attention: Token Paradigm, Attention mixing, Query-key matching
+We generally work under the \textbf{token paradigm} (sequence of tokens in embedding-form).
+\[
+x_1,\dots,x_T,\qquad
+X = [x_1,\dots,x_T] \in \mathbb{R}^{n\times T}
+\]\\
+The fundamental idea is
+to map the non-contextualized (or less-contextualized) embeddings to contextualized (or
+more-contextualized) representations.
+\[
+\xi_1,\dots,\xi_T,\qquad
+\Xi = [\xi_1,\dots,\xi_T] \in \mathbb{R}^{m\times T}
+\]\\
+
+\sep
+\textbf{Attention Mechanism} produces numbers $\alpha_{s t}$ that are then used to convexly combine the input representation into a new one.\\
+\Def[Attention weights] $\alpha_{s t}$ cleverly indexes the "memory" of the model and retrieves the important bits.
+Note that attention weights have a \textbf{source} (where attention emerges, index s) and a \textbf{target}
+(where attention extracts information, index t).
+\[
+\xi_s \;\equiv\; \sum_t \alpha_{s t}\,W x_t,\qquad
+\alpha_{s t} \ge 0,\qquad
+\sum_t \alpha_{s t} = 1
+\]\\
+\Def[Attention Matrix] summarize the Attention weights
+\[
+A = (a_{s t}) \in \mathbb{R}^{T\times T},\qquad
+\text{s.t.}\quad \Xi = W X A^\top
+\]\\
+\sep
+\textbf{Bi-Linear Query-Key Matching Function} $U_Q, U_K$ project X to a query and key matrix\\
+\[
+Q = U_Q X,\qquad K = U_K X,\qquad U_Q,\,U_K \in \mathbb{R}^{q\times n}
+\]\\
+Produce \Def[Matching Matrix] via inner products of queries and keys
+\[
+Q^\top K \;=\; X^\top U_Q^\top U_K X \in \mathbb{R}^{T\times T},\qquad
+\operatorname{rank}(Q^\top K) \le q
+\]\\
+The matching matrix already matches the dimensions of the attention matrix. But is commonly passed through a softmax (to normalize \& guarantee non-negativity).\\
+\[
+A = \operatorname{softmax}\big(\beta\,Q^\top K\big),\qquad
+a_{s t} \;=\; \frac{\exp\!\big(\beta\,[Q^\top K]_{s t}\big)}{\sum_r \exp\!\big(\beta\,[Q^\top K]_{s r}\big)}
+\]\\
+Usually $\beta = \frac{1}{\sqrt{q}}$. This facilitates training (through variance stabilizing scaling).\\
+% \sep
 
 % Transformers: Multi-headed attention, Feature transformation, Depth & position, Masked and cross attention, 
+\subsection{Transformers}
+\Def[Transformer] \\ is an architecture that takes the idea of attention to the extreme.\\
+\Def[Multi-Headed Attention] \\ runs multiple attention mechanisms in parallel ($r$ \textbf{heads}). Replicate matrices $U_k, U_Q, W$, $r$ times, 
+perform the attention-based propagation \(X \mapsto \Xi_i \qquad (1 \le i \le r)\) and then concatenate the matrices $\Xi_i$ along the feature dimension.\\
+\Thm[Feature Transformation]\\
+In order to
+gain more representational power, one also needs to allow for a learnable transformation
+of features. 
+Transformers do this following the network-within-network design pattern by
+applying a per-token transformation with a feedforward network (MLP).
+$F_\theta$ is an MLP applied columnwise to $\Xi$:
+\[
+X \mapsto \Xi \mapsto F_\theta(\Xi),\qquad
+F_\theta(\Xi) = \big(F_\theta(\xi_1),\dots,F_\theta(\xi_T)\big).
+\]\\
+When we add resiudal connections and normalization layers, we arrive at a typical encoder block of a Transformer.\\
+\begin{center}
+    \includegraphics[width=0.35\linewidth]{img/Transformer_encoder_block.png}
+\end{center}
+\Thm[Depth]\\
+Stack transformer blocks in a compositonal manner. One block relies on the per token output of the previous.
+typically depth is between 6 \& 10.\\
+\Thm[Position Encoding]\\
+Transformer architecture is \textbf{permutation invariant}. To overcome this, we need to inject information about the position of tokens in the sequence.\\
+This can either be fixed or learned. A common fixed choice is the K sinusoidal-function encoding:
+\[
+p_{t k} = \begin{cases}
+\sin\big(t\,\omega_k\big), & k\ \text{even},\\[4pt]
+\cos\big(t\,\omega_k\big), & k\ \text{odd},
+\end{cases}\qquad
+\omega_k = C^{k/K}\quad (C = 10000).
+\]
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{img/sinusoidal encoding.png}
+\end{center}
+\Thm[Masked Attention]\\
+When transformers operate in coupled encoder-decoder pairs the decoder is operated in an autoregressive fashion, where the next output
+for the $t$-th token depends on the encoder, but also the produced token representations for
+$s < t$. This can be accomplished in a transformer by simply restricting attention to the
+past (no masks are worn).\\
+\begin{center}
+    \includegraphics[width=0.6\linewidth]{img/masked attention.png}
+\end{center}
+\Def[Cross-Attention] to the representations produced by the encoder. Often decoder and encoder
+are of the same depth and cross-attention is implemented across layers of the same depth.
+Note that in cross-attention the queries emerge from the decoder, whereas keys and values
+are derived from the encoder states.
 
 % LLMs: bayes rule, Neural language models, BERT, Talking LLMS
 
