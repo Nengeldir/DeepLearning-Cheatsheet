@@ -1,9 +1,9 @@
 \section{Generative Models}
 
-\subsubsection{Variational Autoencoders (VAEs)}
+\subsection{Variational Autoencoders (VAEs)}
 Latent variable models $p(x,z) = p(x|z)p(z)$ where the posterior $p(z|x)$ is intractable. VAEs approximate it using a parametric encoder $q_\phi(z|x)$.
 
-\Def{Evidence Lower Bound (ELBO)}:
+\Def[Evidence Lower Bound (ELBO)]:
 Since $\ln p(x)$ is intractable, we maximize a lower bound (Jensen's Inequality):
 $$ \ln p_\theta(x) \ge \mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_\phi(z|x)}[\ln p_\theta(x|z)]}_{\text{Reconstruction}} - \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_{\text{Regularization}} $$
 \begin{itemize}
@@ -11,8 +11,9 @@ $$ \ln p_\theta(x) \ge \mathcal{L}(\theta, \phi; x) = \underbrace{\mathbb{E}_{q_
     \item \textbf{Decoder ($p_\theta$)}: Reconstructs $x$ from sampled $z$.
 \end{itemize}
 
+\sep
 
-\Def{Reparameterization Trick}:
+\Def[Reparameterization Trick]:
 To backpropagate through the stochastic node $z \sim \mathcal{N}(\mu, \Sigma)$, we move the noise outside:
 $$ z = \mu + \Sigma^{1/2} \odot \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, I) $$
 This makes $z$ a deterministic, differentiable function of $\phi$ and fixed noise $\epsilon$.
@@ -22,10 +23,14 @@ This makes $z$ a deterministic, differentiable function of $\phi$ and fixed nois
 \subsection{Normalizing Flows}
 Learns a bijective mapping $f: \mathcal{Z} \to \mathcal{X}$ from a simple distribution $p_z$ (e.g., Gaussian) to the complex data distribution $p_x$. Allows \textbf{exact likelihood} computation.
 
+\sep
+
 \Def{Change of Variables}:
 $$ p_x(x) = p_z(z) \left| \det \frac{\partial f^{-1}(x)}{\partial x} \right| = p_z(f^{-1}(x)) |\det J_{f^{-1}}(x)| $$
 Or in log-domain (maximizing likelihood):
 $$ \ln p_x(x) = \ln p_z(z) - \ln \left| \det \frac{\partial f(z)}{\partial z} \right| $$
+
+\sep
 
 \Def{Coupling Layers (RealNVP)}:
 To ensure the Jacobian determinant is computationally cheap, we split variables $x_{1:d}$ and $x_{d+1:D}$:
@@ -40,17 +45,18 @@ The Jacobian is triangular, so $\det J = \prod \exp(s(x_{1:d}))$.
 \subsection{Generative Adversarial Networks (GANs)}
 A minimax game between a Generator $G$ (creates fakes) and Discriminator $D$ (classifies real vs. fake).
 
-\Def{Minimax Objective}:
+\Def[Minimax Objective]:
 $$ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))] $$
 
-\Def{Optimality}:
+\textbf{Optimality}:
 \begin{itemize}
     \item \textbf{Optimal Discriminator}: For a fixed $G$, $D^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$.
     \item \textbf{Global Minimum}: Achieved when $p_g = p_{data}$. The value is $-\log 4$ (related to Jensen-Shannon Divergence).
 \end{itemize}
 
+\sep
 
-\Def{Training Issues}:
+\Com \textbf{Training Issues}:
 \begin{itemize}
     \item \textbf{Vanishing Gradients}: If $D$ is perfect, $\log(1-D(G(z)))$ saturates. Fix: Train $G$ to maximize $\log D(G(z))$ (Non-Saturating Loss).
     \item \textbf{Mode Collapse}: $G$ maps all $z$ to a single plausible $x$ to cheat $D$.
@@ -61,16 +67,20 @@ $$ \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_
 \subsection{Denoising Diffusion Models (DDPM)}
 Learns to reverse a gradual noising process.
 
-\Def{Forward Process (Fixed)}:
+\Def[Forward Process (Fixed)]:
 Markov chain adding Gaussian noise according to schedule $\beta_t$:
 $$ q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I) $$
 \textbf{Closed form} sampling at step $t$ (using $\alpha_t = 1-\beta_t$ and $\bar{\alpha}_t = \prod \alpha_i$):
 $$ x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, \quad \epsilon \sim \mathcal{N}(0, I) $$
 
-\Def{Reverse Process (Learned)}:
+\sep
+
+\Def[Reverse Process (Learned)]:
 Approximated by a neural network with parameters $\theta$:
 $$ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t)) $$
 
-\Def{Simplified Objective}:
+\sep
+
+\Def[Simplified Objective]:
 Instead of predicting the image mean $\mu$, we predict the noise $\epsilon$ added at step $t$:
 $$ L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t) \|^2 \right] $$

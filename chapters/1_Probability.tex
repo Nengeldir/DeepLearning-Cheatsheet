@@ -33,11 +33,7 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \(\Var{\MA\MX} = \MA\Var{\MX}\MA^\T\) \quad \(\Var{aX + b} = a^2\Var{X}\)
 
-\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  2\sum_{i<j}a_ia_j\Cov{X_i,X_j}}
-\)
-
-\( \textstyle{\Var{\sum_{i = 1}^n a_iX_i} =  \sum_{i = 1}^n a_i^2\Var{X_i} +  \sum_{i\neq j}a_ia_j\Cov{X_i,X_j}}
-\)
+\[\Var{\sum_{i = 1}^n a_iX_i} = \sum_{i = 1}^n a_i^2\Var{X_i} +  2\sum_{i<j}a_ia_j\Cov{X_i,X_j} \]
 
 \sep
 
@@ -50,11 +46,12 @@ Cond. Ind. \( \rX\perp\rY|Z \Longrightarrow \cProb{X}{Y,Z} = \cProb{X}{Z} \)
 
 \Thm The moment generating function (MGF) \(\psi_{X}(t) = \Exp{e^{tX}}\) characterizes the distr. of a rv
 
-\begin{tabular}{@{}l@{}l|l@{}l@{}}
-    \(Be(p)\): & \(pe^t + (1 - p)\) & \(\cN(\mu,\sigma)\): & \(\exp\left(\mu t +  \frac{1}{2}\sigma^2 t^2\right)\)\\
-    \(Bin(n,p)\):\, & \((pe^t +  (1 - p))^n\)\, & \(Gam(\alpha,\beta)\):\, & \(\left(\frac{1}{a - \beta t}^\alpha\right)\) for \(t<1/\beta\) \\
-    \(Pois(\lambda)\): & \(e^{\lambda(e^t - 1)}\)\\
-\end{tabular}
+\[Be(p) \quad pe^t + (1 - p)\]
+\[\cN(\mu,\sigma)\quad \exp\left(\mu t +  \frac{1}{2}\sigma^2 t^2\right)\]
+\[Bin(n,p)\quad (pe^t +  (1 - p))^n\]
+\[Gam(\alpha,\beta)\quad \left(\frac{1}{a - \beta t}^\alpha\right)\] for \(t<1/\beta\) \\
+\[Pois(\lambda)\quad e^{\lambda(e^t - 1)}\]
+
 
 \sep
 

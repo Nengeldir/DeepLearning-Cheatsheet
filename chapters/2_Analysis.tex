@@ -25,11 +25,13 @@ Special case: \(\Exp{XY}^2\leq\Exp{X^2}\Exp{Y^2}\).
 
 \sep
 
-\Def[Convex Function] A function \(f\colon S\to\R\) defined on a \emph{convex set} \(S\subseteq\R^d\) is called \emph{convex} if
+\Def[Convex Function] A function \(f\colon S\to\R\) defined on a \emph{convex set} \(S\subseteq\R^d\) is called \emph{convex} if \(\forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\) 
 
-\[\forall\vx,\vx'\in S, \,\lambda\in[0,1]\colon\quad f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)\]
+\[ f(\lambda\vx +  (1 - \lambda)\vx')\leq\lambda f(\vx) +  (1 - \lambda)f(\vx)\]
 
 \Com A function is strictly convex if the line segment between any two points on the graph of the function lies strictly above the graph. This guarantees that there is a unique global minimum.
+
+\sep
 
 \Thm[Properties of Convex Functions]
 \begin{itemize}
