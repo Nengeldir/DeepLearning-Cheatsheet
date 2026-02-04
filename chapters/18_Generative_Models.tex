@@ -149,4 +149,22 @@ $$ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\thet
 Instead of predicting the image mean $\mu$, we predict the noise $\epsilon$ added at step $t$:
 $$ L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t) \|^2 \right] $$
 
-% Factor Analysis, Autoregressive Modles
+\subsection{Autoregressive Models}
+\Thm[AR for Density Estimation]\\
+Any joint density can be factorized as a product of conditionals
+\[
+p(\mathbf{x}) \;=\; \prod_{i=1}^d p(x_i \mid \mathbf{x}_{<i})
+\]
+Traditional linear AR models in statistics use:
+\[
+p(x_i \mid \mathbf{x}_{<i}) \;=\; \mathcal{N}\!\left(x_i;\; \sum_{k=1}^K \theta_k x_{i-k},\; \sigma^2\right)
+\]
+To obtain richer models, we can model each conditional with a DNN
+Properties:
+\begin{itemize}
+    \item exact likelihood evaluation (fully tractable)
+    \item sampling is sequential over dimensions (can be slow)
+    \item AR structure $\to$ triangular Jacobian in flows
+\end{itemize}
+
+VAEs \& GANs are complicated to learn / not always successful. AR models are simple (look at chainrule \(p(x_1,\dots,x_m) \;=\; \prod_{t=1}^m p(x_t \mid x_{1:t-1})\))
