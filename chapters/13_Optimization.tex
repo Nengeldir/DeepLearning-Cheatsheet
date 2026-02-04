@@ -26,7 +26,7 @@ Under certain conditions SGD converges to the optimum:
 \begin{itemize}
   \item If we have a convex, or strongly convex objective,
   \item and if we have Lipschitz continous gradients,
-  \item and a deaying learning rate, s.t.
+  \item and a decaying learning rate, s.t.
   \[\underbrace{\sum_{t = 1}^\infty\eta_t = \infty}_{\mathclap{\text{we get far enough}}}, \qquad \underbrace{\sum_{t = 1}^\infty\eta_t^2<\infty}_{\text{our steps get always smaller}}\]
   typically \(\eta_t = Ct^{-\alpha}\), \(\frac{1}{2}<\alpha<1\) (c.f. harmonic series.)
   \item or we use iterate (Polyak) averaging (once we start jumping around, we average the solutions over time).
@@ -38,6 +38,14 @@ Then, we can get the following convergence rates:
   \item strongly-convex case: can achieve a \(\BigO(1/t)\) suboptimality rate (only polynomial convergence)
   \item non-strongly convex case: \(\BigO(1/\sqrt{t})\) suboptimality rate (even worse than polynomial convergence)
   \item Strong Convexity \(\implies\) Polyak-Łojasiewicz (PL) condition.
+\end{itemize}
+
+\Thm Additional bounds for a function $h$:
+\begin{itemize}
+    \item If $h$ is strongly convex:
+    \[ \mathbf{E}[h(\bar{\theta}^t)] - \min h \le \mathbf{O}\left(\frac{\log t}{t}\right) \]
+    \item If $h$ is smooth in addition:
+    \[ \mathbf{E}[h(\bar{\theta}^t)] - \min h \le \mathbf{O}\left(\frac{1}{t}\right) \]
 \end{itemize}
 
 So, even if the convergence rates are not super nice, thanks to the cheap gradient computation (only one example at the time), we may even converge faster than computing the gradient on the full dataset everytime.

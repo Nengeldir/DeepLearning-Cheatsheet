@@ -96,3 +96,12 @@ Learns dynamic edge weights $\alpha_{ij}$ instead of static adjacency.
     \item \textbf{Normalize}: $\alpha_{ij} = \text{softmax}_j(e_{ij}) = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}_i} \exp(e_{ik})}$
     \item \textbf{Aggregate}: $x_i' = \sigma\left(\sum_{j \in \mathcal{N}_i} \alpha_{ij} W x_j\right)$
 \end{enumerate}
+
+\subsection{Weisfeiler-Lehman (WL) Test}
+Iterative graph isomorphism test based on color refinement. It can distinguish non-isomorphic graphs but not all of them.
+
+\Def{Connection to GNNs}:
+\begin{itemize}
+    \item \textbf{1-WL Limitation}: Standard MP-GNNs (Message Passing GNNs) are at most as powerful as the 1-WL test in distinguishing non-isomorphic graphs.
+    \item \textbf{GIN (Graph Isomorphism Network)}: A GNN architecture designed to be maximally expressive, reaching the discriminative power of the 1-WL test.
+\end{itemize}
