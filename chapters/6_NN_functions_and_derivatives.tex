@@ -42,3 +42,21 @@ f(x)_i = \frac{e^{x_i}}{\sum_{j=1}^K e^{x_j}} \; \frac{\partial f(x)_i}{\partial
 \end{align*}
 
 \[\nabla_x f(x) = \MJ_{f}(x) = \diag(f(x)) - f(x)f(x)^T\]
+
+\sep
+
+\Def[GeLU] Unlike ReLU, GeLU is a smooth approximation of ReLU. It is defined as
+\[\mathrm{GeLU}(x) = x \cdot \Phi(x)\]
+where \(\Phi(x)\) is the cumulative distribution function of the standard normal distribution. One can approximate it as
+\[\mathrm{GeLU}(x) \approx 0.5x \left (1 + \tanh \left [ \sqrt{\frac{2}{\pi}} \left (x + 0.044715x^3\right )\right ] \right )\]
+
+It has a slight curvature for negative values before approaching zero for large negative values. This helps gradients propagate better than the "dead zone" of ReLU.
+
+\sep
+
+\Def[ELU] ELU is designed to speed up learning and improve the robustness of neural networks. It solves the "dying ReLU" problem by having a non-zero gradient for negative values. It is defined as
+
+\[\mathrm{ELU}(x) = \begin{cases}x & x > 0 \\ \alpha(e^x - 1) & x \leq 0\end{cases}\]
+where \(\alpha\) is a hyperparameter.
+
+
