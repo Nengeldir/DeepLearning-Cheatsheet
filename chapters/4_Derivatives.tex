@@ -98,3 +98,13 @@ The two conventions are related by transposition.
 \todo{verify}
 
 \todo{Are there any general rules for transposes??}
+
+\subsection{Subdifferential}
+\(f: \mathbb{R}^n \to \mathbb{R} \cup \left\{+\infty\right\}\) be a convex function, and let $x$ be a point in its domain.
+The \textbf{subdifferential} of $f$ at $x$, denoted
+\[\partial f(x) \]
+is the set of all vectors $g \in \mathbb{R}^n$
+\[
+f(y) \ge f(x) + g^\top (y - x)\quad\text{for all } y\in\mathbb{R}^n.
+\]\\
+Any vector $g \in \partial f(x)$ is called a \Def[subgradient] of $f$ at $x$.
