@@ -118,6 +118,19 @@ after a few layers. Hence, the convolutions have to be small.
 
 \sep
 
+\Def[Recursive Receptive Field Formula]
+The receptive field size \(r_l\) of layer \(l\) is calculated as:
+\[ r_l = r_{l-1} + (k_l - 1) \times j_{l-1} \]
+Where:
+\begin{itemize}
+    \item \(r_l\): Receptive field size of the current layer.
+    \item \(r_{l-1}\): Receptive field size of the previous layer.
+    \item \(k_l\): Kernel size of the current layer.
+    \item \(j_{l-1}\): Cumulative stride product of all previous layers (\(j_{l-1} = \prod_{i=1}^{l-1} s_i\)).
+\end{itemize}
+
+\sep
+
 We have \(\forall j\neq \cI_i^l\colon\frac{\partial x_i^l}{\partial x_j^{l - 1}} = 0,\)
 
 \sep
@@ -166,6 +179,17 @@ There are min, max, avg, and softmax pooling. Max pooling is the most frequently
 \subsection{Sub-Sampling (aka ``Strides'')}
 
 Often, it is desirable to reduce the size of the feature maps. This can be achieved by skipping some of the input values in the convolution. The stride is the number of steps the kernel takes in each direction.
+
+\subsection{Hyperparameters \& Output Dimensions}
+
+\Def[Dilation] Dilation introduces gaps between the kernel elements, effectively widening the receptive field without increasing the number of parameters.
+
+\Def[Output Dimension Formula]
+\[ O = \left\lfloor \frac{I + 2P - d(K-1) - 1}{S} + 1 \right\rfloor \]
+where \(I\) is the input size, \(K\) the kernel size, \(P\) padding, \(S\) stride, and \(d\) dilation.
+
+\Ex[Convolution with \(K=4\)] For a kernel of size 4, stride 1, and dilation 1, the convolution (cross-correlation style) is:
+\[ o(i,j) = \sum_{k=0}^{3} \sum_{l=0}^{3} I(i+k, j+l) K(k,l) \]
 
 \subsection{Channels}
 

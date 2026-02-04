@@ -46,6 +46,8 @@ Operates on Graph $G=(V, \mathcal{E})$ with feature matrix $X \in \mathbb{R}^{M 
 \begin{itemize}
     \item \textbf{Adjacency Matrix ($A$)}: Symmetric $M \times M$ matrix. $A_{nm} = 1$ if $\{n,m\} \in \mathcal{E}$, else $0$. Zeros on diagonal.
     \item \textbf{Degree Matrix ($D$)}: Diagonal matrix $D = \text{diag}(d_1, \dots, d_M)$ where $d_m = \sum_n A_{nm}$ (number of neighbors).
+    \item \textbf{Incidence Matrix ($\MB$)}: Matrix of size \(|E| \times |V|\). For an edge \(e=(i,j)\), the entry \(b_{ek}\) is:
+    \[ b_{ek} = \begin{cases} -1 & \text{if } k = i \text{ (source)} \\ +1 & \text{if } k = j \text{ (target)} \\ 0 & \text{otherwise} \end{cases} \]
 \end{itemize}
 
 \Def{Coupling Matrix ($\bar{A}$)}:

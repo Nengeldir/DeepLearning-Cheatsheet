@@ -37,6 +37,7 @@ Then, we can get the following convergence rates:
 \begin{itemize}
   \item strongly-convex case: can achieve a \(\BigO(1/t)\) suboptimality rate (only polynomial convergence)
   \item non-strongly convex case: \(\BigO(1/\sqrt{t})\) suboptimality rate (even worse than polynomial convergence)
+  \item Strong Convexity \(\implies\) Polyak-Łojasiewicz (PL) condition.
 \end{itemize}
 
 So, even if the convergence rates are not super nice, thanks to the cheap gradient computation (only one example at the time), we may even converge faster than computing the gradient on the full dataset everytime.
