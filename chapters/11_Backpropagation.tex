@@ -62,6 +62,8 @@ Iteratively moves parameters \(\theta\) in the direction of the negative gradien
 
 \Com Gradient Flow can be seen as the numerical integration of the continuous-time ordinary differential equation (ODE) \(\dot{x} = -\nabla f(x)\).
 
+\Com For an $L$-smooth function, GD with a fixed step size \(\eta \leq \frac{1}{L}\) is optimal.
+
 \sep
 
 \Def[Polyak Averaging (Averaged SGD)]
@@ -122,3 +124,20 @@ m_t &= \beta_1 m_{t-1} + (1-\beta_1) \nabla J(\theta_t) \\
 v_t &= \beta_2 v_{t-1} + (1-\beta_2) (\nabla J(\theta_t))^2 \\
 \theta_{t+1} &= \theta_t - \frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t
 \end{align*}
+
+\sep
+
+\Def[Muon Optimizer]\\
+is an optimizer that takes into account the matrix structure of model parameters. Specifically, while optimizing a loss function $\mathcal{L}(W)$
+that depends on a weight matrix $W \in \mathbb{R}^{d_{\text{out}} \times d_{\text{in}}}$ , at iteration t we follow an update:\\
+\[
+M_t = \mu M_{t-1} + \nabla_W \mathcal{L}(W_t)
+\]
+\[
+P_t = \operatorname{orthogonalize}(M_t)
+\]
+\[
+W_{t+1} = W_t - \eta \sqrt{\frac{d_{\mathrm{out}}}{d_{\mathrm{in}}}}\,P_t.
+\]
+Muon is motivated by its ability to increase the scale of "rare directions" that are otherwise ignored during learning\\
+Orthogonalization might require SVD ($U\Sigma V^T$, with unitary $U\in\mathbb{R}^{m \times m}$, rectangular diagonal matrix $\Sigma\in\mathbb{R}^{m \times n}$, and unitary $V \in \mathbb{R}^{n \times n}$)
