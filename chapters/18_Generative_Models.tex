@@ -23,6 +23,62 @@ To backpropagate through the stochastic node $z \sim \mathcal{N}(\mu, \Sigma)$, 
 $$ z = \mu + \Sigma^{1/2} \odot \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, I) $$
 This makes $z$ a deterministic, differentiable function of $\phi$ and fixed noise $\epsilon$.
 
+\subsection{Factor Analysis}
+defines a proper probabilistic model of the data ($m \ll n$):\\
+\begin{itemize}
+    \item choose a probability density function $p_Z$ over the latents
+    \item define a conditional probability density function $p_{X|Z}$ over observables
+    \item integrate out the latent variables
+        \[
+        p_X(x) \;=\; \int p_Z(z)\,p_{X\mid Z}(x\mid z)\,dz
+        \]
+    \item use the Gaussian prior density $z \sim \mathcal{N}(0, I), \quad z \in \mathbb{R}^m$
+    \item add linear observation model for $x \in \mathbb{R}^n$
+        \[
+        x = \mu + W z + \eta,\quad
+        \eta \sim \mathcal{N}(0,\Sigma),\quad
+        \Sigma=\operatorname{diag}(\sigma_1^2,\dots,\sigma_n^2)
+        \]
+        \[
+        x\in\mathbb{R}^n,\quad z\in\mathbb{R}^m,\quad W\in\mathbb{R}^{n\times m}
+        \]
+    \item observational noise $\eta$ is independent of the latents $z$
+    \item The induced density is itself normal
+        \[
+        x \sim \mathcal{N}\!\big(\mu,\; W W^\top + \Sigma\big), \quad
+        \mu \;=\; \frac{1}{s}\sum_{i=1}^s x_i
+        \]
+    \item factors are only identifiable up to orthogonal transformations (rotations, reflections, or permutations) in ${\mathbb{R}}^m$, 
+        because for any orthogonal matrix $Q \in \mathbb{R}^{m \times m}$ holds:
+        \[
+        (WQ)(WQ)^\top = W Q Q^\top W^\top = W W^\top \quad\text{if } Q Q^\top = I
+        \]
+    \item posterior is normal with mean and covariance matrix
+        \[
+        \mu_{z\mid x} \;=\; W^\top (W W^\top + \Sigma)^{-1} (x - \mu)
+        \]
+        \[
+        \Sigma_{z\mid x} \;=\; I - W^\top (W W^\top + \Sigma)^{-1} W.
+        \]
+    \item For vanishing isotropic noise (probabilistic PCA) ($\Sigma = \sigma^2 I, \sigma^2 \to 0$), the pseudo-inverse of $W$ converges (if $W$ has orthogonal colums $W^{+} = W^\top$)
+        \[
+        W^\top (W W^\top + \sigma^2 I)^{-1} \;\longrightarrow\; W^{+} \in \mathbb{R}^{m\times n}
+        \]
+    \item Given W, it is thus easy to calc. the posterior over z.
+        \[
+        \mu_{z\mid x} \;\longrightarrow\; W^{+}(x-\mu),\quad
+        \Sigma_{z\mid x} \;\longrightarrow\; 0
+        \]
+    \item MLE with a sample set $\mathcal{S}$: \(\mu, W \leftarrow \log p(\mu, W)(S)\)
+    \item The optimality condition of the $i$-th column of $W$ is
+        \[
+        w_i = \rho_i\,u_i,\qquad
+        \rho_i = \max\{0,\;\sqrt{\lambda_i - \sigma^2}\}.
+        \]
+        where $u_i$ is the $i$-th principal eigenvector of the sample covariance matrix and $\lambda_i$ the corresponding eigenvalue.
+    \item For $\sigma^2 \to 0$, we recover PCA
+\end{itemize}
+
 \sep
 
 \subsection{Normalizing Flows}
@@ -92,3 +148,5 @@ $$ p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\thet
 \Def[Simplified Objective]:
 Instead of predicting the image mean $\mu$, we predict the noise $\epsilon$ added at step $t$:
 $$ L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \| \epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t) \|^2 \right] $$
+
+% Factor Analysis, Autoregressive Modles
